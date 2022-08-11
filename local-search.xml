@@ -4,13 +4,32 @@
   
   
   <entry>
-    <title>hexo-in-cloudflare-workers</title>
-    <link href="/2022/08/07/hexo-in-cloudflare-workers/"/>
-    <url>/2022/08/07/hexo-in-cloudflare-workers/</url>
+    <title>【文献学习】热电偶信号调理电路、IOT接入和处理算法</title>
+    <link href="/2022/08/10/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%83%AD%E7%94%B5%E5%81%B6%E4%BF%A1%E5%8F%B7%E8%B0%83%E7%90%86%E7%94%B5%E8%B7%AF%E3%80%81IOT%E6%8E%A5%E5%85%A5%E5%92%8C%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/"/>
+    <url>/2022/08/10/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%83%AD%E7%94%B5%E5%81%B6%E4%BF%A1%E5%8F%B7%E8%B0%83%E7%90%86%E7%94%B5%E8%B7%AF%E3%80%81IOT%E6%8E%A5%E5%85%A5%E5%92%8C%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/</url>
     
     <content type="html"><![CDATA[]]></content>
     
     
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>STM32-中断卡死</title>
+    <link href="/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/"/>
+    <url>/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/</url>
+    
+    <content type="html"><![CDATA[<p>在最近某个项目中，遇到了串口中断卡死主程序的问题，仔细debug后发现是没有读取接收缓存区buffer的原因。</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">USART_ReceiveData(USART1);        <span class="hljs-comment">//读取一次数据，不然会一直进中断</span><br></code></pre></td></tr></table></figure><p>函数里面主要的语句：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">(USARTx-&gt;DR &amp; (<span class="hljs-type">uint16_t</span>)<span class="hljs-number">0x01FF</span>); <span class="hljs-comment">//读取USARTx-&gt;DR</span><br></code></pre></td></tr></table></figure><p>USART1-&gt;DR是串口数据收发的缓存区寄存器。<br>串口中断标志位自动清空的前提是软件需要先读USART_SR寄存器，然后读USART_DR寄存器来自动清除。即串口中断事件发生后，如果使能的接收中断，而中断函数里面什么都不执行的话，接收中断标志位是无法自动清空的，故而，函数会一直卡在中断函数里面。</p><p>后来在定时器中断也遇到了类似的问题。由于任务需要，定时器需要根据串口命令更改不同的定时频率，但是在更改时如果只是在timer外部关闭定时器再重新initial，则程序会卡死 测试后发现是卡死在timer中断中。<br>timer关闭前一定要清空中中断标志，否则会在中断中出不来，所以中断timer再重启，需要的timer的中断中执行：</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c">TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  <span class="hljs-comment">//清除TIMx的中断待处理位</span><br><span class="hljs-keyword">if</span>(IsTimerReset)<br>&#123;<br>    TIM_Cmd(TIM3, DISABLE);<br>    TIM3_Int_Init(IRQTimes,<span class="hljs-number">99</span>);<span class="hljs-comment">//重新启用</span><br>    IsTimerReset=<span class="hljs-number">0</span>;<br>    <span class="hljs-comment">//printf(&quot;IsTimerReset=1,and timer is reset \r\n&quot;);</span><br>&#125;<br></code></pre></td></tr></table></figure>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>嵌入式</tag>
+      
+    </tags>
     
   </entry>
   
