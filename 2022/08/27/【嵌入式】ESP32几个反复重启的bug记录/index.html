@@ -23,11 +23,13 @@
 <meta property="og:site_name" content="CHER-YOUNG BLOG">
 <meta property="og:description" content="最近在使用ESP32开发一些无线应用，在经历重重困难能够顺利编译-下载工程后，尝试把STM32中的程序移植到ESP32中，但由于对FreeRTOS系统了解不够深入，所以遇到了很多导致板子一直Rebooting的bug，在此记录一下。##1. 消息队列溢出在创建一个消息队列时需要给出队列长度，同时也需要相应的读取队列信息。如果入队过多没读完就满了，队列溢出则会导致系统重启。所以在使用消息队列时注意消">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
 <meta property="article:published_time" content="2022-08-27T06:09:00.000Z">
-<meta property="article:modified_time" content="2022-08-27T07:07:31.304Z">
+<meta property="article:modified_time" content="2022-08-27T13:28:34.244Z">
 <meta property="article:author" content="Chery Young">
 <meta property="article:tag" content="嵌入式">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
   
   
   
@@ -91,7 +93,7 @@
   <header>
     
 
-<div class="header-inner" style="height: 70vh;">
+<div class="header-inner" style="height: 80vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand" href="/">
@@ -178,7 +180,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -231,6 +233,10 @@
         
       </div>
 
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
       
     </div>
   </div>
