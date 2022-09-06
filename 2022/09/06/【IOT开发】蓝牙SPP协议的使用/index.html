@@ -16,24 +16,24 @@
   <meta name="author" content="Chery Young">
   <meta name="keywords" content="嵌入式">
   
-    <meta name="description" content="最近在使用ESP32开发一些无线应用，在经历重重困难能够顺利编译-下载工程后，尝试把STM32中的程序移植到ESP32中，但由于对FreeRTOS系统了解不够深入，所以遇到了很多导致板子一直Rebooting的bug，在此记录一下。 1. 消息队列溢出在创建一个消息队列时需要给出队列长度，同时也需要相应的读取队列信息。如果入队过多没读完就满了，队列溢出则会导致系统重启。所以在使用消息队列时注意消息">
+    <meta name="description" content="之前有个项目需要在PC端通过蓝牙发送数据给单片机，由于当时还不太懂蓝牙协议，使用的是PC-USB-BT 到BT-MCU的方案，会多出来一个USB-UART-BT模块硬件。之后调研学习了解到 可以通过搭建SPP协议使得连接到PC蓝牙后生成一个COM号，进行数据传输。本次使用基于 ESP32 的蓝牙串口协议，具体见官方例程：esp-idf\examples\bluetooth\bluedroid\cl">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【嵌入式】ESP32几个反复重启的bug记录">
-<meta property="og:url" content="http://example.com/2022/08/27/%E3%80%90%E5%B5%8C%E5%85%A5%E5%BC%8F%E3%80%91ESP32%E5%87%A0%E4%B8%AA%E5%8F%8D%E5%A4%8D%E9%87%8D%E5%90%AF%E7%9A%84bug%E8%AE%B0%E5%BD%95/index.html">
+<meta property="og:title" content="【IOT开发】蓝牙SPP协议的使用">
+<meta property="og:url" content="http://example.com/2022/09/06/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91%E8%93%9D%E7%89%99SPP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="CHER-YOUNG BLOG">
-<meta property="og:description" content="最近在使用ESP32开发一些无线应用，在经历重重困难能够顺利编译-下载工程后，尝试把STM32中的程序移植到ESP32中，但由于对FreeRTOS系统了解不够深入，所以遇到了很多导致板子一直Rebooting的bug，在此记录一下。 1. 消息队列溢出在创建一个消息队列时需要给出队列长度，同时也需要相应的读取队列信息。如果入队过多没读完就满了，队列溢出则会导致系统重启。所以在使用消息队列时注意消息">
+<meta property="og:description" content="之前有个项目需要在PC端通过蓝牙发送数据给单片机，由于当时还不太懂蓝牙协议，使用的是PC-USB-BT 到BT-MCU的方案，会多出来一个USB-UART-BT模块硬件。之后调研学习了解到 可以通过搭建SPP协议使得连接到PC蓝牙后生成一个COM号，进行数据传输。本次使用基于 ESP32 的蓝牙串口协议，具体见官方例程：esp-idf\examples\bluetooth\bluedroid\cl">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
-<meta property="article:published_time" content="2022-08-27T06:09:00.000Z">
-<meta property="article:modified_time" content="2022-09-06T15:28:59.552Z">
+<meta property="article:published_time" content="2022-09-06T13:43:08.000Z">
+<meta property="article:modified_time" content="2022-09-06T15:31:42.126Z">
 <meta property="article:author" content="Chery Young">
-<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
   
   
   
-  <title>【嵌入式】ESP32几个反复重启的bug记录 - CHER-YOUNG BLOG</title>
+  <title>【IOT开发】蓝牙SPP协议的使用 - CHER-YOUNG BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -186,7 +186,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【嵌入式】ESP32几个反复重启的bug记录"></span>
+            <span id="subtitle" data-typed-text="【IOT开发】蓝牙SPP协议的使用"></span>
           
         </div>
 
@@ -197,8 +197,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-08-27 14:09" pubdate>
-          2022年8月27日 下午
+        <time datetime="2022-09-06 21:43" pubdate>
+          2022年9月6日 晚上
         </time>
       </span>
     
@@ -209,7 +209,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          3.3k 字
         
       </span>
     
@@ -220,7 +220,7 @@
         
         
         
-          10 分钟
+          28 分钟
         
       </span>
     
@@ -262,22 +262,28 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">【嵌入式】ESP32几个反复重启的bug记录</h1>
+            <h1 style="display: none">【IOT开发】蓝牙SPP协议的使用</h1>
             
             
               <div class="markdown-body">
                 
-                <p>最近在使用ESP32开发一些无线应用，在经历重重困难能够顺利编译-下载工程后，尝试把STM32中的程序移植到ESP32中，但由于对FreeRTOS系统了解不够深入，所以遇到了很多导致板子一直Rebooting的bug，在此记录一下。</p>
-<h2 id="1-消息队列溢出"><a href="#1-消息队列溢出" class="headerlink" title="1. 消息队列溢出"></a>1. 消息队列溢出</h2><p>在创建一个消息队列时需要给出队列长度，同时也需要相应的读取队列信息。如果入队过多没读完就满了，队列溢出则会导致系统重启。<br>所以在使用消息队列时注意消息写入与读取的对应关系。</p>
-<h2 id="2-中断程序卡死-看门狗异常"><a href="#2-中断程序卡死-看门狗异常" class="headerlink" title="2. 中断程序卡死 看门狗异常"></a>2. 中断程序卡死 看门狗异常</h2><p>在程序中使用到了一个timer中断，刚写完发现一直重启，报错的原因是看门狗溢出，也就是高优先级线程卡死太久了。后来debug发现是卡死在timer中断内了。卡死的具体原因见我之前写的一个小总结：<a target="_blank" rel="noopener" href="https://yiyangc18.github.io/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/">STM32-中断卡死</a><br>在ESP32-FreeRTOS系统中封装了太多层，直接去改中断标志位寄存器的值没有开放API，不过可以随意调用一个更改中断位的函数完成。<br>这点后来查阅官方文档，也有相应的说明：</p>
+                <p>之前有个项目需要在PC端通过蓝牙发送数据给单片机，由于当时还不太懂蓝牙协议，使用的是PC-USB-BT 到BT-MCU的方案，会多出来一个USB-UART-BT模块硬件。之后调研学习了解到 可以通过搭建SPP协议使得连接到PC蓝牙后生成一个COM号，进行数据传输。<br>本次使用基于 ESP32 的蓝牙串口协议，具体见官方例程：<br><code>esp-idf\examples\bluetooth\bluedroid\classic_bt\bt_spp_acceptor</code></p>
+<p>把例程编译下载后，在PC端连接上对应的蓝牙服务，会发现多出来两个端口：<br><img src="/img/ESP-SPP/COM.PNG" srcset="/img/loading.gif" lazyload alt="SPP-COM"><br>很自然的生成了两个端口号  注意其中一个是 pc发送，下位机接收服务，另一个是pc接收，ESP32发送服务。具体哪个是发送,可以在蓝牙设备-更多蓝牙选项-COM端口中查看。</p>
+<p>在使用时，遇到了带宽不够的问题，在论坛也遇到了类似问题，但是没有现成的回答。不过之后通过调研找到了可能的解决方案。<br><a target="_blank" rel="noopener" href="https://github.com/espressif/esp-idf/issues/9356">https://github.com/espressif/esp-idf/issues/9356</a><br>我之后给ESPRESSIF技术支持发邮件，他答复了一下，然后我答复了一下他的答复：</p>
 <blockquote>
-<p>定时器启动后，可动态产生特定事件（如“警报事件”）。如需在事件发生时调用某些函数，请通过 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-reference/peripherals/gptimer.html#_CPPv432gptimer_register_event_callbacks16gptimer_handle_tPK25gptimer_event_callbacks_tPv">gptimer_register_event_callbacks()</a> 将函数挂载到中断服务例程 (ISR)。gptimer_event_callbacks_t::on_alarm 设置警报事件的回调函数。<font color=#FF0000 >由于此函数在 ISR 上下文中调用，必须确保该函数不会试图阻塞（例如，确保仅从函数内调用具有 ISR 后缀的 FreeRTOS API）</font>。函数原型在 gptimer_alarm_cb_t 中有所声明。&gt;<br>例如 xQueueSendFromISR、timer_group_get_counter_value_in_isr</p>
+<p>Thanks for reply. I think I have solved this problem by increasing the frequency of sending and the amount of data per packet.<br>  1.BT SPP speed is not affected by baud rate, because RFCOMM, the configuration file under SPP, will try to transmit data packets as fast as possible. You can change Virtue BT COM in the Device Manager, but it’s useless for transmission speed. We are used to the design of hardware UART, and the best way to increase the data rate is to change the baud rate, but this is not necessary when using Bluetooth SPP.<br>  2.The default MTU size is 990 bytes, but you can send a larger MTU to get more bandwidth. When increasing the packet size is useless, you can increase the sending frequency. Don’t config the send interval less than 10 ms, because the MAX ACK Fre of BT is about 100 Hz. Higher fre may lead to packet loss. In my Windows PC, the data speed can achieve 1200 kbps-150 kB/s with 20 send interval and 3 kB Per packet.</p>
+<blockquote>
+<p>Hi @naragururaj,<br>Thanks for reporting the issue. The SPP throughput can be affected by many reasons:<br>The default MTU size of classic Bluetooth SPP on ESP32 is 990 bytes, and higher throughput can be achieved in the case that data chunck size is close to the MTU size or multiple of MTU size. For example, sending 100 bytes data per second is much better than sending 10 bytes every 100 milliseconds.<br>SPP uses credit based flow control. If the receiver can’t give the credit back to the sender as soon as possible, it can also slow down the throughput.<br>Unnecessary logs in the SPP callback functions.<br>The coexistence of BLE or Wi-Fi on ESP32.<br>Complex electromagnetic environment.</p>
 </blockquote>
-<h2 id="3-printf重入"><a href="#3-printf重入" class="headerlink" title="3. printf重入"></a>3. printf重入</h2><p>由于之前写裸机程序习惯了，没想到有一天会因为printf卡死。<br>具体的场景是：中断A和B同时调用了printf，然后系统就很重启。printf不能在未返回的时候再次被调用。所以在中断中尽量不要用printf发送调试信息，应该改用ESP_LOG，日志输出。<br>详情见：<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-reference/system/log.html#c.ESP_LOGD">Logging library </a></p>
-<p>大致就是以下几个API:</p>
-<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">ESP_LOGE -<span class="hljs-built_in">error</span><br>ESP_LOGW -wornning<br>ESP_LOGI -information<br>ESP_LOGD -<span class="hljs-built_in">debug</span><br>ESP_LOGV -verbose<br></code></pre></td></tr></table></figure>
-<h2 id="4-指针导致的内存错误"><a href="#4-指针导致的内存错误" class="headerlink" title="4. 指针导致的内存错误"></a>4. 指针导致的内存错误</h2><p>在程序中需要用到结构体指针、函数指针等稍微复杂一些的指针操作时，注意指向对象前先给对象分配内存空间，不然找不到地址就会报错重启。</p>
-<h2 id="5-参数异常"><a href="#5-参数异常" class="headerlink" title="5. 参数异常"></a>5. 参数异常</h2><p>某些API参数设置没有保护或异常判断，输入参数溢出可能会导致错误。例如在设置定时器alarm周期时需要根据命令内容来设置，这时需要手动检测这个周期&gt;=0，否则会导致重启。</p>
+</blockquote>
+<p>总结一下：<br>1.是PC端生成的虚拟串口波特率太低影响的速率吗，如果是的话应该如何更改PC端COM波特率呢？<br>打开蓝牙串口的波特率是协议栈内规定的，貌似没有给出修改接口，但是不影响带宽。蓝牙SPP基于RFCOMM，底层会尽可能多地传输数据，所以改带宽的关键不在波特率。<br>2.我之前开到一个解释：SPP协议的波特率不会影响通信速率，SPP协议层中也没有给出baudrate的配置选项，是因为底层通信不是基于波特率时钟吗？那通信时会有ACK吗？<br>有的。RFCOMM基于Scoket，有ACK。<br>3.在windows PC 与 ESP32 间进行约100kB/s的无线数据传输，SPP可以实现吗？如果SPP无法实现，有其他的协议推荐吗？<br>大概能实现，看PC蓝牙的硬件及其是否有其他蓝牙设备，周围的2.4GHz频段有多少干扰。</p>
+<p>SPP对蓝牙模块串口的读写实现通信，建立在串口仿真协议RFCOMM上实现；服务端和客户端对应为BluetoothServerSocket和BluetoothSocket，通过流进行数据传输，和java中的socket很像。<br>RFCOMM，它是蓝牙客户端和服务端的Socket通道，其目的为了解决如何在两个不同设备上的应用程序之间保证一条完整的通信路径，并在它们之间保持同一通信段的问题。设备配对后，还没有通信通道，BluetoothServerSocket监听RFCOMM，BluetoothSocket发起建立RFCOMM连接完成通信通道的建立。大致就像是下面这样：</p>
+<p><img src="/img/ESP-SPP/RFCOMM.PNG" srcset="/img/loading.gif" lazyload alt="RFCOMM"></p>
+<p>这也解释了为什么蓝牙端口有两个COM号，因为需要两个通道<br>什么是socket？<br>socket起源于Unix，而Unix/Linux基本哲学之一就是“一切皆文件”，都可以用“open –&gt; write/read –&gt; close”模式操作。Socket就是该模式的一个实现，是一种特殊的文件，一些socket函数就是对其进行的操作（读/写IO、打开、关闭。<br>Socket是应用层与TCP/IP协议族通信的中间软件抽象层，它是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP/IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。其实socket也没有层的概念，它只是一个facade设计模式的应用，让编程变的更简单。是一个软件抽象层。</p>
+<p><img src="/img/ESP-SPP/Socket.PNG" srcset="/img/loading.gif" lazyload alt="socket"></p>
+<p>Socket抽象层，会有请求-应答，也就是ACK。那这个ACK是总体传输开始时候的ACK呢，还是同步时钟用的ACK呢？这两个发送的速率是怎样的。如果没有每次包的同步ACK，那么应该有同步位检测，如果同步失败则返回错误ACK。在不同的线程调用同一个socket通道,会致错误产生.</p>
+<p>所以如果要改PC端盖的蓝牙串口，重点是改RFCOMM服务。<br>RFCOMM通过L2CAP来处理单连接上的多路复用，并提供到多个设备的连接，从而提供多个并发连接。<br>RFCOMM数据速率将限制在涉及物理串行端口（类型2设备）的设备中。实现可以选择在虚拟串行端口（类型1设备中）上对数据进行调整。在允许范围内，RFCOMM将提供尽可能高的数据速率<br>什么是类型2？<br>RFCOMM支持两种类型的设备：<br>• 类型1–内部模拟串行端口（或等效端口）。<br>• 类型2–带物理串行端口的中间设备</p>
+<p>PC是type1  PC没有把数据传给真实物理端口。通道打开后，如果持续一段时间（60s）没有数据传输，就会自动关闭通道。或者一方发送关闭通道的命令也行。</p>
 
                 
               </div>
@@ -290,7 +296,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">#嵌入式</a>
+        <a href="/tags/IOT/">#IOT</a>
       
     </div>
   
@@ -302,8 +308,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【嵌入式】ESP32几个反复重启的bug记录</div>
-      <div>http://example.com/2022/08/27/【嵌入式】ESP32几个反复重启的bug记录/</div>
+      <div>【IOT开发】蓝牙SPP协议的使用</div>
+      <div>http://example.com/2022/09/06/【IOT开发】蓝牙SPP协议的使用/</div>
     </div>
     <div class="license-meta">
       
@@ -315,7 +321,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年8月27日</div>
+          <div>2022年9月6日</div>
         </div>
       
       
@@ -345,9 +351,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/09/06/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91%E8%93%9D%E7%89%99SPP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%BF%E7%94%A8/" title="【IOT开发】蓝牙SPP协议的使用">
+                      <a href="/2022/09/06/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91%E8%93%9D%E7%89%99-%E9%9F%B3%E9%A2%91-%E5%8D%8F%E8%AE%AE%E6%A0%88/" title="【调研学习】蓝牙-音频-协议栈">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【IOT开发】蓝牙SPP协议的使用</span>
+                        <span class="hidden-mobile">【调研学习】蓝牙-音频-协议栈</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -355,8 +361,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/08/10/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%83%AD%E7%94%B5%E5%81%B6%E4%BF%A1%E5%8F%B7%E8%B0%83%E7%90%86%E7%94%B5%E8%B7%AF%E3%80%81IOT%E6%8E%A5%E5%85%A5%E5%92%8C%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/" title="【文献学习】热电偶信号调理电路、IOT接入和处理算法">
-                        <span class="hidden-mobile">【文献学习】热电偶信号调理电路、IOT接入和处理算法</span>
+                      <a href="/2022/08/27/%E3%80%90%E5%B5%8C%E5%85%A5%E5%BC%8F%E3%80%91ESP32%E5%87%A0%E4%B8%AA%E5%8F%8D%E5%A4%8D%E9%87%8D%E5%90%AF%E7%9A%84bug%E8%AE%B0%E5%BD%95/" title="【嵌入式】ESP32几个反复重启的bug记录">
+                        <span class="hidden-mobile">【嵌入式】ESP32几个反复重启的bug记录</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
