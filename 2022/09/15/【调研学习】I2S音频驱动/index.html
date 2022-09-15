@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
 <meta property="article:published_time" content="2022-09-15T02:40:45.000Z">
-<meta property="article:modified_time" content="2022-09-15T03:13:03.289Z">
+<meta property="article:modified_time" content="2022-09-15T03:16:41.215Z">
 <meta property="article:author" content="Chery Young">
 <meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
@@ -270,7 +270,7 @@
                 <p>学习使用IIS芯片驱动音频。<br>I2S(Inter-IC Sound)总线–集成电路内置音频总线，是由飞利浦半导体公司针对数字音频设备之间的音频数据传输而定制的一种音频总线标准。采用独立的时钟线和数据线，在主设备和从设备之间能够实现同步传输。I2S驱动需要硬件支持，所以之前使用的STM32都没有I2S功能，而ESP32支持音频开发，大多都搭载了I2S接口。<br>在此记录I2S驱动学习时考虑到的一些问题，并通过调研尝试给出解答。</p>
 <h2 id="1-IIS各个引脚接口的作用是什么，如何使用IO口模拟IIS接口-初始化代码长啥样？"><a href="#1-IIS各个引脚接口的作用是什么，如何使用IO口模拟IIS接口-初始化代码长啥样？" class="headerlink" title="1.IIS各个引脚接口的作用是什么，如何使用IO口模拟IIS接口-初始化代码长啥样？"></a>1.IIS各个引脚接口的作用是什么，如何使用IO口模拟IIS接口-初始化代码长啥样？</h2><p>IIS总线，最简就是三条线：<br>BLCK-位时钟，bit clock，BCLK最低不低于采样频率*采样位数声道数<br>RLCK - 也叫WS，Word Select CLK ，左右声道选择时钟。0-左声道；1-右声道<br>SD serial data ，如果是MCU to I2Schip，在MCU是Dout，I2S芯片的Din</p>
 <p>由MCU向I2S解码芯片传数据并播放，加上GND VCC一共五条线。<br>除此之外，一些I2S设备（ES8388）还需要主时钟，用于主从设备的同步，或者产生BCK；主时钟一般是MCU的主频，会高很多；如果是由声音采集的设备一般都需要主时钟和另一个Dout脚向MCU返回采集的PCM数据。<br>常用的数据传输标准由飞利浦标准、左对齐、短PCM格式。Philip FormatRLCK变化后第2个BCLK脉冲处变换声道数据，就是有一位延时。左对齐就是在WS电位变化时改变声道数据。PCM Short Format是每次变换WS都会有一个1周期的脉冲，动一次变换一次左右。<br><img src="/img/ESP-SPP/i2s-philipformat.png" srcset="/img/loading.gif" lazyload alt="i2s-philipformat"></p>
-<p>I2S在STM32中不适用，不过在ESP32中用到比较多。ESP32无论是基于ESP-IDF架构的工程还是基于arduino的工程，使用的I2S驱动头文件都是&lt;driver/i2s.h&gt;<br>驱动的架构：<br><a href="/img/ESP-SPP/I2S_structure.PNG">I2S_structure</a><br>主要使用的是APP层接口，移植的话可能需要基于driver层修改。主要还是使用STD模式。</p>
+<p>I2S在STM32中不适用，不过在ESP32中用到比较多。ESP32无论是基于ESP-IDF架构的工程还是基于arduino的工程，使用的I2S驱动头文件都是&lt;driver/i2s.h&gt;<br>驱动的架构：<br><img src="/img/ESP-SPP/I2S_structure.PNG" srcset="/img/loading.gif" lazyload alt="I2S_structure"><br>主要使用的是APP层接口，移植的话可能需要基于driver层修改。主要还是使用STD模式。</p>
 <ul>
 <li>i2s.h: The header file of legacy I2S APIs (for apps using legacy driver).</li>
 <li>i2s_std.h: The header file that provides standard communication mode specific APIs (for apps using new driver with standard mode).</li>
