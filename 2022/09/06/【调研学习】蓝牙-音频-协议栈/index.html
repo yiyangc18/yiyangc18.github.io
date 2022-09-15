@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
 <meta property="article:published_time" content="2022-09-06T13:45:00.000Z">
-<meta property="article:modified_time" content="2022-09-06T15:28:28.383Z">
+<meta property="article:modified_time" content="2022-09-08T06:41:45.341Z">
 <meta property="article:author" content="Chery Young">
 <meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
@@ -276,7 +276,7 @@
 <p>ESP32也是系列芯片，目前产品还没有STM23系列多，但是官方不止卖芯片，还买贴片模组和开发板，还很便宜！不过大多数芯片都不带DAC功能，可能需要IIC接口外接DAC芯片。不过ESP32基本都带IIS协议接口，这个可用接音频解码播放芯片，具体的播放芯片还没有调研选型，不过大概知道他能干这件事儿。</p>
 <h2 id="3-各个协议栈到底是啥关系，如何快速改成想要的样子？"><a href="#3-各个协议栈到底是啥关系，如何快速改成想要的样子？" class="headerlink" title="3.各个协议栈到底是啥关系，如何快速改成想要的样子？"></a>3.各个协议栈到底是啥关系，如何快速改成想要的样子？</h2><p>协议栈的组成也是众说纷纭，具体原因的经典蓝牙、ble蓝牙的协议栈会有不同，而其他人搬过去的时候也只是机械地翻译 ，协议栈有多少多少层，每层有什么功能，对初学者非常不友好，看完往往是一头雾水。</p>
 <p>后来找到一篇讲得好的教程：<a target="_blank" rel="noopener" href="https://wlink.blog.csdn.net/article/details/107727900">CSDN:一篇文章足够你学习蓝牙技术</a><br><img src="/img/ESP-SPP/BTprofile.PNG" srcset="/img/loading.gif" lazyload alt="BTprofile"></p>
-<p>大致的原理都是类似的：controller于底层RF交互、HCI交连controller和Host，Host中搭建应用功能服务协议。架构都是相似的，其中controller层的协议决定了是BLE还是经典BT。手机、电脑中大多都是双模的底层协议。<br><img src="/img/ESP-SPP/BTPconstant.PNG" srcset="/img/loading.gif" lazyload alt="BTPconstant"><br>transport层决定了controller和Host交互的通信协议，片外通信。常见的有UART USB SDIO。USB是D+、D-,用的是差分线,这样的话可以支持的速率更高，虽然和UART都是异步串行协议，但是USB通过差分稳定以及打包发送能实现更快的速度；SDIO是SD卡的读取协议，属于同步串行协议。SDIO和USB协议的通信速度都比UART高，但是对于2Mbps的底层速率，UART显然够用了。<br>之前买的很多模块，HC-05 ATK-BLE HC-08等等，大多都只是在无线收发芯片中封装了底层协议，给出了UART接口，然后就可以接入单片机使用了。但是这种使用方法，由于没有Host协议栈，即使能匹配上电脑的蓝牙，也无法通信。可以在单片机中完善Host协议栈，配置SSP协议，在与电脑内置蓝牙配对后，那么蓝牙设备会被识别出一个串口，可以生成对应的串口号进行通信了。亦或者配置A2DP协议，这一与电脑蓝牙匹配后会被识别出蓝牙耳机，进行音频数据传输。<br>协议栈给出了更多功能服务的协议组成，例如想搭载A2DP协议，就得先有AVDTP协议。在搭载了LE协议的同时，也有A2DP协议，则设备会被主机识别为音频播放设备。<br>在ESP32的开发平台中，有基于espressif IDF的框架和基于Arduino的框架。如果使用Espressif框架，在SDK configuration editor给出了无代码、选择配置的界面。<br><img src="/img/ESP-SPP/ESP32-BTconfig.PNG" srcset="/img/loading.gif" lazyload alt="ESP32-BTconfig.png"><br>在创建工程时可以选择是否开启蓝牙协议栈、controller模式、运行内核、HCI接口、最大连接数等等。当然也可以基于协议栈代码自己改。</p>
+<p>大致的原理都是类似的：controller于底层RF交互、HCI交连controller和Host，Host中搭建应用功能服务协议。架构都是相似的，其中controller层的协议决定了是BLE还是经典BT。手机、电脑中大多都是双模的底层协议。<br><img src="/img/ESP-SPP/BTPconstant.PNG" srcset="/img/loading.gif" lazyload alt="BTPconstant"><br>transport层决定了controller和Host交互的通信协议，片外通信。常见的有UART USB SDIO。USB是D+、D-,用的是差分线,这样的话可以支持的速率更高，虽然和UART都是异步串行协议，但是USB通过差分稳定以及打包发送能实现更快的速度；SDIO是SD卡的读取协议，属于同步串行协议。SDIO和USB协议的通信速度都比UART高，但是对于2Mbps的底层速率，UART显然够用了。<br>之前买的很多模块，HC-05 ATK-BLE HC-08等等，大多都只是在无线收发芯片中封装了底层协议，给出了UART接口，然后就可以接入单片机使用了。但是这种使用方法，由于没有Host协议栈，即使能匹配上电脑的蓝牙，也无法通信。可以在单片机中完善Host协议栈，配置SSP协议，在与电脑内置蓝牙配对后，那么蓝牙设备会被识别出一个串口，可以生成对应的串口号进行通信了。亦或者配置A2DP协议，这一与电脑蓝牙匹配后会被识别出蓝牙耳机，进行音频数据传输。<br>协议栈给出了更多功能服务的协议组成，例如想搭载A2DP协议，就得先有AVDTP协议。在搭载了LE协议的同时，也有A2DP协议，则设备会被主机识别为音频播放设备。<br>在ESP32的开发平台中，有基于espressif IDF的框架和基于Arduino的框架。如果使用Espressif框架，在SDK configuration editor给出了无代码、选择配置的界面。<br><img src="/img/ESP-SPP/ESP32-BTconfig.PNG" srcset="/img/loading.gif" lazyload alt="ESP32-BTconfig"><br>在创建工程时可以选择是否开启蓝牙协议栈、controller模式、运行内核、HCI接口、最大连接数等等。当然也可以基于协议栈代码自己改。</p>
 <h2 id="4-目前高性能鼠标会采用2-4G通信模块，比起蓝牙2-4G通信有什么优势，为什么2-4G通信没有蓝牙应用的广？"><a href="#4-目前高性能鼠标会采用2-4G通信模块，比起蓝牙2-4G通信有什么优势，为什么2-4G通信没有蓝牙应用的广？" class="headerlink" title="4.目前高性能鼠标会采用2.4G通信模块，比起蓝牙2.4G通信有什么优势，为什么2.4G通信没有蓝牙应用的广？"></a>4.目前高性能鼠标会采用2.4G通信模块，比起蓝牙2.4G通信有什么优势，为什么2.4G通信没有蓝牙应用的广？</h2><p>蓝牙的标准比2.4G多 拥有IEEE标准，可以实现多设备传输，可以一对多，不需要外置专门的接收器。蓝牙计数可以使可连接的设备更加广泛，工作模式也更加便捷。蓝牙增加了自适应调频计数，一般只要有蓝牙模块即可连接，但是速度慢，带宽较小。<br>2.4G信号传输频率更高，需要专用的一对一接收器，且只能一对一通信，但是在单点性能上比蓝牙更好。需要和自带的USB接收器对码才能使用，一般来说不是自己的接收器无法使用。不过它占用的频宽大，响应快，中高端产品已经做到和USB有线一样的1000HZ，也就是1ms一个包，而蓝牙不行，最多每秒百次。<br>现在自己的鼠标MS Master基于 罗技USB UNIFYING RECEIVER ，这个模块基于nEF24L 2.4G通信模块。相对于蓝牙，其接收器需要占用USB口。早期罗技的U联接受只支持鼠标，后来加入了键盘、耳机。LIGHTSPEED计数在鼠标中更是天花板，UR相较而言会差一些，但能多设备接收，同时比蓝牙速度更快。</p>
 <h2 id="5-支持蓝牙耳机最小功能的蓝牙芯片大概长啥样？"><a href="#5-支持蓝牙耳机最小功能的蓝牙芯片大概长啥样？" class="headerlink" title="5.支持蓝牙耳机最小功能的蓝牙芯片大概长啥样？"></a>5.支持蓝牙耳机最小功能的蓝牙芯片大概长啥样？</h2><p>某宝搜蓝牙耳机，最便宜的30块钱就能买到。是怎么做到这么便宜的？<br>降低蓝牙耳机成本的关键是芯片选型。找到一款便宜的WT2605-24SS 蓝牙MP3芯片：<br><img src="/img/ESP-SPP/WT2605-24SS.PNG" srcset="/img/loading.gif" lazyload alt="WT2605-24SS"><br>像上面这一款，集成了蓝牙通信、扬声器播放、麦克风输入、UART通信配置、USB、SPI-SD卡数据读取。这是一款几乎集成了所有蓝牙MP3播放器功能的芯片。<br>有一个16 bit DAC音频解码器,通讯速率高达1Mbps 。具体的解码方式应该是最基础的SBC ，AAC带宽不支持。<br>也有其他的蓝牙-音频芯片，价格几块钱到几十块不等。支持不同的蓝牙版本、编解码方式。</p>
 
@@ -345,6 +345,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/09/15/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91I2S%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="【调研学习】I2S音频驱动">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【调研学习】I2S音频驱动</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
