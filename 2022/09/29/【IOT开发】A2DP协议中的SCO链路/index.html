@@ -16,24 +16,22 @@
   <meta name="author" content="Chery Young">
   <meta name="keywords" content="嵌入式">
   
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Hello">
+    <meta name="description" content="在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。 百度百科：支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。用保留带宽进行同步通信，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://example.com/2022/08/07/hello-world/index.html">
+<meta property="og:title" content="【IOT开发】A2DP协议中的SCO链路">
+<meta property="og:url" content="http://example.com/2022/09/29/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91A2DP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84SCO%E9%93%BE%E8%B7%AF/index.html">
 <meta property="og:site_name" content="CHER-YOUNG BLOG">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Hello">
+<meta property="og:description" content="在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。 百度百科：支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。用保留带宽进行同步通信，">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/img/code1.jpg">
-<meta property="article:published_time" content="2022-08-07T07:26:34.204Z">
-<meta property="article:modified_time" content="2022-09-25T13:10:09.424Z">
+<meta property="article:published_time" content="2022-09-28T16:44:00.000Z">
+<meta property="article:modified_time" content="2022-09-28T16:54:51.471Z">
 <meta property="article:author" content="Chery Young">
-<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/img/code1.jpg">
   
   
   
-  <title>Hello World - CHER-YOUNG BLOG</title>
+  <title>【IOT开发】A2DP协议中的SCO链路 - CHER-YOUNG BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -186,7 +184,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Hello World"></span>
+            <span id="subtitle" data-typed-text="【IOT开发】A2DP协议中的SCO链路"></span>
           
         </div>
 
@@ -197,8 +195,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-08-07 15:26" pubdate>
-          2022年8月7日 下午
+        <time datetime="2022-09-29 00:44" pubdate>
+          2022年9月29日 凌晨
         </time>
       </span>
     
@@ -209,7 +207,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          507 字
+          2k 字
         
       </span>
     
@@ -220,7 +218,7 @@
         
         
         
-          5 分钟
+          17 分钟
         
       </span>
     
@@ -262,27 +260,15 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Hello World</h1>
+            <h1 style="display: none">【IOT开发】A2DP协议中的SCO链路</h1>
             
             
               <div class="markdown-body">
                 
-                <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<p>Hello,Wrold！这是我首次使用hexo搭建自己的个人博客，希望能在此记录技术的进步。本博客基于<a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>框架和<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/guide">Fluid</a>主题，如果觉得好看可以根据教程搭建。</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<h3 id="Some-error"><a href="#Some-error" class="headerlink" title="Some error"></a>Some error</h3><p>deploy时报错，可试试</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo clean<br>$ hexo generate<br>$ hexo deploy<br></code></pre></td></tr></table></figure>
+                <p>在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路<br>如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。</p>
+<p>百度百科：<br>支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。<br>用保留带宽进行同步通信，即两台设备在LMP层利用保留时隙在物理信道上周期传送传送数据包。这种类型的链接主要用于传送SCO包（语音数据）。SCO 包不包括CRC码，且不进行重传。主要支持传输有时间限制的信息，例如声音。仅仅在ACL链接已经建立之后，才可以建立SCO 链接。<br>wiki没有收录<br>What is SCO in Bluetooth?<br>SCO (Synchronous Connection Oriented Link) This is a voice data link. While Bluetooth is the technology used to connect devices from different manufacturers without wires, the devices still have to talk to each other while providing what ever service they are designed for.<br>SCO is a symmetric link, i.e. fixed slots are allocated for each direction. Since fixed slots are reserved, SCO provides a circuit switched connection. SCO radio links are used for time critical data transfer, particularly for voice data.</p>
+<p>The Synchronous Connection Oriented link is one of the two possible Bluetooth data link types defined. The SCO link is a symmetric, point-to-point link between the master device and a specific slave device. The SCO link reserves slots between the master and the slave and can therefore be considered to provide a circuit switched connection. The SCO link is usually used to support time critical information, e.g. voice, since time critical SCO packets are never retransmitted. The master device can support up to three SCO links, this might be to the same slave or to different slaves. A slave can support up to a maximum of three SCO links, assuming they are from the same master. If the slave has links from different masters, a maximum of two SCO links are available.</p>
+<p> 蓝牙物理链路ACL(Asynchronous Connectionless)，另外的一种链路是SCO(Synchronous Connection Oriented)主要用来传输对时间要求很高的数据通信。        蓝牙基带技术支持两种连接类型：同步定向连接(SCO)类型和异步无连接(ACL)类型。前者主要用于同步话音传送，后者主要用于分组数据传送。        SCO连接为对称连接，利用保留时隙传送数据包。连接建立后，主设备和从设备可以不被选中就发送SCO数据包。SCO数据包既可以传送话音，也可以传送数据，但在传送数据时，只用于重发被损坏的那部分的数据。同步定向链接（SCO）是在匹克网中主单元和从单元之间实现 点到点链接。主单元通过有规律的 使用保留时隙来维持SCO 链接。<br>       ACL链路就是定向发送数据包，它既支持对称连接，也支持不对称连接（既可以一对一，也可以一对多）。主设备负责控制链路带宽，并决定微微网中的每个从设备可以占用多少带宽和连接的对称性。从设备只有被选中时才能传送数据。ACL链路也支持接收主设备发给微微网中所有从设备的广播消息。ACL 链接是主单元与共存于匹克网中的所有从单元之间实现一点多址的连接方式。在这种连接方式中，主单元并不以时隙来保留SCO 链接，主单元在每个时隙基上建立对任何其它从单元的ACL链接。其中包括已预定用SCO链接方式中的从单元。</p>
 
                 
               </div>
@@ -292,6 +278,13 @@
               <div class="post-metas my-3">
   
   
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/IOT/">#IOT</a>
+      
+    </div>
+  
 </div>
 
 
@@ -300,8 +293,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Hello World</div>
-      <div>http://example.com/2022/08/07/hello-world/</div>
+      <div>【IOT开发】A2DP协议中的SCO链路</div>
+      <div>http://example.com/2022/09/29/【IOT开发】A2DP协议中的SCO链路/</div>
     </div>
     <div class="license-meta">
       
@@ -313,7 +306,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年8月7日</div>
+          <div>2022年9月29日</div>
         </div>
       
       
@@ -343,15 +336,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/" title="STM32-中断卡死">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">STM32-中断卡死</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" title="【文献学习】磁强计的应用">
+                        <span class="hidden-mobile">【文献学习】磁强计的应用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
