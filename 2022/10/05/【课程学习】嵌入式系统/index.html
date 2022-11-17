@@ -16,22 +16,24 @@
   <meta name="author" content="Chery Young">
   <meta name="keywords" content="嵌入式">
   
-    <meta name="description" content="这是在学习数值分析课程中的笔记。 计算机中的浮点数计算：表示：x &#x3D; (−1)^s ·(0.a_1a2 ···at ) ·β^e &#x3D; (−1)s ·m ·β ^e−t符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位 类似于科学计数法和之前学的二级制浮点数表示有点相似，但又不完全相同 Matlab 默认的数据类型是double 向前误差分析f(x∗) &#x3D; (x)2(1 + 2δ)   ;f">
+    <meta name="description" content="这是在学习 嵌入式计算机及机电系统接口 课程中的笔记。 嵌入式系统 Verilog HDL 设计接口电路基础Verilog HDL 是一种以文本形式来描述数字系统硬件结构和行为的语言，是在 C 语言的基础上发展起来的 module and(in, out); 12345input[1:0]  in;                &#x2F;&#x2F; 定义输入管脚（2根）output  out;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【数值分析】计算精度">
-<meta property="og:url" content="http://example.com/2022/09/23/%E3%80%90%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E3%80%91%E8%AE%A1%E7%AE%97%E7%B2%BE%E5%BA%A6/index.html">
+<meta property="og:title" content="【课程学习】嵌入式系统">
+<meta property="og:url" content="http://example.com/2022/10/05/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F/index.html">
 <meta property="og:site_name" content="CHER-YOUNG BLOG">
-<meta property="og:description" content="这是在学习数值分析课程中的笔记。 计算机中的浮点数计算：表示：x &#x3D; (−1)^s ·(0.a_1a2 ···at ) ·β^e &#x3D; (−1)s ·m ·β ^e−t符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位 类似于科学计数法和之前学的二级制浮点数表示有点相似，但又不完全相同 Matlab 默认的数据类型是double 向前误差分析f(x∗) &#x3D; (x)2(1 + 2δ)   ;f">
+<meta property="og:description" content="这是在学习 嵌入式计算机及机电系统接口 课程中的笔记。 嵌入式系统 Verilog HDL 设计接口电路基础Verilog HDL 是一种以文本形式来描述数字系统硬件结构和行为的语言，是在 C 语言的基础上发展起来的 module and(in, out); 12345input[1:0]  in;                &#x2F;&#x2F; 定义输入管脚（2根）output  out;">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-09-23T05:35:51.000Z">
-<meta property="article:modified_time" content="2022-09-24T08:11:20.226Z">
+<meta property="og:image" content="http://example.com/img/learning.png">
+<meta property="article:published_time" content="2022-10-05T13:56:55.000Z">
+<meta property="article:modified_time" content="2022-11-17T04:07:43.552Z">
 <meta property="article:author" content="Chery Young">
 <meta property="article:tag" content="课程学习">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/learning.png">
   
   
   
-  <title>【数值分析】计算精度 - CHER-YOUNG BLOG</title>
+  <title>【课程学习】嵌入式系统 - CHER-YOUNG BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -184,7 +186,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【数值分析】计算精度"></span>
+            <span id="subtitle" data-typed-text="【课程学习】嵌入式系统"></span>
           
         </div>
 
@@ -195,8 +197,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-09-23 13:35" pubdate>
-          2022年9月23日 下午
+        <time datetime="2022-10-05 21:56" pubdate>
+          2022年10月5日 晚上
         </time>
       </span>
     
@@ -207,7 +209,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          512 字
+          1.8k 字
         
       </span>
     
@@ -218,7 +220,7 @@
         
         
         
-          5 分钟
+          15 分钟
         
       </span>
     
@@ -260,20 +262,85 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">【数值分析】计算精度</h1>
+            <h1 style="display: none">【课程学习】嵌入式系统</h1>
             
             
               <div class="markdown-body">
                 
-                <p>这是在学习数值分析课程中的笔记。</p>
-<p>计算机中的浮点数计算：<br>表示：<br>x = (−1)^s ·(0.a_1a2 ···at ) ·β^e = (−1)s ·m ·β ^e−t<br>符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位</p>
-<p>类似于科学计数法<br>和之前学的二级制浮点数表示有点相似，但又不完全相同</p>
-<p>Matlab 默认的数据类型是double</p>
-<p>向前误差分析f(x∗) = (x)2(1 + 2δ)   ;f(x)=x^2<br>向后误差分析[f (x)]∗ = f (x(1 +  ̃δ))”</p>
-<p>条件数：|f (x + δx) −f (x)| /|f (x)| ≤ κ(x)|δx|/|x|<br>κ(x) 自变量变化引起函数值的变化  类似于灵敏度  太大是病态的<br>κ(x)= |xf ‘(x) /f (x)   |</p>
-<p>避免相近的数相减  会严重损失有效数字<br>避免和绝对值大的数相乘、和绝对值小的数相除<br>减少运算次数：  x3 −6.1x2 + 3.2x + 1.5 -&gt;  ((x −6.1)x + 3.2)x + 1.5</p>
-<p>选公式： ln(1+x)  ln(1+x/1-x)  的Taylor展开算ln2 后者强</p>
-<p>SYSCLK（系统时钟） =64MHz   ok<br>AHB 总线时钟(使用 SYSCLK) =64MHz<br>APB1 总线时钟(PCLK1) =64MHz<br>APB2 总线时钟(PCLK2) =64MHz<br>PLL 时钟 =64MHz</p>
+                <p>这是在学习 嵌入式计算机及机电系统接口 课程中的笔记。</p>
+<h1 id="嵌入式系统"><a href="#嵌入式系统" class="headerlink" title="嵌入式系统"></a>嵌入式系统</h1><p><img src="/img/boxcnzejAPizgx3IBiOzcIqIyTb.png" srcset="/img/loading.gif" lazyload alt="review"></p>
+<h2 id="Verilog-HDL-设计接口电路基础"><a href="#Verilog-HDL-设计接口电路基础" class="headerlink" title="Verilog HDL 设计接口电路基础"></a>Verilog HDL 设计接口电路基础</h2><p>Verilog HDL 是一种以文本形式来描述数字系统硬件结构和行为的语言，是在 C 语言的基础上发展起来的</p>
+<p>module and(in, out);</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">input[<span class="hljs-number">1</span>:<span class="hljs-number">0</span>]  <span class="hljs-keyword">in</span>;                <span class="hljs-regexp">//</span> 定义输入管脚（<span class="hljs-number">2</span>根）<br><br>output  out;                        <span class="hljs-regexp">//</span> 定义输出管脚<br><br>assign out = <span class="hljs-keyword">in</span>[<span class="hljs-number">0</span>] &amp; <span class="hljs-keyword">in</span>[<span class="hljs-number">1</span>];  <span class="hljs-regexp">//</span> 赋值操作<br></code></pre></td></tr></table></figure>
+
+<p>endmodule</p>
+<p>加、减、乘、除：+、-、*、/</p>
+<p>取模：%</p>
+<p>乘方：**</p>
+<p>位与—“&amp;”、位或—“|”、位非（取反）—“~”</p>
+<p>异或—“^”、异或非—“~^”</p>
+<p>与—“&amp;&amp;”、或—“||”、非真—“!”</p>
+<p>大于—“&gt;”、小于—“&lt;”</p>
+<p>大于等于—“&gt;=”、小于等于“&lt;=”</p>
+<p>等于—“==”、不等于—“！=”</p>
+<p>合并不同信号为一总线</p>
+<p>assign  bus1 = {a, b, c};</p>
+<p>assign  bus2 = {3{a}, b};</p>
+<p>变量主要由以下两个关键字定义：</p>
+<p>reg：定义寄存器变量（该变量一般由时钟锁存）</p>
+<p>wire：定义连接线变量，用于定义连接关系</p>
+<p><img src="C://Users//chery//chery-hexo//source//img/boxcnlnZsQH7oIXVB4OTHGrQhOc.png" srcset="/img/loading.gif" lazyload></p>
+<p>module mychip1(in, out);</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">input  a,b,c;                <span class="hljs-regexp">//</span> 定义输入管脚<br><br>output  out;                <span class="hljs-regexp">//</span> 定义输出管脚<br><br>wire  w1,w2;                <span class="hljs-regexp">//</span> 定义导线<br></code></pre></td></tr></table></figure>
+
+<p>    nand(w1,a,b);</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">and</span>(w2,b,c);<br><br><span class="hljs-built_in">xor</span>(out,w1,w2);<br></code></pre></td></tr></table></figure>
+
+<p>endmodule</p>
+<p>时序电路：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">设计一个4位16进制减计数器，该计数器具有一个同步复位端，且是低电平复位，该计数器在计数到0时给出溢出指示<br></code></pre></td></tr></table></figure>
+
+<p>module count4(clk,nReset,cntout,c);</p>
+<p>input clk;</p>
+<p>input nReset;</p>
+<p>output[3:0] cntout;</p>
+<p>output c;</p>
+<p>reg[3:0] cntout;</p>
+<p>reg c;</p>
+<p>always@(posedge clk)</p>
+<p>begin</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-code">    if(~nReset)</span><br><span class="hljs-code"></span><br><span class="hljs-code">    begin</span><br><span class="hljs-code"></span><br><span class="hljs-code">            cntout &lt;= 0;</span><br><span class="hljs-code"></span><br>c&lt;=0;<br><br><span class="hljs-code">    end</span><br><span class="hljs-code"></span><br><span class="hljs-code">    else</span><br><span class="hljs-code"></span><br><span class="hljs-code">    begin</span><br><span class="hljs-code"></span><br><span class="hljs-code">            cntout &lt;= cntout-1;</span><br><span class="hljs-code"></span><br><span class="hljs-code">            if(cntout == 0)</span><br><span class="hljs-code"></span><br><span class="hljs-code">                    c&lt;=1;</span><br><span class="hljs-code"></span><br><span class="hljs-code">            else</span><br><span class="hljs-code"></span><br><span class="hljs-code">                    c&lt;=0;</span><br><span class="hljs-code"></span><br><span class="hljs-code">    end</span><br></code></pre></td></tr></table></figure>
+
+<p>end</p>
+<p>endmodule</p>
+<h2 id="AD-DA"><a href="#AD-DA" class="headerlink" title="AD/DA"></a>AD/DA</h2><p>已学习：可编程并行接口 8255A   DAC0832</p>
+<p>8 位 DAC DAC0832 DI0<del>DI7  – SD0</del>7 数据总线</p>
+<p>Vref 一般不会直接 VCC，需要一个稳压源 带隙基准源</p>
+<p>量级寄存去作缓冲 可以用第二级 LE 控制保证多个 DAC 的同步</p>
+<p>DAC1210 高位 DAC YOY1 控制高低位 byte 写入 其他地址控制二次寄存器开放</p>
+<p>AD 逐次比较型 开关逻辑组合 比较输入数值</p>
+<p>ADC0809  多通道 ADC</p>
+<p><img src="C://Users//chery//chery-hexo//source//img/boxcn4ZiOjq258v5WGfQZksUxtJ.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="C://Users//chery//chery-hexo//source//img/boxcnO6fXH4BBnK7Jzz8GkADAQh.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="PWM"><a href="#PWM" class="headerlink" title="PWM"></a>PWM</h2><p>定时器基础电路：计数结束时产生中断，不够精确；可重触发的单脉冲，可以精确计时；门控分频器，gate 为高时工作</p>
+<p>中断处理，PC104 最多 15 根线；中断向量-中断地址</p>
+<p>驱动执行机构：直流伺服电机-转速 PWM 驱动- ；无刷直流电机； 步进电机 单\双三排 or 六拍，不同地点齿距角 有对应的转动精度，驱动电路 UCN5804B；减速轮，提高精度</p>
+<h2 id="机电状态测量控制"><a href="#机电状态测量控制" class="headerlink" title="机电状态测量控制"></a>机电状态测量控制</h2><p>机电系统的测量控制：利用编码器测量转角转速；转速测量-四倍频电路-上下沿信息检测</p>
+<p>直流测速发电机，少用</p>
+<p>光电编码器-脉冲数量法；测量实践 Tg 内转过 Mp 个编码器脉冲，编码器每圈脉冲数 P，则转过了 n=60Mp/Tg P (rpm) ； 在中高速的测量精度较好，但是低速场景可能会有较大误差。</p>
+<p>脉冲周期法：计数脉冲 fc，计数一个编码器脉冲周期有多少个计数，得到周期，进而测转速。适合低速场景。</p>
+<p>可以把两种方法结合：用编码器上升沿作为确定，截取确定的周期，计数脉冲固定到对应的 Tg，避免周期截断误差</p>
+<p>n=60 fc Mp/P mc ; 测量时间是完整的被测周期： Tg+ΔT，在 Tg 后第一个编码器脉冲下降沿终止计数脉冲。</p>
+<p>电路实现：三种方法都是基于计数器工作；MT 方法用 D 触发器对齐周期沿。</p>
+<p><img src="C://Users//chery//chery-hexo//source//img/boxcnTG23vV2rG6chZB8EKmkdAh.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="双口-RAM-通信"><a href="#双口-RAM-通信" class="headerlink" title="双口 RAM 通信"></a>双口 RAM 通信</h2><p>系统间通信-串行 并行；</p>
+<p>一般并行通信比较快，但是时钟对其很难，可以使用爽口 RAM 作为中间存储器进行通信。</p>
+<p>IDT7130，双口 RAM，地址线，数据线，R W EN 控制线</p>
+<h2 id="PCI-总线"><a href="#PCI-总线" class="headerlink" title="PCI 总线"></a>PCI 总线</h2><p>9054</p>
+<h2 id="串行通信"><a href="#串行通信" class="headerlink" title="串行通信"></a>串行通信</h2><p>应用最广泛的通信总线。异步串行，起始位，数据为，校验位，</p>
+<p>调制解调 485 232  A-Y Z-B</p>
+<p>同步通信，需要考虑逻辑之外的时序冲突问题</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>需要预约一下；</p>
 
                 
               </div>
@@ -298,8 +365,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【数值分析】计算精度</div>
-      <div>http://example.com/2022/09/23/【数值分析】计算精度/</div>
+      <div>【课程学习】嵌入式系统</div>
+      <div>http://example.com/2022/10/05/【课程学习】嵌入式系统/</div>
     </div>
     <div class="license-meta">
       
@@ -311,7 +378,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年9月23日</div>
+          <div>2022年10月5日</div>
         </div>
       
       
@@ -341,9 +408,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" title="【文献学习】磁强计的应用">
+                      <a href="/2022/10/10/%E5%8F%91%E7%97%85%E6%96%87%E5%AD%A6%E5%AE%9E%E5%BD%95/" title="【摸鱼】发病文学实录">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【文献学习】磁强计的应用</span>
+                        <span class="hidden-mobile">【摸鱼】发病文学实录</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
@@ -351,8 +418,8 @@
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/09/15/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91I2S%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="【调研学习】I2S音频驱动">
-                        <span class="hidden-mobile">【调研学习】I2S音频驱动</span>
+                      <a href="/2022/09/29/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91A2DP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84SCO%E9%93%BE%E8%B7%AF/" title="【IOT开发】A2DP协议">
+                        <span class="hidden-mobile">【IOT开发】A2DP协议</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -211,18 +211,300 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91esp-idf_component%E6%90%AD%E5%BB%BA/" target="_self">
+          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【IOT开发】esp-idf_component搭建">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/09/29/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91A2DP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84SCO%E9%93%BE%E8%B7%AF/" target="_self">
-          【IOT开发】A2DP协议中的SCO链路
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91esp-idf_component%E6%90%AD%E5%BB%BA/" target="_self">
+          【IOT开发】esp-idf_component搭建
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/09/29/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91A2DP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84SCO%E9%93%BE%E8%B7%AF/" target="_self">
+      <a class="index-excerpt " href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91esp-idf_component%E6%90%AD%E5%BB%BA/" target="_self">
         <div>
-          在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。 百度百科：支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。用保留带宽进行同步通信，
+          在ESP-IDF搭建自己的工程组件，需要了解sdkconfig文件、cmakelist文件的配置，系统驱动的过程。具体见官方文档 系统启动本文将会介绍 ESP32 从上电到运行 app_main 函数中间所经历的步骤（即启动流程）。 宏观上，该启动流程可以分为如下 3 个步骤：  一级引导程序 被固化在了 ESP32 内部的 ROM 中，它会从 flash 的 0x1000 偏移地址处加载二级引导
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-11-17 11:52" pubdate>
+              2022-11-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/IOT/">#IOT</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+          <img src="/img/learning.png" srcset="/img/loading.gif" lazyload alt="【课程学习】信号分析处理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+          【课程学习】信号分析处理
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt " href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+        <div>
+          测试信号分析与处理课程笔记 WEEK3 DFS一些简单的性质：线性、奇偶虚实 - 实信号 频域幅值偶对称相位奇对称 对于一个 δ 信号，频谱是一个 A&#x3D;1 横线 ；直流信号的频谱是 2pi δ 时域乘 exp(jωt) 频域频移 -ω  ；时移 to 频 AXexp(jωto) 相位变化 时域拉伸  频域 f 变窄 ，同时幅值 a 压缩 时域卷积 等于 频域相乘 相关： 频谱  X*Y 离散信号的
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-11-17 11:35" pubdate>
+              2022-11-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">#课程学习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-ADF%E6%A1%86%E6%9E%B6/" target="_self">
+          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【IOT开发】ESP-ADF框架">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-ADF%E6%A1%86%E6%9E%B6/" target="_self">
+          【IOT开发】ESP-ADF框架
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt " href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-ADF%E6%A1%86%E6%9E%B6/" target="_self">
+        <div>
+          ESP32 的音频应用开发框架。主要了解 ADF 的架构、使用、以及注意事项。 适用 MCU：ESP32, ESP32-S2, and ESP32-S3 ESP-ADF 是 IDF(Espressif IoT Development Framework)在音频应用方面的一系列扩展组件。所以得先搭好 IDF 环境，再搭建 ADF 环境。 ADF 框架：  几个重要的 element：streams，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-11-17 11:34" pubdate>
+              2022-11-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/IOT/">#IOT</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ES8388%E9%A9%B1%E5%8A%A8/" target="_self">
+          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【IOT开发】ES8388驱动">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ES8388%E9%A9%B1%E5%8A%A8/" target="_self">
+          【IOT开发】ES8388驱动
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt " href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ES8388%E9%A9%B1%E5%8A%A8/" target="_self">
+        <div>
+          ES8388 驱动 &amp;component之前使用的 I2S 解码芯片功能比较单一，直接在 I2S 信号引脚输入相应的脉冲量即可工作，通过一些外接引脚的拉高拉低控制数据格式、功放类型等。但是 ES8388 数字化集成较好，有双声道输入输出，集成 I2C 通信模块以及内部控制寄存器，需要通过 I2C 更改内部寄存器的值来调整工作模式。 ES8388 需要 I2C 通信，command 初始化
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-11-17 11:34" pubdate>
+              2022-11-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/IOT/">#IOT</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/10/10/%E5%8F%91%E7%97%85%E6%96%87%E5%AD%A6%E5%AE%9E%E5%BD%95/" target="_self">
+          <img src="/img/learning.png" srcset="/img/loading.gif" lazyload alt="【摸鱼】发病文学实录">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/10/10/%E5%8F%91%E7%97%85%E6%96%87%E5%AD%A6%E5%AE%9E%E5%BD%95/" target="_self">
+          【摸鱼】发病文学实录
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt " href="/2022/10/10/%E5%8F%91%E7%97%85%E6%96%87%E5%AD%A6%E5%AE%9E%E5%BD%95/" target="_self">
+        <div>
+          Hi,B站评论区的发病评论太TM好笑了，mark一下 hhhh 致xx：屋子里颇有些闷热，忽觉灵感迸发，便拿起了许久未沾水的钢笔，总觉得该写点什么，但又不知道从何提笔。也许大抵是这天搅得人心情烦闷，我歪歪扭扭写下你的名便作罢。院内的枣树不知怎地，今年竟结了几颗果子，摘下一尝，略显苦涩，不好。但一想到梦中的你，口中的酸涩也甜了几分。闲暇之余扭头望向窗外，有夏天，却又不止夏天。有纷繁，有闲散，有春花秋
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-10-10 00:24" pubdate>
+              2022-10-10
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%8F%91%E7%97%85/">#发病</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/10/05/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F/" target="_self">
+          <img src="/img/learning.png" srcset="/img/loading.gif" lazyload alt="【课程学习】嵌入式系统">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/10/05/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F/" target="_self">
+          【课程学习】嵌入式系统
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt " href="/2022/10/05/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F/" target="_self">
+        <div>
+          这是在学习 嵌入式计算机及机电系统接口 课程中的笔记。 嵌入式系统 Verilog HDL 设计接口电路基础Verilog HDL 是一种以文本形式来描述数字系统硬件结构和行为的语言，是在 C 语言的基础上发展起来的 module and(in, out); 12345input[1:0]  in;                &#x2F;&#x2F; 定义输入管脚（2根）output  out;
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-10-05 21:56" pubdate>
+              2022-10-05
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">#课程学习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/09/29/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91A2DP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84SCO%E9%93%BE%E8%B7%AF/" target="_self">
+          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【IOT开发】A2DP协议">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2022/09/29/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91A2DP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84SCO%E9%93%BE%E8%B7%AF/" target="_self">
+          【IOT开发】A2DP协议
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt " href="/2022/09/29/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91A2DP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84SCO%E9%93%BE%E8%B7%AF/" target="_self">
+        <div>
+          SCO在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。 百度百科：支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。用保留带宽进行同步
         </div>
       </a>
 
@@ -251,7 +533,13 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" target="_self">
+          <img src="/img/microsatellite.png" srcset="/img/loading.gif" lazyload alt="【文献学习】磁强计的应用">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
         <a href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" target="_self">
@@ -260,9 +548,9 @@
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" target="_self">
+      <a class="index-excerpt " href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" target="_self">
         <div>
-          给磁强计做一个应用系统，调研一下磁强计原理、大致有哪些应用方向。任务路线：理解磁强计的工作原理、找一个具体的应用方向、规划系统构成-软硬件方案、开发实现、迭代改进 1.磁强计的原理大体有哪些、弱磁场-中磁场-强磁场 的区别、如何测弱磁和强磁从应用的观点出发，根据磁场感应范围将磁场传感器分为：中低强度磁场、高强度磁场传感器。中低强度磁场传感器通常检测10G以下的磁场；高强度磁场传感器检测范围通常在1
+          给磁强计做一个应用系统，调研一下磁强计原理、大致有哪些应用方向。任务路线：理解磁强计的工作原理、找一个具体的应用方向、规划系统构成-软硬件方案、开发实现、迭代改进 1.磁强计的原理大体有哪些、弱磁场-中磁场-强磁场 的区别、如何测弱磁和强磁从应用的观点出发，根据磁场感应范围将磁场传感器分为：中低强度磁场、高强度磁场传感器。中低强度磁场传感器通常检测 10G 以下的磁场；高强度磁场传感器检测范围通常
         </div>
       </a>
 
@@ -291,18 +579,24 @@
   <div class="row mx-auto index-card">
     
     
-    <article class="col-12 col-md-12 mx-auto index-info">
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/09/23/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" target="_self">
+          <img src="/img/learning.png" srcset="/img/loading.gif" lazyload alt="【数值分析】计算精度">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
       <h1 class="index-header">
         
-        <a href="/2022/09/23/%E3%80%90%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E3%80%91%E8%AE%A1%E7%AE%97%E7%B2%BE%E5%BA%A6/" target="_self">
+        <a href="/2022/09/23/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" target="_self">
           【数值分析】计算精度
         </a>
       </h1>
 
       
-      <a class="index-excerpt index-excerpt__noimg" href="/2022/09/23/%E3%80%90%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90%E3%80%91%E8%AE%A1%E7%AE%97%E7%B2%BE%E5%BA%A6/" target="_self">
+      <a class="index-excerpt " href="/2022/09/23/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" target="_self">
         <div>
-          这是在学习数值分析课程中的笔记。 计算机中的浮点数计算：表示：x &#x3D; (−1)^s ·(0.a_1a2 ···at ) ·β^e &#x3D; (−1)s ·m ·β ^e−t符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位 类似于科学计数法和之前学的二级制浮点数表示有点相似，但又不完全相同 Matlab 默认的数据类型是double 向前误差分析f(x∗) &#x3D; (x)2(1 + 2δ)   ;f
+          Hi，这是数值分析课程中的笔记。原文档 基础概念&amp;线代复习计算机中的浮点数计算： 表示： x &#x3D; (−1)^s ·(0.a_1a2 ···at ) ·β^e &#x3D; (−1)s ·m ·β ^e−t 符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位 类似于科学计数法 和之前学的二级制浮点数表示有点相似，但又不完全相同 Matlab 默认的数据类型是 double 向前误差分析 f(x
         </div>
       </a>
 
@@ -374,276 +668,13 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2022/09/06/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91%E8%93%9D%E7%89%99-%E9%9F%B3%E9%A2%91-%E5%8D%8F%E8%AE%AE%E6%A0%88/" target="_self">
-          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【调研学习】蓝牙-音频-协议栈">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/09/06/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91%E8%93%9D%E7%89%99-%E9%9F%B3%E9%A2%91-%E5%8D%8F%E8%AE%AE%E6%A0%88/" target="_self">
-          【调研学习】蓝牙-音频-协议栈
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2022/09/06/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91%E8%93%9D%E7%89%99-%E9%9F%B3%E9%A2%91-%E5%8D%8F%E8%AE%AE%E6%A0%88/" target="_self">
-        <div>
-          项目需要使用蓝牙传输较多的数据，配置完发现带宽不够，所以找了市面上的嵌入式蓝牙模块，即使能找到最大带宽的模块，也只有60k byte&#x2F;S，而且是基于蓝牙2.0 ble双模模块HC-04，SSP协议下才能实现这么高带宽的传输。完成项目通讯需求，仅仅换一个能支持这个带宽的模块也许就完事儿了，但这对于技术的进步显然是不够的。在此，提出一些相关的问题，并尝试通过调研给出可能的答案。 问题的提出1.是什么限
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-09-06 21:45" pubdate>
-              2022-09-06
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/IOT/">#IOT</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2022/09/06/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91%E8%93%9D%E7%89%99SPP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
-          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【IOT开发】蓝牙SPP协议的使用">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/09/06/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91%E8%93%9D%E7%89%99SPP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
-          【IOT开发】蓝牙SPP协议的使用
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2022/09/06/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91%E8%93%9D%E7%89%99SPP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%BF%E7%94%A8/" target="_self">
-        <div>
-          之前有个项目需要在PC端通过蓝牙发送数据给单片机，由于当时还不太懂蓝牙协议，使用的是PC-USB-BT 到BT-MCU的方案，会多出来一个USB-UART-BT模块硬件。之后调研学习了解到 可以通过搭建SPP协议使得连接到PC蓝牙后生成一个COM号，进行数据传输。本次使用基于 ESP32 的蓝牙串口协议，具体见官方例程：esp-idf\examples\bluetooth\bluedroid\cl
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-09-06 21:43" pubdate>
-              2022-09-06
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/IOT/">#IOT</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2022/08/27/%E3%80%90%E5%B5%8C%E5%85%A5%E5%BC%8F%E3%80%91ESP32%E5%87%A0%E4%B8%AA%E5%8F%8D%E5%A4%8D%E9%87%8D%E5%90%AF%E7%9A%84bug%E8%AE%B0%E5%BD%95/" target="_self">
-          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【嵌入式】ESP32几个反复重启的bug记录">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/08/27/%E3%80%90%E5%B5%8C%E5%85%A5%E5%BC%8F%E3%80%91ESP32%E5%87%A0%E4%B8%AA%E5%8F%8D%E5%A4%8D%E9%87%8D%E5%90%AF%E7%9A%84bug%E8%AE%B0%E5%BD%95/" target="_self">
-          【嵌入式】ESP32几个反复重启的bug记录
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2022/08/27/%E3%80%90%E5%B5%8C%E5%85%A5%E5%BC%8F%E3%80%91ESP32%E5%87%A0%E4%B8%AA%E5%8F%8D%E5%A4%8D%E9%87%8D%E5%90%AF%E7%9A%84bug%E8%AE%B0%E5%BD%95/" target="_self">
-        <div>
-          最近在使用ESP32开发一些无线应用，在经历重重困难能够顺利编译-下载工程后，尝试把STM32中的程序移植到ESP32中，但由于对FreeRTOS系统了解不够深入，所以遇到了很多导致板子一直Rebooting的bug，在此记录一下。 1. 消息队列溢出在创建一个消息队列时需要给出队列长度，同时也需要相应的读取队列信息。如果入队过多没读完就满了，队列溢出则会导致系统重启。所以在使用消息队列时注意消息
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-08-27 14:09" pubdate>
-              2022-08-27
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">#嵌入式</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2022/08/10/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%83%AD%E7%94%B5%E5%81%B6%E4%BF%A1%E5%8F%B7%E8%B0%83%E7%90%86%E7%94%B5%E8%B7%AF%E3%80%81IOT%E6%8E%A5%E5%85%A5%E5%92%8C%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/" target="_self">
-          <img src="/img/STM32.jpg" srcset="/img/loading.gif" lazyload alt="【文献学习】热电偶信号调理电路、IOT接入和处理算法">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/08/10/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%83%AD%E7%94%B5%E5%81%B6%E4%BF%A1%E5%8F%B7%E8%B0%83%E7%90%86%E7%94%B5%E8%B7%AF%E3%80%81IOT%E6%8E%A5%E5%85%A5%E5%92%8C%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/" target="_self">
-          【文献学习】热电偶信号调理电路、IOT接入和处理算法
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2022/08/10/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%83%AD%E7%94%B5%E5%81%B6%E4%BF%A1%E5%8F%B7%E8%B0%83%E7%90%86%E7%94%B5%E8%B7%AF%E3%80%81IOT%E6%8E%A5%E5%85%A5%E5%92%8C%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/" target="_self">
-        <div>
-          2021.10 ~ 12 参与了一个高温高精度测温项目，任务是做一个高精度高温传感器配套测试系统。在此记录一些文献的学习笔记与参考。仅做记录总结，转载注明出处。 热电偶信号调理、IOT接入1.基础知识复习热电偶传感器利用热电效应来进行工作的, 其热电势率一般为几十到几μV&#x2F;0℃。它直接和被测对象接触, 不受中间介质的影响, 因而测量精度高, 并且可以在-200 ~ 1600℃范围内进行连续测量。理
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-08-10 23:41" pubdate>
-              2022-08-10
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0/">#文献学习</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/" target="_self">
-          <img src="/img/STM32.jpg" srcset="/img/loading.gif" lazyload alt="STM32-中断卡死">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/" target="_self">
-          STM32-中断卡死
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/" target="_self">
-        <div>
-          在最近某个项目中，遇到了串口中断卡死主程序的问题，仔细debug后发现是没有读取接收缓存区buffer的原因。 1USART_ReceiveData(USART1);        &#x2F;&#x2F;读取一次数据，不然会一直进中断 函数里面主要的语句： 1(USARTx-&gt;DR &amp; (uint16_t)0x01FF); &#x2F;&#x2F;读取USARTx-&gt;DR USART1-&gt;DR是串口数据收发的
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-08-07 15:39" pubdate>
-              2022-08-07
-            </time>
-          </div>
-        
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">#嵌入式</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-      <div class="col-12 col-md-4 m-auto index-img">
-        <a href="/2022/08/07/hello-world/" target="_self">
-          <img src="/img/code1.jpg" srcset="/img/loading.gif" lazyload alt="Hello World">
-        </a>
-      </div>
-    
-    <article class="col-12 col-md-8 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2022/08/07/hello-world/" target="_self">
-          Hello World
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt " href="/2022/08/07/hello-world/" target="_self">
-        <div>
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Hello
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-08-07 15:26" pubdate>
-              2022-08-07
-            </time>
-          </div>
-        
-        
-        
-      </div>
-    </article>
-  </div>
 
 
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
 
 
 

@@ -16,24 +16,24 @@
   <meta name="author" content="Chery Young">
   <meta name="keywords" content="嵌入式">
   
-    <meta name="description" content="在最近某个项目中，遇到了串口中断卡死主程序的问题，仔细debug后发现是没有读取接收缓存区buffer的原因。 1USART_ReceiveData(USART1);        &#x2F;&#x2F;读取一次数据，不然会一直进中断 函数里面主要的语句： 1(USARTx-&gt;DR &amp; (uint16_t)0x01FF); &#x2F;&#x2F;读取USARTx-&gt;DR USART1-&gt;DR是串口数据收发的">
+    <meta name="description" content="在ESP-IDF搭建自己的工程组件，需要了解sdkconfig文件、cmakelist文件的配置，系统驱动的过程。具体见官方文档 系统启动本文将会介绍 ESP32 从上电到运行 app_main 函数中间所经历的步骤（即启动流程）。 宏观上，该启动流程可以分为如下 3 个步骤：  一级引导程序 被固化在了 ESP32 内部的 ROM 中，它会从 flash 的 0x1000 偏移地址处加载二级引导">
 <meta property="og:type" content="article">
-<meta property="og:title" content="STM32-中断卡死">
-<meta property="og:url" content="http://example.com/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/index.html">
+<meta property="og:title" content="【IOT开发】esp-idf_component搭建">
+<meta property="og:url" content="http://example.com/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91esp-idf_component%E6%90%AD%E5%BB%BA/index.html">
 <meta property="og:site_name" content="CHER-YOUNG BLOG">
-<meta property="og:description" content="在最近某个项目中，遇到了串口中断卡死主程序的问题，仔细debug后发现是没有读取接收缓存区buffer的原因。 1USART_ReceiveData(USART1);        &#x2F;&#x2F;读取一次数据，不然会一直进中断 函数里面主要的语句： 1(USARTx-&gt;DR &amp; (uint16_t)0x01FF); &#x2F;&#x2F;读取USARTx-&gt;DR USART1-&gt;DR是串口数据收发的">
+<meta property="og:description" content="在ESP-IDF搭建自己的工程组件，需要了解sdkconfig文件、cmakelist文件的配置，系统驱动的过程。具体见官方文档 系统启动本文将会介绍 ESP32 从上电到运行 app_main 函数中间所经历的步骤（即启动流程）。 宏观上，该启动流程可以分为如下 3 个步骤：  一级引导程序 被固化在了 ESP32 内部的 ROM 中，它会从 flash 的 0x1000 偏移地址处加载二级引导">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/img/STM32.jpg">
-<meta property="article:published_time" content="2022-08-07T07:39:27.000Z">
-<meta property="article:modified_time" content="2022-08-27T13:30:41.967Z">
+<meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
+<meta property="article:published_time" content="2022-11-17T03:52:53.000Z">
+<meta property="article:modified_time" content="2022-11-17T04:07:43.558Z">
 <meta property="article:author" content="Chery Young">
-<meta property="article:tag" content="嵌入式">
+<meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="http://example.com/img/STM32.jpg">
+<meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
   
   
   
-  <title>STM32-中断卡死 - CHER-YOUNG BLOG</title>
+  <title>【IOT开发】esp-idf_component搭建 - CHER-YOUNG BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -186,7 +186,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="STM32-中断卡死"></span>
+            <span id="subtitle" data-typed-text="【IOT开发】esp-idf_component搭建"></span>
           
         </div>
 
@@ -197,8 +197,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-08-07 15:39" pubdate>
-          2022年8月7日 下午
+        <time datetime="2022-11-17 11:52" pubdate>
+          2022年11月17日 中午
         </time>
       </span>
     
@@ -209,7 +209,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          697 字
+          3.1k 字
         
       </span>
     
@@ -220,7 +220,7 @@
         
         
         
-          6 分钟
+          26 分钟
         
       </span>
     
@@ -262,20 +262,62 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">STM32-中断卡死</h1>
+            <h1 style="display: none">【IOT开发】esp-idf_component搭建</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在最近某个项目中，遇到了串口中断卡死主程序的问题，仔细debug后发现是没有读取接收缓存区buffer的原因。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">USART_ReceiveData(USART1);        <span class="hljs-comment">//读取一次数据，不然会一直进中断</span><br></code></pre></td></tr></table></figure>
-<p>函数里面主要的语句：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">(USARTx-&gt;DR &amp; (<span class="hljs-type">uint16_t</span>)<span class="hljs-number">0x01FF</span>); <span class="hljs-comment">//读取USARTx-&gt;DR</span><br></code></pre></td></tr></table></figure>
-<p>USART1-&gt;DR是串口数据收发的缓存区寄存器。<br>串口中断标志位自动清空的前提是软件需要先读USART_SR寄存器，然后读USART_DR寄存器来自动清除。即串口中断事件发生后，如果使能的接收中断，而中断函数里面什么都不执行的话，接收中断标志位是无法自动清空的，故而，函数会一直卡在中断函数里面。</p>
-<p>后来在定时器中断也遇到了类似的问题。由于任务需要，定时器需要根据串口命令更改不同的定时频率，但是在更改时如果只是在timer外部关闭定时器再重新initial，则程序会卡死 测试后发现是卡死在timer中断中。<br>timer关闭前一定要清空中中断标志，否则会在中断中出不来，所以中断timer再重启，需要的timer的中断中执行：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c">TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  <span class="hljs-comment">//清除TIMx的中断待处理位</span><br><span class="hljs-keyword">if</span>(IsTimerReset)<br>&#123;<br>    TIM_Cmd(TIM3, DISABLE);<br>    TIM3_Int_Init(IRQTimes,<span class="hljs-number">99</span>);<span class="hljs-comment">//重新启用</span><br>    IsTimerReset=<span class="hljs-number">0</span>;<br>    <span class="hljs-comment">//printf(&quot;IsTimerReset=1,and timer is reset \r\n&quot;);</span><br>&#125;<br></code></pre></td></tr></table></figure>
+                <p>在ESP-IDF搭建自己的工程组件，需要了解sdkconfig文件、cmakelist文件的配置，系统驱动的过程。<br>具体见<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/release-v4.1/api-guides/build-system.html#cmake">官方文档</a></p>
+<h2 id="系统启动"><a href="#系统启动" class="headerlink" title="系统启动"></a>系统启动</h2><p>本文将会介绍 ESP32 从上电到运行 <code>app_main</code> 函数中间所经历的步骤（即启动流程）。</p>
+<p>宏观上，该启动流程可以分为如下 3 个步骤：</p>
+<ol>
+<li>一级引导程序 被固化在了 ESP32 内部的 ROM 中，它会从 flash 的 0x1000 偏移地址处加载二级引导程序至 RAM (IRAM &amp; DRAM) 中。</li>
+<li>二级引导程序 从 flash 中加载分区表和主程序镜像至内存中，主程序中包含了 RAM 段和通过 flash 高速缓存映射的只读段。</li>
+<li>应用程序启动阶段 运行，这时第二个 CPU 和 RTOS 的调度器启动。</li>
+</ol>
+<p>硬件和基本 C 语言运行环境的端口初始化。</p>
+<p>软件服务和 FreeRTOS 的系统初始化。</p>
+<p>运行主任务并调用 <code>app_main</code>。</p>
+<p>与普通的 FreeRTOS 任务（或嵌入式 C 的 <code>main</code> 函数）不同，<code>app_main</code> 任务可以返回。如果 <code>app_main</code> 函数返回，那么主任务将会被删除。系统将继续运行其他的 RTOS 任务。因此可以将 <code>app_main</code> 实现为一个创建其他应用任务然后返回的函数，或主应用任务本身。</p>
+<p>OTA:</p>
+<p>建议使用最新发布的 ESP-IDF 版本。OTA（空中升级）更新可以在现场烧录新的应用程序，但不能烧录一个新的引导加载程序。因此，引导加载程序支持引导从 ESP-IDF 新版本中构建的应用程序。</p>
+<h2 id="component-搭建"><a href="#component-搭建" class="headerlink" title="component 搭建"></a>component 搭建</h2><p>ESP-IDF 可以显式地指定和配置每个组件。在构建项目的时候，构建系统会前往 ESP-IDF 目录、项目目录和用户自定义组件目录（可选）中查找所有组件，允许用户通过文本菜单系统配置 ESP-IDF 项目中用到的每个组件。在所有组件配置结束后，构建系统开始编译整个项目。</p>
+<ul>
+<li><code>项目</code> 特指一个目录，其中包含了构建可执行应用程序所需的全部文件和配置，以及其他支持型文件，例如分区表、数据/文件系统分区和引导程序。</li>
+<li><code>项目配置</code> 保存在项目根目录下名为 <code>sdkconfig</code> 的文件中，可以通过 <code>idf.py menuconfig</code> 进行修改，且一个项目只能包含一个项目配置。</li>
+<li><code>应用程序</code> 是由 ESP-IDF 构建得到的可执行文件。一个项目通常会构建两个应用程序：项目应用程序（可执行的主文件，即用户自定义的固件）和引导程序（启动并初始化项目应用程序）。</li>
+<li><code>组件</code> 是模块化且独立的代码，会被编译成静态库（.a 文件）并链接到应用程序。部分组件由 ESP-IDF 官方提供，其他组件则来源于其它开源项目。</li>
+<li><code>目标</code> 特指运行构建后应用程序的硬件设备。运行 idf.py –list-targets 可以查看当前 ESP-IDF 版本中支持目标的完整列表。</li>
+</ul>
+<p>以下内容并不属于项目的组成部分：</p>
+<ul>
+<li><code>ESP-IDF</code> 并不是项目的一部分，它独立于项目，通过 <code>IDF_PATH</code> 环境变量（保存 <code>esp-idf</code> 目录的路径）链接到项目，从而将 IDF 框架与项目分离。</li>
+<li>交叉编译工具链并不是项目的组成部分，它应该被安装在系统 PATH 环境变量中。</li>
+</ul>
+<p>！！！！！！一下午的 debug  新添加 component 后，要删除原有的 build rebuild，不然已有的 build 目录会找不到 cmakelist 文件。 。。 一整个无语  component 以及 main 里面的 Kconfig.projbuild  ESP 配置目录更改，也需要重编译才会出现在 configuration UI 里面。</p>
+<p>ESP-IDF 在搜索所有待构建的组件时，会按照 <code>COMPONENT_DIRS</code> 指定的顺序依次进行，这意味着在默认情况下，首先搜索 ESP-IDF 内部组件（<code>IDF_PATH/components</code>），然后是 <code>EXTRA_COMPONENT_DIRS</code> 中的组件，最后是项目组件（<code>PROJECT_DIR/components</code>）。如果这些目录中的两个或者多个包含具有相同名字的组件，则使用搜索到的最后一个位置的组件。这就允许将组件复制到项目目录中再修改以覆盖 ESP-IDF 组件，如果使用这种方式，ESP-IDF 目录本身可以保持不变。</p>
+<p>每个组件都可以包含一个 <code>Kconfig</code> 文件，和 <code>CMakeLists.txt</code> 放在同一目录下。<code>Kconfig</code> 文件中包含要添加到该组件配置菜单中的一些配置设置信息。</p>
+<p>运行 menuconfig 时，可以在 <code>Component Settings</code> 菜单栏下找到这些设置。</p>
+<p>创建一个组件的 Kconfig 文件，最简单的方法就是使用 ESP-IDF 中现有的 Kconfig 文件作为模板，在这基础上进行修改。</p>
+<p>有关示例请参阅 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/build-system.html#add-conditional-config">添加条件配置</a>。</p>
+<p><strong>KConfig.projbuild</strong> 与 <code>project_include.cmake</code> 类似，也可以为组件定义一个 KConfig 文件以实现全局的 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/build-system.html#component-configuration">组件配置</a>。如果要在 menuconfig 的顶层添加配置选项，而不是在 “Component Configuration” 子菜单中，则可以在 <code>CMakeLists.txt</code> 文件所在目录的 KConfig.projbuild 文件中定义这些选项。</p>
+<p>经典的组件 kconfig 和 cmakelist 配置：</p>
+<p>在设置 UI 中启用了组件，才会把相应的文件选入 cmake 编译 list</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-built_in">config</span> FOO_ENABLE_BAR<br>    <span class="hljs-keyword">bool </span><span class="hljs-string">&quot;Enable the BAR feature.&quot;</span><br>    help<br>        This enables the <span class="hljs-keyword">BAR </span>feature of the FOO component.<br><br></code></pre></td></tr></table></figure>
 
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs isbl"> <span class="hljs-function"><span class="hljs-title">set</span>(<span class="hljs-variable">srcs</span> <span class="hljs-string">&quot;foo.c&quot;</span> <span class="hljs-string">&quot;more_foo.c&quot;</span>)</span><br><br> <span class="hljs-function"><span class="hljs-title">if</span>(<span class="hljs-variable">CONFIG_FOO_ENABLE_BAR</span>)</span><br>     <span class="hljs-function"><span class="hljs-title">list</span>(<span class="hljs-variable">APPEND</span> <span class="hljs-variable">srcs</span> <span class="hljs-string">&quot;bar.c&quot;</span>)</span><br> <span class="hljs-function"><span class="hljs-title">endif</span>()</span><br><br><span class="hljs-function"><span class="hljs-title">idf_component_register</span>(<span class="hljs-variable">SRCS</span> <span class="hljs-string">&quot;$&#123;srcs&#125;&quot;</span></span><br><span class="hljs-function">                     ...)</span><br><br></code></pre></td></tr></table></figure>
 
+<p>//嵌入二进制文件-PCM  MP3</p>
+<p><strong>嵌入二进制数据</strong></p>
+<p>有时您的组件希望使用一个二进制文件或者文本文件，但是您又不希望将它们重新格式化为 C 源文件。</p>
+<p>这时，您可以在组件注册中指定 <code>EMBED_FILES</code> 参数，用空格分隔要嵌入的文件名称:</p>
+<p>idf_component_register(…                       EMBED_FILES server_root_cert.der)</p>
+<p>或者，如果文件是字符串，则可以使用 <code>EMBED_TXTFILES</code> 变量，把文件的内容转成以 null 结尾的字符串嵌入:</p>
+<p>idf_component_register(…                       EMBED_TXTFILES server_root_cert.pem)</p>
+<p>文件的内容会被添加到 Flash 的 .rodata 段，用户可以通过符号名来访问，如下所示:</p>
+<p><strong>extern</strong> <strong>const</strong> uint8_t server_root_cert_pem_start[] <strong>asm</strong>(“_binary_server_root_cert_pem_start”);<strong>extern</strong> <strong>const</strong> uint8_t server_root_cert_pem_end[]   <strong>asm</strong>(“_binary_server_root_cert_pem_end”);</p>
+<p>符号名会根据文件全名生成，如 <code>EMBED_FILES</code> 中所示，字符 <code>/</code>、<code>.</code> 等都会被下划线替代。符号名称中的 _binary 前缀由 objcopy 命令添加，对文本文件和二进制文件都是如此。</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">es8388_config_fmt</span>(ES_MODULE_DAC, ES_I2S_NORMAL)；<br><span class="hljs-built_in">es8388_i2s_config_clock</span>(lclk_div);<br><span class="hljs-built_in">es8388_set_bits_per_sample</span>(ES_MODULE_DAC, BIT_LENGTH_16BITS);<br><br><span class="hljs-built_in">es8388_read_all</span>();<br><br></code></pre></td></tr></table></figure>
 
                 
               </div>
@@ -288,7 +330,7 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">#嵌入式</a>
+        <a href="/tags/IOT/">#IOT</a>
       
     </div>
   
@@ -300,8 +342,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>STM32-中断卡死</div>
-      <div>http://example.com/2022/08/07/STM32中断卡死/</div>
+      <div>【IOT开发】esp-idf_component搭建</div>
+      <div>http://example.com/2022/11/17/【IOT开发】esp-idf_component搭建/</div>
     </div>
     <div class="license-meta">
       
@@ -313,7 +355,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年8月7日</div>
+          <div>2022年11月17日</div>
         </div>
       
       
@@ -343,18 +385,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/08/10/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%83%AD%E7%94%B5%E5%81%B6%E4%BF%A1%E5%8F%B7%E8%B0%83%E7%90%86%E7%94%B5%E8%B7%AF%E3%80%81IOT%E6%8E%A5%E5%85%A5%E5%92%8C%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/" title="【文献学习】热电偶信号调理电路、IOT接入和处理算法">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">【文献学习】热电偶信号调理电路、IOT接入和处理算法</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/08/07/hello-world/" title="Hello World">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" title="【课程学习】信号分析处理">
+                        <span class="hidden-mobile">【课程学习】信号分析处理</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

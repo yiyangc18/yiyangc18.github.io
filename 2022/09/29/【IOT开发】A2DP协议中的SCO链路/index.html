@@ -16,22 +16,24 @@
   <meta name="author" content="Chery Young">
   <meta name="keywords" content="嵌入式">
   
-    <meta name="description" content="在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。 百度百科：支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。用保留带宽进行同步通信，">
+    <meta name="description" content="SCO在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。 百度百科：支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。用保留带宽进行同步">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【IOT开发】A2DP协议中的SCO链路">
+<meta property="og:title" content="【IOT开发】A2DP协议">
 <meta property="og:url" content="http://example.com/2022/09/29/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91A2DP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84SCO%E9%93%BE%E8%B7%AF/index.html">
 <meta property="og:site_name" content="CHER-YOUNG BLOG">
-<meta property="og:description" content="在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。 百度百科：支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。用保留带宽进行同步通信，">
+<meta property="og:description" content="SCO在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。 百度百科：支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。用保留带宽进行同步">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
 <meta property="article:published_time" content="2022-09-28T16:44:00.000Z">
-<meta property="article:modified_time" content="2022-09-28T16:55:55.361Z">
+<meta property="article:modified_time" content="2022-11-17T04:07:43.553Z">
 <meta property="article:author" content="Chery Young">
 <meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
   
   
   
-  <title>【IOT开发】A2DP协议中的SCO链路 - CHER-YOUNG BLOG</title>
+  <title>【IOT开发】A2DP协议 - CHER-YOUNG BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -184,7 +186,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【IOT开发】A2DP协议中的SCO链路"></span>
+            <span id="subtitle" data-typed-text="【IOT开发】A2DP协议"></span>
           
         </div>
 
@@ -207,7 +209,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2k 字
+          1.7k 字
         
       </span>
     
@@ -218,7 +220,7 @@
         
         
         
-          17 分钟
+          15 分钟
         
       </span>
     
@@ -260,15 +262,20 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">【IOT开发】A2DP协议中的SCO链路</h1>
+            <h1 style="display: none">【IOT开发】A2DP协议</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路<br>如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。</p>
-<p>百度百科：<br>支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。<br>用保留带宽进行同步通信，即两台设备在LMP层利用保留时隙在物理信道上周期传送传送数据包。这种类型的链接主要用于传送SCO包（语音数据）。SCO 包不包括CRC码，且不进行重传。主要支持传输有时间限制的信息，例如声音。仅仅在ACL链接已经建立之后，才可以建立SCO 链接。<br>wiki没有收录<br>What is SCO in Bluetooth?<br>SCO (Synchronous Connection Oriented Link) This is a voice data link. While Bluetooth is the technology used to connect devices from different manufacturers without wires, the devices still have to talk to each other while providing what ever service they are designed for.<br>SCO is a symmetric link, i.e. fixed slots are allocated for each direction. Since fixed slots are reserved, SCO provides a circuit switched connection. SCO radio links are used for time critical data transfer, particularly for voice data.</p>
+                <h2 id="SCO"><a href="#SCO" class="headerlink" title="SCO"></a>SCO</h2><p>在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路<br>如果接触音视频开发相关的项目，不同设备间、不同数据形式间的同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。</p>
+<p>百度百科：<br>支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。<br>用保留带宽进行同步通信，即两台设备在LMP层利用保留时隙在物理信道上周期传送传送数据包。这种类型的链接主要用于传送SCO包（语音数据）。SCO 包不包括CRC码，且不进行重传。主要支持传输有时间限制的信息，例如声音。仅仅在ACL链接已经建立之后，才可以建立SCO 链接。<br>wiki没有收录</p>
+<blockquote>
+<p>What is SCO in Bluetooth?<br>SCO (Synchronous Connection Oriented Link) This is a voice data link. While Bluetooth is the technology used to connect devices from different manufacturers without wires, the devices still have to talk to each other while providing what ever service they are designed for.<br>SCO is a symmetric link, i.e. fixed slots are allocated for each direction. Since fixed slots are reserved, SCO provides a circuit switched connection. SCO radio links are used for time critical data transfer, particularly for voice data.</p>
+</blockquote>
+<blockquote>
 <p>The Synchronous Connection Oriented link is one of the two possible Bluetooth data link types defined. The SCO link is a symmetric, point-to-point link between the master device and a specific slave device. The SCO link reserves slots between the master and the slave and can therefore be considered to provide a circuit switched connection. The SCO link is usually used to support time critical information, e.g. voice, since time critical SCO packets are never retransmitted. The master device can support up to three SCO links, this might be to the same slave or to different slaves. A slave can support up to a maximum of three SCO links, assuming they are from the same master. If the slave has links from different masters, a maximum of two SCO links are available.</p>
-<p> 蓝牙物理链路ACL(Asynchronous Connectionless)，另外的一种链路是SCO(Synchronous Connection Oriented)主要用来传输对时间要求很高的数据通信。        蓝牙基带技术支持两种连接类型：同步定向连接(SCO)类型和异步无连接(ACL)类型。前者主要用于同步话音传送，后者主要用于分组数据传送。        SCO连接为对称连接，利用保留时隙传送数据包。连接建立后，主设备和从设备可以不被选中就发送SCO数据包。SCO数据包既可以传送话音，也可以传送数据，但在传送数据时，只用于重发被损坏的那部分的数据。同步定向链接（SCO）是在匹克网中主单元和从单元之间实现 点到点链接。主单元通过有规律的 使用保留时隙来维持SCO 链接。<br>       ACL链路就是定向发送数据包，它既支持对称连接，也支持不对称连接（既可以一对一，也可以一对多）。主设备负责控制链路带宽，并决定微微网中的每个从设备可以占用多少带宽和连接的对称性。从设备只有被选中时才能传送数据。ACL链路也支持接收主设备发给微微网中所有从设备的广播消息。ACL 链接是主单元与共存于匹克网中的所有从单元之间实现一点多址的连接方式。在这种连接方式中，主单元并不以时隙来保留SCO 链接，主单元在每个时隙基上建立对任何其它从单元的ACL链接。其中包括已预定用SCO链接方式中的从单元。</p>
+</blockquote>
+<p>蓝牙物理链路ACL(Asynchronous Connectionless)，另外的一种链路是SCO(Synchronous Connection Oriented)主要用来传输对时间要求很高的数据通信。<br>蓝牙基带技术支持两种连接类型：同步定向连接(SCO)类型和异步无连接(ACL)类型。前者主要用于同步话音传送，后者主要用于分组数据传送。<br>SCO连接为对称连接，利用保留时隙传送数据包。连接建立后，主设备和从设备可以不被选中就发送SCO数据包。SCO数据包既可以传送话音，也可以传送数据，但在传送数据时，只用于重发被损坏的那部分的数据。同步定向链接（SCO）是在匹克网中主单元和从单元之间实现 点到点链接。主单元通过有规律的 使用保留时隙来维持SCO 链接。 </p>
 
                 
               </div>
@@ -293,7 +300,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【IOT开发】A2DP协议中的SCO链路</div>
+      <div>【IOT开发】A2DP协议</div>
       <div>http://example.com/2022/09/29/【IOT开发】A2DP协议中的SCO链路/</div>
     </div>
     <div class="license-meta">
@@ -335,6 +342,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2022/10/05/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E5%B5%8C%E5%85%A5%E5%BC%8F%E7%B3%BB%E7%BB%9F/" title="【课程学习】嵌入式系统">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【课程学习】嵌入式系统</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
