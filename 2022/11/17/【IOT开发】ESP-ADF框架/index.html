@@ -18,14 +18,14 @@
   
     <meta name="description" content="ESP32 的音频应用开发框架。主要了解 ADF 的架构、使用、以及注意事项。 适用 MCU：ESP32, ESP32-S2, and ESP32-S3 ESP-ADF 是 IDF(Espressif IoT Development Framework)在音频应用方面的一系列扩展组件。所以得先搭好 IDF 环境，再搭建 ADF 环境。 ADF 框架：  几个重要的 element：streams，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="【IOT开发】ESP-ADF框架">
+<meta property="og:title" content="【IOT开发】ESP-ADF框架&amp;esp-idf_component搭建">
 <meta property="og:url" content="http://example.com/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-ADF%E6%A1%86%E6%9E%B6/index.html">
 <meta property="og:site_name" content="CHER-YOUNG BLOG">
 <meta property="og:description" content="ESP32 的音频应用开发框架。主要了解 ADF 的架构、使用、以及注意事项。 适用 MCU：ESP32, ESP32-S2, and ESP32-S3 ESP-ADF 是 IDF(Espressif IoT Development Framework)在音频应用方面的一系列扩展组件。所以得先搭好 IDF 环境，再搭建 ADF 环境。 ADF 框架：  几个重要的 element：streams，">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
 <meta property="article:published_time" content="2022-11-17T03:34:37.000Z">
-<meta property="article:modified_time" content="2022-11-17T04:07:43.555Z">
+<meta property="article:modified_time" content="2022-12-03T11:12:54.673Z">
 <meta property="article:author" content="Chery Young">
 <meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
   
   
   
-  <title>【IOT开发】ESP-ADF框架 - CHER-YOUNG BLOG</title>
+  <title>【IOT开发】ESP-ADF框架&amp;esp-idf_component搭建 - CHER-YOUNG BLOG</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -186,7 +186,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="【IOT开发】ESP-ADF框架"></span>
+            <span id="subtitle" data-typed-text="【IOT开发】ESP-ADF框架&amp;esp-idf_component搭建"></span>
           
         </div>
 
@@ -209,7 +209,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.9k 字
+          5.7k 字
         
       </span>
     
@@ -220,7 +220,7 @@
         
         
         
-          25 分钟
+          48 分钟
         
       </span>
     
@@ -262,7 +262,7 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">【IOT开发】ESP-ADF框架</h1>
+            <h1 style="display: none">【IOT开发】ESP-ADF框架&amp;esp-idf_component搭建</h1>
             
             
               <div class="markdown-body">
@@ -270,7 +270,7 @@
                 <p>ESP32 的音频应用开发框架。主要了解 ADF 的架构、使用、以及注意事项。</p>
 <p>适用 MCU：ESP32, ESP32-S2, and ESP32-S3</p>
 <p>ESP-ADF 是 IDF(Espressif IoT Development Framework)在音频应用方面的一系列扩展组件。所以得先搭好 IDF 环境，再搭建 ADF 环境。</p>
-<h2 id="ADF-框架："><a href="#ADF-框架：" class="headerlink" title="ADF 框架："></a>ADF 框架：</h2><p><img src="/img/boxcnelXuci48oqORdK7xtv1qbd.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="ADF-框架："><a href="#ADF-框架：" class="headerlink" title="ADF 框架："></a>ADF 框架：</h1><p><img src="/img/boxcnelXuci48oqORdK7xtv1qbd.png" srcset="/img/loading.gif" lazyload></p>
 <p><img src="/img/boxcnA4WrZljxiFkeDNlKpL1qSc.png" srcset="/img/loading.gif" lazyload></p>
 <p>几个重要的 element：streams，codecs，audio processing。这是在构建音频应用时主要考虑的功能元素。而一个功能应用需要一个 pipeline 把各个元素串起来，上图就是把 MP3decoder 和 I2S stream 结合，实现一个从 mp3 文件读数据并播放的功能。</p>
 <p>The basic building block for the application programmer developing with ADF is the audio element object. 都被封装成了对象，对象会提供对应的 API。</p>
@@ -321,6 +321,49 @@
 <p>可以使用 SPI RAM 作为扩展，需要在组件配置 &gt;SPI RAM 配置下的 menucofig 中启用它。</p>
 <p>同时：Bluetooth and Wi-Fi can not coexist without PSRAM because it will not leave enough memory for an audio application.</p>
 <h2 id="UART-数据流作为输入-pipeline-element"><a href="#UART-数据流作为输入-pipeline-element" class="headerlink" title="UART 数据流作为输入 pipeline element"></a>UART 数据流作为输入 pipeline element</h2><p>参考 element 的结构体 构建自定义 PCM 数据输入流的 element<br>还在开发中。</p>
+<h1 id="esp-idf-component搭建"><a href="#esp-idf-component搭建" class="headerlink" title="esp-idf_component搭建"></a>esp-idf_component搭建</h1><p>ESP-IDF搭建自己的工程组件，需要了解sdkconfig文件、cmakelist文件的配置，系统驱动的过程。<br>具体见<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/release-v4.1/api-guides/build-system.html#cmake">官方文档</a></p>
+<h2 id="系统启动"><a href="#系统启动" class="headerlink" title="系统启动"></a>系统启动</h2><p>本文将会介绍 ESP32 从上电到运行 <code>app_main</code> 函数中间所经历的步骤（即启动流程）。</p>
+<p>宏观上，该启动流程可以分为如下 3 个步骤：</p>
+<ol>
+<li>一级引导程序 被固化在了 ESP32 内部的 ROM 中，它会从 flash 的 0x1000 偏移地址处加载二级引导程序至 RAM (IRAM &amp; DRAM) 中。</li>
+<li>二级引导程序 从 flash 中加载分区表和主程序镜像至内存中，主程序中包含了 RAM 段和通过 flash 高速缓存映射的只读段。</li>
+<li>应用程序启动阶段 运行，这时第二个 CPU 和 RTOS 的调度器启动。</li>
+</ol>
+<p>硬件和基本 C 语言运行环境的端口初始化。</p>
+<p>软件服务和 FreeRTOS 的系统初始化。</p>
+<p>运行主任务并调用 <code>app_main</code>。</p>
+<p>与普通的 FreeRTOS 任务（或嵌入式 C 的 <code>main</code> 函数）不同，<code>app_main</code> 任务可以返回。如果 <code>app_main</code> 函数返回，那么主任务将会被删除。系统将继续运行其他的 RTOS 任务。因此可以将 <code>app_main</code> 实现为一个创建其他应用任务然后返回的函数，或主应用任务本身。</p>
+<p>OTA:<br>OTA（空中升级）更新可以在现场烧录新的应用程序，但不能烧录一个新的引导加载程序。因此，引导加载程序支持引导从 ESP-IDF 新版本中构建的应用程序。之后会尝试OTA功能进行物联网应用升级。</p>
+<h2 id="component-搭建"><a href="#component-搭建" class="headerlink" title="component 搭建"></a>component 搭建</h2><p>ESP-IDF 可以显式地指定和配置每个组件。在构建项目的时候，构建系统会前往 ESP-IDF 目录、项目目录和用户自定义组件目录（可选）中查找所有组件，允许用户通过文本菜单系统配置 ESP-IDF 项目中用到的每个组件。在所有组件配置结束后，构建系统开始编译整个项目。</p>
+<ul>
+<li><code>项目</code> 特指一个目录，其中包含了构建可执行应用程序所需的全部文件和配置，以及其他支持型文件，例如分区表、数据/文件系统分区和引导程序。</li>
+<li><code>项目配置</code> 保存在项目根目录下名为 <code>sdkconfig</code> 的文件中，可以通过 <code>idf.py menuconfig</code> 进行修改，且一个项目只能包含一个项目配置。</li>
+<li><code>应用程序</code> 是由 ESP-IDF 构建得到的可执行文件。一个项目通常会构建两个应用程序：项目应用程序（可执行的主文件，即用户自定义的固件）和引导程序（启动并初始化项目应用程序）。</li>
+<li><code>组件</code> 是模块化且独立的代码，会被编译成静态库（.a 文件）并链接到应用程序。部分组件由 ESP-IDF 官方提供，其他组件则来源于其它开源项目。</li>
+<li><code>目标</code> 特指运行构建后应用程序的硬件设备。运行 idf.py –list-targets 可以查看当前 ESP-IDF 版本中支持目标的完整列表。</li>
+</ul>
+<p>！！！！！！一下午的 debug  新添加 component 后，要删除原有的 build rebuild，不然已有的 build 目录会找不到 cmakelist 文件。 。。 一整个无语。  component 以及 main 里面的 Kconfig.projbuild  ESP 配置目录更改，也需要重编译才会出现在 configuration UI 里面。</p>
+<p>ESP-IDF 在搜索所有待构建的组件时，会按照 <code>COMPONENT_DIRS</code> 指定的顺序依次进行，这意味着在默认情况下，首先搜索 ESP-IDF 内部组件（<code>IDF_PATH/components</code>），然后是 <code>EXTRA_COMPONENT_DIRS</code> 中的组件，最后是项目组件（<code>PROJECT_DIR/components</code>）。如果这些目录中的两个或者多个包含具有相同名字的组件，则使用搜索到的最后一个位置的组件。这就允许将组件复制到项目目录中再修改以覆盖 ESP-IDF 组件，如果使用这种方式，ESP-IDF 目录本身可以保持不变。</p>
+<p>每个组件都可以包含一个 <code>Kconfig</code> 文件，和 <code>CMakeLists.txt</code> 放在同一目录下。<code>Kconfig</code> 文件中包含要添加到该组件配置菜单中的一些配置设置信息。</p>
+<p>运行 menuconfig 时，可以在 <code>Component Settings</code> 菜单栏下找到这些设置。</p>
+<p>创建一个组件的 Kconfig 文件，最简单的方法就是使用 ESP-IDF 中现有的 Kconfig 文件作为模板，在这基础上进行修改。</p>
+<p>有关示例请参阅 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/build-system.html#add-conditional-config">添加条件配置</a>。</p>
+<p><strong>KConfig.projbuild</strong> 与 <code>project_include.cmake</code> 类似，也可以为组件定义一个 KConfig 文件以实现全局的 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/build-system.html#component-configuration">组件配置</a>。如果要在 menuconfig 的顶层添加配置选项，而不是在 “Component Configuration” 子菜单中，则可以在 <code>CMakeLists.txt</code> 文件所在目录的 KConfig.projbuild 文件中定义这些选项。</p>
+<p>经典的组件 kconfig 和 cmakelist 配置：</p>
+<p>在设置 UI 中启用了组件，才会把相应的文件选入 cmake 编译 list</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-built_in">config</span> FOO_ENABLE_BAR<br>    <span class="hljs-keyword">bool </span><span class="hljs-string">&quot;Enable the BAR feature.&quot;</span><br>    help<br>        This enables the <span class="hljs-keyword">BAR </span>feature of the FOO component.<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs isbl"> <span class="hljs-function"><span class="hljs-title">set</span>(<span class="hljs-variable">srcs</span> <span class="hljs-string">&quot;foo.c&quot;</span> <span class="hljs-string">&quot;more_foo.c&quot;</span>)</span><br><br> <span class="hljs-function"><span class="hljs-title">if</span>(<span class="hljs-variable">CONFIG_FOO_ENABLE_BAR</span>)</span><br>     <span class="hljs-function"><span class="hljs-title">list</span>(<span class="hljs-variable">APPEND</span> <span class="hljs-variable">srcs</span> <span class="hljs-string">&quot;bar.c&quot;</span>)</span><br> <span class="hljs-function"><span class="hljs-title">endif</span>()</span><br><br><span class="hljs-function"><span class="hljs-title">idf_component_register</span>(<span class="hljs-variable">SRCS</span> <span class="hljs-string">&quot;$&#123;srcs&#125;&quot;</span></span><br><span class="hljs-function">                     ...)</span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="嵌入二进制数据"><a href="#嵌入二进制数据" class="headerlink" title="嵌入二进制数据"></a>嵌入二进制数据</h2><p>//嵌入二进制文件-PCM  MP3</p>
+<p>有时组件中希望使用一个二进制文件或者文本文件，但是您又不希望将它们重新格式化为 C 源文件。（例如提示音.mp3）</p>
+<p>这时，可以在组件注册中指定 <code>EMBED_FILES</code> 参数，用空格分隔要嵌入的文件名称:</p>
+<p>idf_component_register(…                       EMBED_FILES server_root_cert.der)</p>
+<p>或者，如果文件是字符串，则可以使用 <code>EMBED_TXTFILES</code> 变量，把文件的内容转成以 null 结尾的字符串嵌入:</p>
+<p>idf_component_register(…                       EMBED_TXTFILES server_root_cert.pem)</p>
+<p>文件的内容会被添加到 Flash 的 .rodata 段，用户可以通过符号名来访问，如下所示:</p>
+<p><strong>extern</strong> <strong>const</strong> uint8_t server_root_cert_pem_start[] <strong>asm</strong>(“_binary_server_root_cert_pem_start”);<strong>extern</strong> <strong>const</strong> uint8_t server_root_cert_pem_end[]   <strong>asm</strong>(“_binary_server_root_cert_pem_end”);</p>
+<p>符号名会根据文件全名生成，如 <code>EMBED_FILES</code> 中所示，字符 <code>/</code>、<code>.</code> 等都会被下划线替代。符号名称中的 _binary 前缀由 objcopy 命令添加，对文本文件和二进制文件都是如此。</p>
 
                 
               </div>
@@ -345,7 +388,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>【IOT开发】ESP-ADF框架</div>
+      <div>【IOT开发】ESP-ADF框架&amp;esp-idf_component搭建</div>
       <div>http://example.com/2022/11/17/【IOT开发】ESP-ADF框架/</div>
     </div>
     <div class="license-meta">
