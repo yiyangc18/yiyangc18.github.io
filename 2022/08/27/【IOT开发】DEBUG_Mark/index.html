@@ -1,0 +1,668 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="ESP32最近在使用ESP32开发一些无线应用，在经历重重困难能够顺DE利编译-下载工程后，尝试把STM32中的程序移植到ESP32中，但由于对FreeRTOS系统了解不够深入，所以遇到了很多导致板子一直Rebooting的bug，在此记录一下。 1. 消息队列溢出在创建一个消息队列时需要给出队列长度，同时也需要相应的读取队列信息。如果入队过多没读完就满了，队列溢出则会导致系统重启。所以在使用消息">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【IOT开发】DEBUG_Mark">
+<meta property="og:url" content="http://example.com/2022/08/27/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91DEBUG_Mark/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="ESP32最近在使用ESP32开发一些无线应用，在经历重重困难能够顺DE利编译-下载工程后，尝试把STM32中的程序移植到ESP32中，但由于对FreeRTOS系统了解不够深入，所以遇到了很多导致板子一直Rebooting的bug，在此记录一下。 1. 消息队列溢出在创建一个消息队列时需要给出队列长度，同时也需要相应的读取队列信息。如果入队过多没读完就满了，队列溢出则会导致系统重启。所以在使用消息">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
+<meta property="article:published_time" content="2022-08-27T06:09:00.000Z">
+<meta property="article:modified_time" content="2023-09-19T02:32:33.638Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="IOT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
+  
+  
+  
+  <title>【IOT开发】DEBUG_Mark - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【IOT开发】DEBUG_Mark"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-08-27 14:09" pubdate>
+          2022年8月27日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【IOT开发】DEBUG_Mark</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="ESP32"><a href="#ESP32" class="headerlink" title="ESP32"></a>ESP32</h1><p>最近在使用ESP32开发一些无线应用，在经历重重困难能够顺DE利编译-下载工程后，尝试把STM32中的程序移植到ESP32中，但由于对FreeRTOS系统了解不够深入，所以遇到了很多导致板子一直Rebooting的bug，在此记录一下。</p>
+<h2 id="1-消息队列溢出"><a href="#1-消息队列溢出" class="headerlink" title="1. 消息队列溢出"></a>1. 消息队列溢出</h2><p>在创建一个消息队列时需要给出队列长度，同时也需要相应的读取队列信息。如果入队过多没读完就满了，队列溢出则会导致系统重启。<br>所以在使用消息队列时注意消息写入与读取的对应关系。</p>
+<h2 id="2-中断程序卡死-看门狗异常"><a href="#2-中断程序卡死-看门狗异常" class="headerlink" title="2. 中断程序卡死 看门狗异常"></a>2. 中断程序卡死 看门狗异常</h2><p>在程序中使用到了一个timer中断，刚写完发现一直重启，报错的原因是看门狗溢出，也就是高优先级线程卡死太久了。后来debug发现是卡死在timer中断内了。卡死的具体原因见我之前写的一个小总结：<a target="_blank" rel="noopener" href="https://yiyangc18.github.io/2022/08/07/STM32%E4%B8%AD%E6%96%AD%E5%8D%A1%E6%AD%BB/">STM32-中断卡死</a><br>在ESP32-FreeRTOS系统中封装了太多层，直接去改中断标志位寄存器的值没有开放API，不过可以随意调用一个更改中断位的函数完成。<br>这点后来查阅官方文档，也有相应的说明：</p>
+<blockquote>
+<p>定时器启动后，可动态产生特定事件（如“警报事件”）。如需在事件发生时调用某些函数，请通过 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-reference/peripherals/gptimer.html#_CPPv432gptimer_register_event_callbacks16gptimer_handle_tPK25gptimer_event_callbacks_tPv">gptimer_register_event_callbacks()</a> 将函数挂载到中断服务例程 (ISR)。gptimer_event_callbacks_t::on_alarm 设置警报事件的回调函数。<font color=#FF0000 >由于此函数在 ISR 上下文中调用，必须确保该函数不会试图阻塞（例如，确保仅从函数内调用具有 ISR 后缀的 FreeRTOS API）</font>。函数原型在 gptimer_alarm_cb_t 中有所声明。&gt;<br>例如 xQueueSendFromISR、timer_group_get_counter_value_in_isr</p>
+</blockquote>
+<h2 id="3-printf重入"><a href="#3-printf重入" class="headerlink" title="3. printf重入"></a>3. printf重入</h2><p>由于之前写裸机程序习惯了，没想到有一天会因为printf卡死。<br>具体的场景是：中断A和B同时调用了printf，然后系统就很重启。printf不能在未返回的时候再次被调用。所以在中断中尽量不要用printf发送调试信息，应该改用ESP_LOG，日志输出。<br>详情见：<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-reference/system/log.html#c.ESP_LOGD">Logging library </a></p>
+<p>大致就是以下几个API:</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs routeros">ESP_LOGE -<span class="hljs-built_in">error</span><br>ESP_LOGW -wornning<br>ESP_LOGI -information<br>ESP_LOGD -<span class="hljs-built_in">debug</span><br>ESP_LOGV -verbose<br></code></pre></td></tr></table></figure>
+<h2 id="4-指针导致的内存错误"><a href="#4-指针导致的内存错误" class="headerlink" title="4. 指针导致的内存错误"></a>4. 指针导致的内存错误</h2><p>在程序中需要用到结构体指针、函数指针等稍微复杂一些的指针操作时，注意指向对象前先给对象分配内存空间，不然找不到地址就会报错重启。</p>
+<h2 id="5-参数异常"><a href="#5-参数异常" class="headerlink" title="5. 参数异常"></a>5. 参数异常</h2><p>某些API参数设置没有保护或异常判断，输入参数溢出可能会导致错误。例如在设置定时器alarm周期时需要根据命令内容来设置，这时需要手动检测这个周期&gt;&#x3D;0，否则会导致重启。</p>
+<h2 id="6-高频率任务超时"><a href="#6-高频率任务超时" class="headerlink" title="6. 高频率任务超时"></a>6. 高频率任务超时</h2><p>2022-9-22<br>今天又遇到了重启的bug，debug后发现是timer 回调函数中ESP_LOGI导致的。这玩意儿是可以重入的，但是timer的频率太高了，只有几十us，而执行一次ESP_LOGI的耗时会超过timer回调的周期，就会卡死重启。所以在高频率任务中注意任务耗时，尽量不要调用一些高耗时的API。<br>如果是很少启用的情况，例如几百次timer callback才会调用一次LOGI，可以使用 任务-消息队列-事件触发的逻辑 避免回调函数的重入error。</p>
+<h2 id="7"><a href="#7" class="headerlink" title="7."></a>7.</h2><p>2023-3-28</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">timer = x<span class="hljs-constructor">TimerCreate(<span class="hljs-string">&quot;timer&quot;</span>, <span class="hljs-params">pdMS_TO_TICKS</span>(TIMER_PERIOD_MS)</span>, pdTRUE, NULL, timer_callback);<br>x<span class="hljs-constructor">TimerStart(<span class="hljs-params">timer</span>, 0)</span>;<span class="hljs-operator"></span><br><span class="hljs-operator">...</span><br><span class="hljs-operator"></span>v<span class="hljs-constructor">TaskSuspendAll()</span>;  <span class="hljs-comment">// 暂停所有其他任务</span><br></code></pre></td></tr></table></figure>
+
+<p>根据搜索结果，您可能遇到了ESP32和FreeRTOS的兼容性问题。一些用户报告说，使用vTaskSuspendAll()或者taskENTER_CRITICAL()等函数会导致看门狗定时器超时或者系统崩溃12。您可以尝试使用其他的同步机制，比如信号量或者互斥锁，来代替暂停其他任务的操作</p>
+<h1 id="STM32"><a href="#STM32" class="headerlink" title="STM32"></a>STM32</h1><h2 id="中断退出"><a href="#中断退出" class="headerlink" title="中断退出"></a>中断退出</h2><p>在最近某个项目中，遇到了串口中断卡死主程序的问题，仔细debug后发现是没有读取接收缓存区buffer的原因。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">USART_ReceiveData(USART1);        <span class="hljs-comment">//读取一次数据，不然会一直进中断</span><br></code></pre></td></tr></table></figure>
+<p>函数里面主要的语句：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs c">(USARTx-&gt;DR &amp; (<span class="hljs-type">uint16_t</span>)<span class="hljs-number">0x01FF</span>); <span class="hljs-comment">//读取USARTx-&gt;DR</span><br></code></pre></td></tr></table></figure>
+<p>USART1-&gt;DR是串口数据收发的缓存区寄存器。<br>串口中断标志位自动清空的前提是软件需要先读USART_SR寄存器，然后读USART_DR寄存器来自动清除。即串口中断事件发生后，如果使能的接收中断，而中断函数里面什么都不执行的话，接收中断标志位是无法自动清空的，故而，函数会一直卡在中断函数里面。</p>
+<p>后来在定时器中断也遇到了类似的问题。由于任务需要，定时器需要根据串口命令更改不同的定时频率，但是在更改时如果只是在timer外部关闭定时器再重新initial，则程序会卡死 测试后发现是卡死在timer中断中。<br>timer关闭前一定要清空中中断标志，否则会在中断中出不来，所以中断timer再重启，需要的timer的中断中执行：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c">TIM_ClearITPendingBit(TIM3, TIM_IT_Update  );  <span class="hljs-comment">//清除TIMx的中断待处理位</span><br><span class="hljs-keyword">if</span>(IsTimerReset)<br>&#123;<br>    TIM_Cmd(TIM3, DISABLE);<br>    TIM3_Int_Init(IRQTimes,<span class="hljs-number">99</span>);<span class="hljs-comment">//重新启用</span><br>    IsTimerReset=<span class="hljs-number">0</span>;<br>    <span class="hljs-comment">//printf(&quot;IsTimerReset=1,and timer is reset \r\n&quot;);</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="STM32-掉电重启异常-bug"><a href="#STM32-掉电重启异常-bug" class="headerlink" title="STM32-掉电重启异常 bug"></a>STM32-掉电重启异常 bug</h2><h3 id="问题描述："><a href="#问题描述：" class="headerlink" title="问题描述："></a>问题描述：</h3><p>基本相同的硬件原理图，上一版是好的，修改了 PCB 布局和走线后，新板子遇到了上电后无法工作的问题。</p>
+<p>很诡异的 bug，烧录完程序一切正常，但是一掉电就无法工作了。</p>
+<h3 id="排查过程："><a href="#排查过程：" class="headerlink" title="排查过程："></a>排查过程：</h3><p>1.怀疑 BOOT0 接触异常 或 Reset 电位异常 ，检查后发现 BOOT0 和 Reset 电位都是正常的。</p>
+<p>2.使用 LED 电灯标准例程，上电发现没有效果。</p>
+<p>3.检查晶振，发现少撸完成后晶振波形正常，复位后晶振波形不正常。尝试通过延长等待 HSE 启动成功的时间常数、直接使用内部 HSI 时钟，仍然无法掉电启动。</p>
+<p>4.更改复位电路的充电电容。怀疑是复位电路时序不对，把 C23 换成了 10uF，仍然无法正常启动。</p>
+<p><img src="C://Users//chery//chery-hexo//source//img/boxcnyEyuTG64D2uV6LrPo9Gfrh.png" srcset="/img/loading.gif" lazyload></p>
+<p>5.突发奇想使用前两天写的一个软件 Reset，发现软件 Reset 居然可以正常重新启动。</p>
+<p>上位机的 reset 设置：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs abnf">serialPort1.RtsEnable <span class="hljs-operator">=</span> true<span class="hljs-comment">;</span><br>serialPort1.DtrEnable <span class="hljs-operator">=</span> false<span class="hljs-comment">;</span><br>Thread.Sleep(<span class="hljs-number">1</span>)<span class="hljs-comment">;</span><br>// RTS高电平，DTR低电平<br>serialPort1.RtsEnable <span class="hljs-operator">=</span> false<span class="hljs-comment">;</span><br>serialPort1.DtrEnable <span class="hljs-operator">=</span> true<span class="hljs-comment">;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>默认情况下 RTS DTR 都是高电平，用示波器测得的电位也是高电平。对比了一下自动下载电路的原理图，这个软件设置其实不会更改 BOOT0 和 EN 的电位，RTS 置高，DTR 无论高低，都是： BOOT0 低，EN 高，flash 启动状态。</p>
+<h3 id="解决方案："><a href="#解决方案：" class="headerlink" title="解决方案："></a>解决方案：</h3><p>把 RTS 引脚飞线到 3V3 或者把 DTR 飞线到 GND。</p>
+<p>上位机命令把 DTR 控制成低电平后可以重启，然后飞线物理控制也可以重启，但是 DTR 高电平输出直接接地会短路，所以尝试把 RTS 飞高电平，发现也能够顺利重启。</p>
+<p>注意 RTS 物理控制高电平时候不能进入串口下载模式，所以得用 SW 下载或者下载完程序再飞线。</p>
+<p>虽然问题是靠运气解决的，可以尝试从结果排查原因：</p>
+<p>飞线前后 RTS DTR 都是高电平，EN 和 BOOT0 的电位都正常，但是无法从 flash 启动，飞线后可以正常启动，用软件控制 RTS 高电平也可以。</p>
+<p>板子的状态就像是单片机的 RST 引脚一直是拉低的，没有跑任何程序。怀疑是某些原因导致驱动能力不够，但是软件设置 RTS 或 DTR 的电平后又可以启动。检查了自动下载电路和复位电路的走线，发现没有过孔，走线也不长。。</p>
+<p>各个引脚电位都正常，EN DTR RTS 都是 3V3，BOOT0 为 0 。</p>
+<p>把 RTS 引脚和 3V3 接一下，就能够启动点亮 LED，从现象判断是拉高了 EN。所以之前的现象是 EN 高了（3V3），但没完全高。所以用杜邦线短接 EN 和 3V3，按 reset 可以正常启动。</p>
+<p>把 BOOT0 和 GND 短接，按 reset 也可以正常启动。问题在自动下载电路上。虽然电位都是正常的，但可能是三极管驱动能力不够，电流太小没能正确驱动 EN 单片机内相应的模块开关？</p>
+<p>把自动下载电路的两个三极管拆了，发现可以上电正常启动了。从电路原理图还是看不出什么问题，上面的解释也不是很能让自己认可。</p>
+<p>感觉总结不出原因，目前知识储备还不够，大概率还是归咎于玄学，之后如果能解答了会来补充。</p>
+<p>参考：</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/shx_2613/article/details/124022153">https://blog.csdn.net/shx_2613&#x2F;article&#x2F;details&#x2F;124022153</a></p>
+<p><a target="_blank" rel="noopener" href="https://community.st.com/s/question/0D53W00000V2YuwSAF/stm32g0-not-works-after-reset">https://community.st.com/s/question/0D53W00000V2YuwSAF/stm32g0-not-works-after-reset</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/IOT/" class="print-no-link">#IOT</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【IOT开发】DEBUG_Mark</div>
+      <div>http://example.com/2022/08/27/【IOT开发】DEBUG_Mark/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年8月27日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/06/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91%E8%93%9D%E7%89%99SPP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%BF%E7%94%A8/" title="【IOT开发】蓝牙SPP协议的使用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【IOT开发】蓝牙SPP协议的使用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/10/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%83%AD%E7%94%B5%E5%81%B6%E4%BF%A1%E5%8F%B7%E8%B0%83%E7%90%86%E7%94%B5%E8%B7%AF%E3%80%81IOT%E6%8E%A5%E5%85%A5%E5%92%8C%E5%A4%84%E7%90%86%E7%AE%97%E6%B3%95/" title="【文献学习】热电偶信号调理电路、IOT接入和处理算法">
+                        <span class="hidden-mobile">【文献学习】热电偶信号调理电路、IOT接入和处理算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,709 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="面向对象基础类与对象 - 对象是实体，类是对象的抽象集合。 类的构造函数 - 代替默认 重载- 相同函数名但是不同参数类型 属性 - 一种限制了外部修改情况的 public 方法，与 public 成员区别是可以限制读写或数值区间 封装 - 暴露可操作的接口，减少耦合 继承 - b is a，b 继承 a 的非 private 属性和功能，可以派生和重写。 多态 - 不同的对象，相同的方法不同的结">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【软件开发】设计模式">
+<meta property="og:url" content="http://example.com/2023/08/14/%E3%80%90%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E3%80%91%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="面向对象基础类与对象 - 对象是实体，类是对象的抽象集合。 类的构造函数 - 代替默认 重载- 相同函数名但是不同参数类型 属性 - 一种限制了外部修改情况的 public 方法，与 public 成员区别是可以限制读写或数值区间 封装 - 暴露可操作的接口，减少耦合 继承 - b is a，b 继承 a 的非 private 属性和功能，可以派生和重写。 多态 - 不同的对象，相同的方法不同的结">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/learning.png">
+<meta property="article:published_time" content="2023-08-14T02:28:40.000Z">
+<meta property="article:modified_time" content="2023-09-19T02:34:45.467Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="开发">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/learning.png">
+  
+  
+  
+  <title>【软件开发】设计模式 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【软件开发】设计模式"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-08-14 10:28" pubdate>
+          2023年8月14日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          42 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【软件开发】设计模式</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="面向对象基础"><a href="#面向对象基础" class="headerlink" title="面向对象基础"></a>面向对象基础</h2><p>类与对象 - 对象是实体，类是对象的抽象集合。</p>
+<p>类的构造函数 - 代替默认</p>
+<p>重载- 相同函数名但是不同参数类型</p>
+<p>属性 - 一种限制了外部修改情况的 public 方法，与 public 成员区别是可以限制读写或数值区间</p>
+<p>封装 - 暴露可操作的接口，减少耦合</p>
+<p>继承 - b is a，b 继承 a 的非 private 属性和功能，可以派生和重写。</p>
+<p>多态 - 不同的对象，相同的方法不同的结果，父类虚函数子类重写</p>
+<p>重构 - 代码冗余后，将子类方法重复的代码变为父类的方法</p>
+<p>抽象类 - abstract 抽象类无法定义实例对象，抽象方法必须被重写</p>
+<p>接口 - 实现某个功能的方法与属性组合，类可以基于接口更简洁地实现该功能，接口是对行为的抽象</p>
+<p>集合 - 实现某一系列功能的类的组合，例如.net framwork 中实现数据存储和检索的集合 ArrayList</p>
+<p>泛型 - 可以接收多种数据类型，但预定义会减少拆装箱开销， List<T> arrayT;</p>
+<p>委托与事件 - 类似于触发-回调机制，当 A 类的对应方法发生时，会执行被添加到 event 的 delegate 实例。委托-引用方法。委托的方法可以带参数</p>
+<h3 id="类与对象的好处"><a href="#类与对象的好处" class="headerlink" title="类与对象的好处"></a>类与对象的好处</h3><p>低耦合 - 》 易扩展，易维护，灵活性高，易于复用</p>
+<p>重复代码多会导致维护困难 –</p>
+<p>业务逻辑和界面逻辑分离</p>
+<h3 id="UML-图"><a href="#UML-图" class="headerlink" title="UML 图"></a>UML 图</h3><p>方框-类 类名 字段属性 方法行为 ；</p>
+<p>三角-继承  虚线箭头-依赖  实线箭头 -》关联；</p>
+<p>虚线三角&#x2F;棒棒糖 实现接口；菱形-箭头 聚合【真子集】；实心菱形-箭头 组合关系【整体-部分 相同生命周期】；</p>
+<h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><h3 id="单一职责原则"><a href="#单一职责原则" class="headerlink" title="单一职责原则"></a>单一职责原则</h3><p>字面意思是一个类的功能要单一；准确解释，一个类只有一个能引起其变化的原因。</p>
+<h3 id="封闭-开放原则"><a href="#封闭-开放原则" class="headerlink" title="封闭-开放原则"></a>封闭-开放原则</h3><p>对于扩展是开放的，对于修改是封闭的。</p>
+<p>对程序的新增需求通过增加代码来实现。</p>
+<h3 id="依赖倒置原则"><a href="#依赖倒置原则" class="headerlink" title="依赖倒置原则"></a>依赖倒置原则</h3><p>面向过程开发时，先从底层着手，再逐步到应用层（高层）。高层模块依赖于低层模块，不易复用。</p>
+<p>为了高层、底层都具备可扩展、复用，高层模块不应该依赖低层模块，两者都应该依赖于业务对象的抽象。而在初期应该针对交互接口编程，而不是针对业务编程。</p>
+<p><img src="/img/R8YqbWvHNoLLvfxttGfcbXvYnLb.png" srcset="/img/loading.gif" lazyload></p>
+<p>针对接口而不是业务细节编程，依赖关系终止于抽象类或接口，是面向对象编程的精华所在。</p>
+<h3 id="里氏替换"><a href="#里氏替换" class="headerlink" title="里氏替换"></a>里氏替换</h3><p>子类可以替代父类。如果一个程序中的父类都被子类替代，其业务行为不应该发生变化。</p>
+<p>高层或低层模块，依赖了抽象接口或抽象类，具体的实现都在类中，可以被子类替换，具备封闭-开发的一些性质，扩展功能的话用扩展后的子类替代即可。</p>
+<h3 id="合成-聚合复用原则"><a href="#合成-聚合复用原则" class="headerlink" title="合成-聚合复用原则"></a>合成-聚合复用原则</h3><p>之前的很多模式都是基于继承-多态实现的，主要优化是解耦和复用。但是继承是一个紧密依赖的方式，父类的任何变化都会导致子类变化，而需要复用子类时，可能继承的一些非虚后抽象的方法不在适用，需要修改父类。父类过多的继承又会导致修改牵一发而动全身；继承的强依赖关系限制了其灵活性。</p>
+<p>合成-聚合复用模式 尽量使用合成 or 聚合，尽量不使用继承。</p>
+<p>聚合 - 空心菱形 - 表示一种弱的拥有关系，A 对象可以包含 B 对象，但是 B 对象不一是 A 的一部分。</p>
+<p>合成 - 实心菱形 - 强拥有关系，生命周期相同。</p>
+<p>使用合成-聚合能保证类被集中在单个任务上，类的继承会保持较小的规模，避免增长到过长的继承链，难以修改。</p>
+<h2 id="创建模式"><a href="#创建模式" class="headerlink" title="创建模式"></a>创建模式</h2><p>创建模式隐藏了这些需要被创建对象的实例类是如何被创建和放在一起的，创建时只需要知道由抽象类所定义的接口是怎样的。客户端只需要提出我想要什么，具体谁创建、如何创建、何时创建由创建类实现。</p>
+<p>使用创建模型时，创建系统对于被创建对象是独立的，创建模式将系统需要使用的哪些类信息会封装，允许用结构和功能差别很大的产品对象配置一个系统，配置可以是动态的 运行时指定的。</p>
+<h3 id="简单工厂模式"><a href="#简单工厂模式" class="headerlink" title="简单工厂模式"></a>简单工厂模式</h3><p>根据需求，在工厂中生成对应的对象。</p>
+<p>需求可以是一类“商品”的具体名称，工厂则负责“生产“出对应的商品。</p>
+<h3 id="工厂方法模式"><a href="#工厂方法模式" class="headerlink" title="工厂方法模式"></a>工厂方法模式</h3><p>和简单工厂模式不同，工厂方法模式中使用不同的工厂还生成不同的对象，其工厂基类也是抽象类，需要具体的工厂实现。而且工厂方法模式的客户端操作更加复杂，需要在代码中指定工厂，不像简单工厂模式中 工厂类根据 case 选择生成方法。</p>
+<p>好处是，符合了封闭-开放原则。当有新的产品添加时，简单工厂类需要添加产品类并修改工厂类的 case 函数–而工厂方法模式不需要修改基类。</p>
+<h3 id="抽象工厂模式"><a href="#抽象工厂模式" class="headerlink" title="抽象工厂模式"></a>抽象工厂模式</h3><p>实例：一个与数据库交互的程序，当更换底层数据库后，程序修改会非常麻烦。 没有做好解耦，希望的效是如果添加对 access 的支持，只需要在数据库交互类组中添加访问 access 的类即可。</p>
+<p>对于一个客户端对应着多个数据库类型交互类的情况，显然可以使用工厂模式，针对不同的数据库类型生成不同的数据库交互对象，它们拥有相同名称的方法， 但是实现不同。</p>
+<p>在客户端，与数据库交互需要声明工厂类型，生成对应的数据库交互对象。</p>
+<p>此时，如果要针对不同的表操作，新的 department 表，则需要创建新的接口，然后再创建新的产品，并在工厂接口添加对应的生产过程。</p>
+<p>抽象工厂模式，和工厂方法模式的不同，在后者的基础上添加了更多的抽象产品，抽象工厂会有多种的实例工厂（取决于有多少类的抽象产品），它们有更多的实现方式。</p>
+<p>相较于工厂模式，把多种抽象产品对应的多个抽象工厂在一个接口内实现的好处是，当需要修改产品的系列，可以直接更换需要实现的抽象工厂。而工厂模式中，每一个产品（department user project 等表）都会在抽象工厂中制造一次，导致了一些重复。相当于在工厂的基础上又抽象了一层。</p>
+<p>反射 – 很像 matlab 中的某个函数，把字符串当成程序代码来运行。将程序由编译时转换为运行时，从而避免 switch-case；可以使用 config 文件记录字符串，来控制程序的不同运行模式。</p>
+<h3 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h3><p>有印象，类似于全局变量，只生成一个。</p>
+<p>某些类，例如窗体实例类，不希望出现多次。这个在我之前设计的.NET 多窗体程序中，我是使用了一个全局变量 ISxxFormOpen 来判断的，如果打开了，就不会重复打开。这显然不是一个好的设计。</p>
+<p>稍微好一些的设计是判断是否实例化过 if(formObject !&#x3D; null)  这样会减少一些代码量。 注意实例化后可能会 disposed，这时候窗口对象并没有析构。</p>
+<p>需要注意的是，这时候判断是否实例化过的代码是在客户端中的，而一个不能生成多对象的类，是否已开应该由其自身决定，尽量不麻烦客户端。单例模式中的做法是，把构造函数自由化，然后编写一个静态方法，对该对象初始化并返回对象，！&#x3D;null 确保单例。</p>
+<p>多线程 – 单例 – 锁 ； 保证线程安全 - 减少每次调用 lock 的开销 双重锁定</p>
+<p>C#中静态初始化可以提供类似的效果。</p>
+<h3 id="原型模式"><a href="#原型模式" class="headerlink" title="原型模式"></a>原型模式</h3><p>通过原型实例指定所创建对象的种类，并通过拷贝这些原型创建新的对象。</p>
+<p>对于某个对象有多个实例，多次创建可能有过多重复的代码段，可以使用克隆，然后对克隆的对象实例进行更改。</p>
+<p>实现克隆接口。</p>
+<p>在初始化信息不变的情况下，使用克隆可以隐藏创建的过程，并且节省构造函数的开销。</p>
+<p>浅复制和深复制 – 值类型和引用类型 ； 浅表复制，会复制值类型的字段，但是引用类型的字段不会。深复制把引种对象的变量指向复制过来的新对象，而不是原来被引用的对象。copy - clone</p>
+<h3 id="建造者模式"><a href="#建造者模式" class="headerlink" title="建造者模式"></a>建造者模式</h3><p>复杂对象的构建和表示分离，使得同样的构建过程可以创建不同的表示。内部表象与生产过程分离，</p>
+<p>创建一个复杂对象时，创造顺序是稳定的，但是每个过程的实现方法可以是各异的。</p>
+<h2 id="结构型模式"><a href="#结构型模式" class="headerlink" title="结构型模式"></a>结构型模式</h2><p>信息的隐藏促进了软件的复用，减小耦合。</p>
+<h3 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h3><p>接口转换，convertor，将一个类的接口转换成另一个接口，克服接口不兼容导致的无法共同工作。</p>
+<p>当系统的行为和数据都正确，但是接口不符；如果添加适配器的代价比修改交互的两个系统之一的代价小，可以使用适配器模式。在设计以及开放初期尽可能统一接口，避免使用适配器。</p>
+<h3 id="桥接模式"><a href="#桥接模式" class="headerlink" title="桥接模式"></a>桥接模式</h3><p>桥接模式-将抽象部分与实现部分分离，实现指的是实现其方法的对象，他们可以独立变化。不是强 is a 关系，使用聚合代替继承。实现一个系统，会有多个角度的分类，每一种每类都会有派生变化；应该把多个角度分离让他们独立变化，而不是在大系统的基类上去继承。</p>
+<h3 id="组合模式"><a href="#组合模式" class="headerlink" title="组合模式"></a>组合模式</h3><p>对象关系以 tree 的形式分布-枝 叶。枝尽可能复用根节点；</p>
+<p>透明和安全方法 – 区分枝和叶</p>
+<p>开发的对象是体现部分与整体层次结构，用户在使用时可以忽略组合对象与单个对象的不同；一致的使用组合对象与单个对象；</p>
+<p>组合控件-自定义控件</p>
+<h3 id="装饰模式"><a href="#装饰模式" class="headerlink" title="装饰模式"></a>装饰模式</h3><p>一个可以更换小人衣服的系统。小人是核心类，有装饰其他衣服的装饰类。 为已有的功能动态添加更多功能。装饰类为核心的类添加新的方法、字段、逻辑，满足特定情况下的特定需求；在执行时，可以选择性地添加装饰。</p>
+<p>把某个类的核心职责和装饰功能区分开，去除相关类中重复的装饰逻辑。动态地给一个对象添加一些额外的职责，比生成对应子类实现添加功能更加灵活。</p>
+<p>和之前工厂模式不同的是，装饰模式是在核心类的基础上不断地派生子类，最终承载了所有装饰的子类执行对应方法。而工厂模式则是对每一个任务生成一个子类，然后每个子类都运行一次方法。</p>
+<h3 id="外观模式"><a href="#外观模式" class="headerlink" title="外观模式"></a>外观模式</h3><p>为子系统的一组接口提供一个组合后的，高一级的接口，减少客户端调用量。</p>
+<p>在设计时，有意识地将不同功能层分离，例如数据访问、业务逻辑、展示。不同层之间提供 facade 接口即可，尽可能减少耦合</p>
+<p>代理提供某个对象的代表访问，外观提供一个子系统的代表访问。</p>
+<h3 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h3><p>A 对象操作 B 对象，但可能 A 不方便直接与 B 交互，而 C 与 A 实现相同的接口。可以通过 C 来与 B 交互。</p>
+<p>在范围 B 对象时加入一定的间接性，而这种间接性可以附加多种用途。</p>
+<p>远程代理 - 为 B 对象提供不同地址空间的局部代理。加入 webService 引用，会预先生成 reference 的文件和文件夹。</p>
+<p>虚拟代理 - 开销很大的对象，使用虚拟代理实现图片，先打开网页后再加载图片</p>
+<p>安全代理 - 控制对实际对象的访问权限。</p>
+<h2 id="行为模式"><a href="#行为模式" class="headerlink" title="行为模式"></a>行为模式</h2><h3 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h3><p>策略类也是定义了一系列的算法，和工厂很类似，根据传递的参数选择具体的算法。但与之不同的是，策略模式的策略类是基类的组合，算法是抽象基类的具体实现子类，根据参数生成基类的具体策略算法，而工厂模式中，工厂类是实现子类的子类，根据传参生产具体的子类对象。</p>
+<h3 id="模板方法模式"><a href="#模板方法模式" class="headerlink" title="模板方法模式"></a>模板方法模式</h3><p>在完成某一系列步骤时，详细实现只有很小的不同。可以把这个不同之处变为父类的虚方法，其余部分在父类实现，而子类只要重写该虚方法，最大程度复用代码。</p>
+<p>模板-一个操作中的算法骨架，并且将一些需要动态变化的部分在子类实现，这样可以使用一个算法框架实现特定的步骤。</p>
+<h3 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h3><p>发布-订阅模式。一种一对多的依赖关系，让多个观察者对象监听某一个主题对象，这个发布对象能通知订阅对象。</p>
+<p>解耦合 – subject 不需要知道都有谁订阅了。让发布和订阅都依赖于抽象接口，而不依赖于具体操作流程。</p>
+<p>当一个对象改变时，其他对象也需要对应的变化，但是不能确定具体的变化目标和结果。而观察者模式可以把两者分开封装。</p>
+<p>观察者模式中，对于已封装的类，让其实现“订阅”修改会有一些困难。一是直接修改违背了封闭-开放原则，另一方面基于订阅发布的接口实现需要依赖于发布的类。这时候可以使用事件委托的方式实现。</p>
+<p>委托对象搭载的方法不需要属于同一个类，但方法需要有相同的返回值和参数列表。</p>
+<h3 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h3><p>当一个对象的行为依赖其状态，并且状态转变表达式过于复杂，可以将其拆分，把状态的判断逻辑转移到不同状态的一系列类中。将特定状态相关的行为局部化，并且将不同的状态分割。</p>
+<p>当有很长的 if else，可以把状态行为定义为一个抽象类，每一个 if 分支去实现行为。这样当需要修改 if 语句中的某一个判断条件或执行，或者出现特殊情况（例如进度条加入了 pause 判断）添加额外的判断，不用去 那个很长的 if-else 语句中修改。</p>
+<h3 id="备忘录模式"><a href="#备忘录模式" class="headerlink" title="备忘录模式"></a>备忘录模式</h3><p>状态恢复-从内存而不是硬盘中。不要把备份的细节暴露在客户端</p>
+<p>保存的实现可以通过一个 memento 类实现，定义一些需要保存的细则；恢复则在发起备份的类中添加参数为 memento 的 set 方法。</p>
+<p>这适用于功能较为复杂，但需要维护或记录所选定的属性历史的类中。</p>
+<h3 id="迭代器模式"><a href="#迭代器模式" class="headerlink" title="迭代器模式"></a>迭代器模式</h3><p>遍历。顺序方法，访问聚合对象中的各个元素，不暴露内部表示。</p>
+<p>当需要访问一个聚合对象，并且无论是何种对象都需要遍历。迭代器支持多种遍历方式。</p>
+<p>Foreach in</p>
+<h3 id="命令模式"><a href="#命令模式" class="headerlink" title="命令模式"></a>命令模式</h3><p>行为请求者和行为实现者耦合过紧密，行为的申请会很复杂。行为实现有延时 、排队 、 请求日志 、 撤销等工作，在客户端实现会很困难。</p>
+<p>命令模式可以较轻松地创建一个命令对了，并记录日志，实现请求的撤销和重做；允许接收方拒绝；添加新的具体命令很容易；请求一个操作对象并不用知道操作对象如何执行。</p>
+<p>代码不用添加猜测的功能架构，例如命令模块，实在需要时再重构即可。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E5%BC%80%E5%8F%91/" class="print-no-link">#开发</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【软件开发】设计模式</div>
+      <div>http://example.com/2023/08/14/【软件开发】设计模式/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年8月14日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/25/%E3%80%90MEMS%E3%80%91%E4%B8%80%E7%A7%8D%E4%B8%89%E7%9B%B8%E9%9D%99%E7%94%B5MEMS%E6%97%8B%E8%BD%AC%E7%94%B5%E6%9C%BA%E7%9A%84%E8%AE%BE%E8%AE%A1/" title="【mems】一种三相静电旋转电机的设计">
+                        <span class="hidden-mobile">【mems】一种三相静电旋转电机的设计</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="ESP32 的音频应用开发框架。主要了解 ADF 的架构、使用、以及注意事项。 适用 MCU：ESP32, ESP32-S2, and ESP32-S3 ESP-ADF 是 IDF(Espressif IoT Development Framework)在音频应用方面的一系列扩展组件。所以得先搭好 IDF 环境，再搭建 ADF 环境。 ADF 框架：  几个重要的 element：streams，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【IOT开发】ESP-IDF&amp;ADF 开发框架搭建">
+<meta property="og:url" content="http://example.com/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-IDF&ADF%E5%BC%80%E5%8F%91%E6%9E%B6%E6%9E%84/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="ESP32 的音频应用开发框架。主要了解 ADF 的架构、使用、以及注意事项。 适用 MCU：ESP32, ESP32-S2, and ESP32-S3 ESP-ADF 是 IDF(Espressif IoT Development Framework)在音频应用方面的一系列扩展组件。所以得先搭好 IDF 环境，再搭建 ADF 环境。 ADF 框架：  几个重要的 element：streams，">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
+<meta property="article:published_time" content="2022-11-17T03:34:37.000Z">
+<meta property="article:modified_time" content="2023-03-25T16:58:12.610Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="IOT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
+  
+  
+  
+  <title>【IOT开发】ESP-IDF&amp;ADF 开发框架搭建 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【IOT开发】ESP-IDF&amp;ADF 开发框架搭建"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-17 11:34" pubdate>
+          2022年11月17日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          11k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          92 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【IOT开发】ESP-IDF&amp;ADF 开发框架搭建</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>ESP32 的音频应用开发框架。主要了解 ADF 的架构、使用、以及注意事项。</p>
+<p>适用 MCU：ESP32, ESP32-S2, and ESP32-S3</p>
+<p>ESP-ADF 是 IDF(Espressif IoT Development Framework)在音频应用方面的一系列扩展组件。所以得先搭好 IDF 环境，再搭建 ADF 环境。</p>
+<h1 id="ADF-框架："><a href="#ADF-框架：" class="headerlink" title="ADF 框架："></a>ADF 框架：</h1><p><img src="/img/boxcnelXuci48oqORdK7xtv1qbd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcnA4WrZljxiFkeDNlKpL1qSc.png" srcset="/img/loading.gif" lazyload></p>
+<p>几个重要的 element：streams，codecs，audio processing。这是在构建音频应用时主要考虑的功能元素。而一个功能应用需要一个 pipeline 把各个元素串起来，上图就是把 MP3decoder 和 I2S stream 结合，实现一个从 mp3 文件读数据并播放的功能。</p>
+<p>The basic building block for the application programmer developing with ADF is the audio element object. 都被封装成了对象，对象会提供对应的 API。</p>
+<p>元素的一般功能是接受一些数据的输入，对其进行处理，并输出到下一个程序。每个元素都能够单独运行。为了能够控制数据生命周期的特定阶段，从输入、处理到输出的过程中，element 对象提供了在每个阶段触发回调的接口。</p>
+<p>例如一个蓝牙耳机的程序，会用到 bt_stream，从 A2DP 协议读数据；再使用 I2S_STREAM 把数据输给解码芯片：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">...<br>  audio_element_handle_t bt_stream_reader, i2s_stream_writer;<span class="hljs-operator"></span><br><span class="hljs-operator">...</span><br><span class="hljs-operator"></span><span class="hljs-comment">//配置a2dp_config  用以初始化 bt_stream_reader element</span><br>  a2dp_stream_config_t a2dp_config = &#123;<br>      .<span class="hljs-keyword">type</span> = AUDIO_STREAM_READER,<br>      .user_callback = &#123;<span class="hljs-number">0</span>&#125;,<br>  &#125;;<br>  bt_stream_reader = a2dp<span class="hljs-constructor">_stream_init(&amp;<span class="hljs-params">a2dp_config</span>)</span>;<br>  <br>  ...<span class="hljs-comment">//然后调用element接口，把从BT来的A2DP数据给element data</span><br>  audio<span class="hljs-constructor">_pipeline_register(<span class="hljs-params">pipeline</span>, <span class="hljs-params">bt_stream_reader</span>, <span class="hljs-string">&quot;bt&quot;</span>)</span>;<br>  <br>  <span class="hljs-comment">//之后再把 bt stream 元素作为audioinfo输入</span><br>  audio<span class="hljs-constructor">_element_getinfo(<span class="hljs-params">bt_stream_reader</span>, &amp;<span class="hljs-params">music_info</span>)</span>;<br>  <br>  <span class="hljs-comment">//i2s_stream_writer 元素也是类似的流程</span><br>  i2s_stream_cfg_t i2s_cfg = <span class="hljs-constructor">I2S_STREAM_CFG_DEFAULT()</span>;<br>  i2s_cfg.<span class="hljs-keyword">type</span> = AUDIO_STREAM_WRITER;<br>  i2s_stream_writer = i2s<span class="hljs-constructor">_stream_init(&amp;<span class="hljs-params">i2s_cfg</span>)</span>;<br>  <br>  audio<span class="hljs-constructor">_pipeline_register(<span class="hljs-params">pipeline</span>, <span class="hljs-params">i2s_stream_writer</span>, <span class="hljs-string">&quot;i2s&quot;</span>)</span>;<br>  i2s<span class="hljs-constructor">_stream_set_clk(<span class="hljs-params">i2s_stream_writer</span>, 48000, 16, 2)</span>;<br>  audio<span class="hljs-constructor">_element_setinfo(<span class="hljs-params">i2s_stream_writer</span>, &amp;<span class="hljs-params">music_info</span>)</span>;<br><br></code></pre></td></tr></table></figure>
+
+<p>过程中会有一个步骤： audio_pipeline_register，把元素绑定到 pipeline 上。pipeline 上的元素是动态的，例如上面的例程就没有 decoder 元素。</p>
+<p>之所以叫做 pipeline，管道内流通的是 data，而把元素 register 上去，类似于提供 data 水流的出入口。</p>
+<p>在注册好各种元素后，就可以 audio_pipeline_run(pipeline)，让数据流起来，输出端也就能 work 了。此外，pipeline 还提供了 pause，resume，stop 等接口控制播放。</p>
+<p>使用 ADF 最重要就是要有数据流的概念。</p>
+<p>数据流支持的来源有：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#api-reference-stream-algorithm">算法流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#fatfs">FatFs 流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#http">HTTP 流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#i2s">I2S 流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#pwm">PWM 流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#api-reference-stream-raw">原始流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#spiffs">SPIFFS 流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#tcp">TCP 客户端流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#api-reference-stream-tone">提示音流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#api-reference-embed-flash">嵌入式二进制文件流</a></li>
+<li><a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/streams/index.html#api-reference-stream-tts">语音合成流</a></li>
+</ul>
+<p>只需要关注各个流的初始化方法和读写方法。</p>
+<p>编解码器</p>
+<p>编码器，把采集的 PCM 编码，ADF 只支持 AMR 和 WAV 编码。</p>
+<p>支持 AAC AMR FLAC MP3 OGG OPUS WAV 解码。</p>
+<p>这个也封装的很好，使用解码器时候只要调用相应的初始化函数，生成 element，再绑定到 pipeline 上就好了。</p>
+<p>audio 操作</p>
+<p>可以对音频流进行一些额外操作，例如混音、均衡器、更改采样通道、</p>
+<ul>
+<li>Combine contents of two audio streams using <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/audio-processing/downmix.html">Downmix</a></li>
+<li>Apply ten band <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-adf/zh_CN/latest/api-reference/audio-processing/equalizer.html">Equalizer</a></li>
+</ul>
+<p>例如配置混音，需要先建立两个 pipeline，然后作为 downmix 的输入</p>
+<p><img src="/img/boxcnfpzxU9ZGEA2ULDl0zmBMrf.png" srcset="/img/loading.gif" lazyload></p>
+<p>服务</p>
+<p>服务 (service) 是具体产品功能在软件层面上的实现，如输入按键、网络配置管理、电池检测等功能。例如，想要在做的蓝牙耳机上加按键 调整音量、切歌的功能，就得使用蓝牙 service 配置。更具体的是 Bluetooth service 中的音视频远程控制规范 (Audio Video Remote Control Profile, AVRCP)。</p>
+<p>在 ADF 框架中 AVRCP 是和 A2DP stream 封装在一起的。触发相应的服务控制，直接调用 api 即可。当然也可调用 <a target="_blank" rel="noopener" href="https://github.com/espressif/esp-adf/blob/3914444/components/bluetooth_service/include/bluetooth_service.h">bluetooth_service.h</a> 中的 api 去实现 AVRCP 服务。</p>
+<p>在实际应用中需要一定的外部事件来触发 bt service，例如 <a target="_blank" rel="noopener" href="https://github.com/espressif/esp-adf/blob/3914444/components/input_key_service/include/input_key_service.h">input_key_service.h</a> 中关于按键输入的服务，其实就是把 GPIO 电位中断 ADC 时间中断等封装了一下，做成 periph 外设的功能服务。</p>
+<h2 id="工程设计："><a href="#工程设计：" class="headerlink" title="工程设计："></a>工程设计：</h2><p>使用 ESP-ADF 开发音频应用工程，大致的思路是：紧跟音频数据流。</p>
+<p>数据输入可以从麦克风、本地存储、wifi、bt、I2S 输入、flash；数据输出也可以是以上通道。</p>
+<p>如果可接受 8 位的数据输出，我们可使用两个板载 DAC 实现；如果需要更好的音频质量和更多的接口选项，可使用外部 I2S 编解码器来完成所有模拟输入和输出信号的处理。</p>
+<p><a target="_blank" rel="noopener" href="http://iot-bits.com/wp-content/uploads/2017/06/I2SBUS.pdf">I2S</a> 是音频编解码器芯片接口的行业标准，通常用于高速、连续传输音频数据。为了优化音频数据处理的性能，可能需要额外的内存。对于这种情况，请考虑使用 8 MB PSRAM 。开发板与软件之间的交互由音频 HAL 和驱动程序完成。</p>
+<p>不同的编码格式-WAV, MP3 or FLAC 和采样率位深需要不同的内存需求。</p>
+<p>可以使用 SPI RAM 作为扩展，需要在组件配置 &gt;SPI RAM 配置下的 menucofig 中启用它。</p>
+<p>同时：Bluetooth and Wi-Fi can not coexist without PSRAM because it will not leave enough memory for an audio application.</p>
+<h2 id="UART-数据流作为输入-pipeline-element"><a href="#UART-数据流作为输入-pipeline-element" class="headerlink" title="UART 数据流作为输入 pipeline element"></a>UART 数据流作为输入 pipeline element</h2><p>参考 element 的结构体 构建自定义 PCM 数据输入流的 element<br>还在开发中。</p>
+<h1 id="esp-idf-component搭建"><a href="#esp-idf-component搭建" class="headerlink" title="esp-idf_component搭建"></a>esp-idf_component搭建</h1><p>ESP-IDF搭建自己的工程组件，需要了解sdkconfig文件、cmakelist文件的配置，系统驱动的过程。<br>具体见<a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/release-v4.1/api-guides/build-system.html#cmake">官方文档</a></p>
+<h2 id="系统启动"><a href="#系统启动" class="headerlink" title="系统启动"></a>系统启动</h2><p>本文将会介绍 ESP32 从上电到运行 <code>app_main</code> 函数中间所经历的步骤（即启动流程）。</p>
+<p>宏观上，该启动流程可以分为如下 3 个步骤：</p>
+<ol>
+<li>一级引导程序 被固化在了 ESP32 内部的 ROM 中，它会从 flash 的 0x1000 偏移地址处加载二级引导程序至 RAM (IRAM &amp; DRAM) 中。</li>
+<li>二级引导程序 从 flash 中加载分区表和主程序镜像至内存中，主程序中包含了 RAM 段和通过 flash 高速缓存映射的只读段。</li>
+<li>应用程序启动阶段 运行，这时第二个 CPU 和 RTOS 的调度器启动。</li>
+</ol>
+<p>硬件和基本 C 语言运行环境的端口初始化。</p>
+<p>软件服务和 FreeRTOS 的系统初始化。</p>
+<p>运行主任务并调用 <code>app_main</code>。</p>
+<p>与普通的 FreeRTOS 任务（或嵌入式 C 的 <code>main</code> 函数）不同，<code>app_main</code> 任务可以返回。如果 <code>app_main</code> 函数返回，那么主任务将会被删除。系统将继续运行其他的 RTOS 任务。因此可以将 <code>app_main</code> 实现为一个创建其他应用任务然后返回的函数，或主应用任务本身。</p>
+<p>OTA:<br>OTA（空中升级）更新可以在现场烧录新的应用程序，但不能烧录一个新的引导加载程序。因此，引导加载程序支持引导从 ESP-IDF 新版本中构建的应用程序。之后会尝试OTA功能进行物联网应用升级。</p>
+<h2 id="component-搭建"><a href="#component-搭建" class="headerlink" title="component 搭建"></a>component 搭建</h2><p>ESP-IDF 可以显式地指定和配置每个组件。在构建项目的时候，构建系统会前往 ESP-IDF 目录、项目目录和用户自定义组件目录（可选）中查找所有组件，允许用户通过文本菜单系统配置 ESP-IDF 项目中用到的每个组件。在所有组件配置结束后，构建系统开始编译整个项目。</p>
+<ul>
+<li><code>项目</code> 特指一个目录，其中包含了构建可执行应用程序所需的全部文件和配置，以及其他支持型文件，例如分区表、数据&#x2F;文件系统分区和引导程序。</li>
+<li><code>项目配置</code> 保存在项目根目录下名为 <code>sdkconfig</code> 的文件中，可以通过 <code>idf.py menuconfig</code> 进行修改，且一个项目只能包含一个项目配置。</li>
+<li><code>应用程序</code> 是由 ESP-IDF 构建得到的可执行文件。一个项目通常会构建两个应用程序：项目应用程序（可执行的主文件，即用户自定义的固件）和引导程序（启动并初始化项目应用程序）。</li>
+<li><code>组件</code> 是模块化且独立的代码，会被编译成静态库（.a 文件）并链接到应用程序。部分组件由 ESP-IDF 官方提供，其他组件则来源于其它开源项目。</li>
+<li><code>目标</code> 特指运行构建后应用程序的硬件设备。运行 idf.py –list-targets 可以查看当前 ESP-IDF 版本中支持目标的完整列表。</li>
+</ul>
+<p>！！！！！！一下午的 debug  新添加 component 后，要删除原有的 build rebuild，不然已有的 build 目录会找不到 cmakelist 文件。 。。 一整个无语。  component 以及 main 里面的 Kconfig.projbuild  ESP 配置目录更改，也需要重编译才会出现在 configuration UI 里面。</p>
+<p>ESP-IDF 在搜索所有待构建的组件时，会按照 <code>COMPONENT_DIRS</code> 指定的顺序依次进行，这意味着在默认情况下，首先搜索 ESP-IDF 内部组件（<code>IDF_PATH/components</code>），然后是 <code>EXTRA_COMPONENT_DIRS</code> 中的组件，最后是项目组件（<code>PROJECT_DIR/components</code>）。如果这些目录中的两个或者多个包含具有相同名字的组件，则使用搜索到的最后一个位置的组件。这就允许将组件复制到项目目录中再修改以覆盖 ESP-IDF 组件，如果使用这种方式，ESP-IDF 目录本身可以保持不变。</p>
+<p>每个组件都可以包含一个 <code>Kconfig</code> 文件，和 <code>CMakeLists.txt</code> 放在同一目录下。<code>Kconfig</code> 文件中包含要添加到该组件配置菜单中的一些配置设置信息。</p>
+<p>运行 menuconfig 时，可以在 <code>Component Settings</code> 菜单栏下找到这些设置。</p>
+<p>创建一个组件的 Kconfig 文件，最简单的方法就是使用 ESP-IDF 中现有的 Kconfig 文件作为模板，在这基础上进行修改。</p>
+<p>有关示例请参阅 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/build-system.html#add-conditional-config">添加条件配置</a>。</p>
+<p><strong>KConfig.projbuild</strong> 与 <code>project_include.cmake</code> 类似，也可以为组件定义一个 KConfig 文件以实现全局的 <a target="_blank" rel="noopener" href="https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32/api-guides/build-system.html#component-configuration">组件配置</a>。如果要在 menuconfig 的顶层添加配置选项，而不是在 “Component Configuration” 子菜单中，则可以在 <code>CMakeLists.txt</code> 文件所在目录的 KConfig.projbuild 文件中定义这些选项。</p>
+<p>经典的组件 kconfig 和 cmakelist 配置：</p>
+<p>在设置 UI 中启用了组件，才会把相应的文件选入 cmake 编译 list</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm"><span class="hljs-built_in">config</span> FOO_ENABLE_BAR<br>    <span class="hljs-keyword">bool </span><span class="hljs-string">&quot;Enable the BAR feature.&quot;</span><br>    help<br>        This enables the <span class="hljs-keyword">BAR </span>feature of the FOO component.<br><br></code></pre></td></tr></table></figure>
+
+<figure class="highlight isbl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs isbl"> <span class="hljs-function"><span class="hljs-title">set</span>(<span class="hljs-variable">srcs</span> <span class="hljs-string">&quot;foo.c&quot;</span> <span class="hljs-string">&quot;more_foo.c&quot;</span>)</span><br><br> <span class="hljs-function"><span class="hljs-title">if</span>(<span class="hljs-variable">CONFIG_FOO_ENABLE_BAR</span>)</span><br>     <span class="hljs-function"><span class="hljs-title">list</span>(<span class="hljs-variable">APPEND</span> <span class="hljs-variable">srcs</span> <span class="hljs-string">&quot;bar.c&quot;</span>)</span><br> <span class="hljs-function"><span class="hljs-title">endif</span>()</span><br><br><span class="hljs-function"><span class="hljs-title">idf_component_register</span>(<span class="hljs-variable">SRCS</span> <span class="hljs-string">&quot;$&#123;srcs&#125;&quot;</span></span><br><span class="hljs-function">                     ...)</span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="嵌入二进制数据"><a href="#嵌入二进制数据" class="headerlink" title="嵌入二进制数据"></a>嵌入二进制数据</h2><p>&#x2F;&#x2F;嵌入二进制文件-PCM  MP3</p>
+<p>有时组件中希望使用一个二进制文件或者文本文件，但是您又不希望将它们重新格式化为 C 源文件。（例如提示音.mp3）</p>
+<p>这时，可以在组件注册中指定 <code>EMBED_FILES</code> 参数，用空格分隔要嵌入的文件名称:</p>
+<p>idf_component_register(…                       EMBED_FILES server_root_cert.der)</p>
+<p>或者，如果文件是字符串，则可以使用 <code>EMBED_TXTFILES</code> 变量，把文件的内容转成以 null 结尾的字符串嵌入:</p>
+<p>idf_component_register(…                       EMBED_TXTFILES server_root_cert.pem)</p>
+<p>文件的内容会被添加到 Flash 的 .rodata 段，用户可以通过符号名来访问，如下所示:</p>
+<p><strong>extern</strong> <strong>const</strong> uint8_t server_root_cert_pem_start[] <strong>asm</strong>(“_binary_server_root_cert_pem_start”);<strong>extern</strong> <strong>const</strong> uint8_t server_root_cert_pem_end[]   <strong>asm</strong>(“_binary_server_root_cert_pem_end”);</p>
+<p>符号名会根据文件全名生成，如 <code>EMBED_FILES</code> 中所示，字符 <code>/</code>、<code>.</code> 等都会被下划线替代。符号名称中的 _binary 前缀由 objcopy 命令添加，对文本文件和二进制文件都是如此。</p>
+<h1 id="搭建系统"><a href="#搭建系统" class="headerlink" title="搭建系统"></a>搭建系统</h1><p>…具体过程不方便展示</p>
+<h1 id="基于已有框架开发"><a href="#基于已有框架开发" class="headerlink" title="基于已有框架开发"></a>基于已有框架开发</h1><p>ESPHAP-Firmware APP develop example</p>
+<p><img src="/img/boxcnNaWtXNp7YvBxgOP9JIJdch.png" srcset="/img/loading.gif" lazyload></p>
+<p>这个文档将演示基于 ESPHAP 固件开发新的 APP 的主要流程。</p>
+<p>本例程将使用 RGB 驱动和 ADC 驱动，实现基于输出音频 wav 控制 RGB 闪烁的效果。过程不会很复杂。</p>
+<h3 id="Setp1-硬件连接与驱动检查"><a href="#Setp1-硬件连接与驱动检查" class="headerlink" title="Setp1.硬件连接与驱动检查"></a>Setp1.硬件连接与驱动检查</h3><p>本次需要使用的 ADC 驱动没有写，所以需要创建一个新的驱动文件夹：my_adc （如果 app 所需的驱动都有，略过这一步）</p>
+<p>在 adf 命令行输入（或者直接复制已有驱动文件夹，然后修改各个文名称）：</p>
+<figure class="highlight dsconfig"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs dsconfig"><span class="hljs-string">idf</span>.<span class="hljs-string">py</span> -<span class="hljs-string">C</span> <span class="hljs-string">components</span> <span class="hljs-built_in">create-component</span> <span class="hljs-string">my_adc</span><br><br></code></pre></td></tr></table></figure>
+
+<p>查看芯片的数据手册，ADC 相应通道对应的引脚：</p>
+<p><img src="/img/boxcnOgZtT8Eve6JlN1l3pKP9Yd.png" srcset="/img/loading.gif" lazyload></p>
+<p>对比原理图，IO32 没有占用，可以使用 ADC1 4 通道。</p>
+<p>然后查看官方例程中 adc 功能的代码，编写相应的驱动程序。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/*</span><br><span class="hljs-comment">初始化结构体：</span><br><span class="hljs-comment">*/</span><br><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-type">adc_channel_t</span> _channel ; <span class="hljs-comment">//ADC通道</span><br>    <span class="hljs-type">adc_atten_t</span> _atten;<span class="hljs-comment">//衰减系数</span><br>    <span class="hljs-type">adc_bits_width_t</span> _bits_width; <span class="hljs-comment">//位宽</span><br>    <span class="hljs-type">adc_unit_t</span> _unit; <span class="hljs-comment">//采样单位</span><br>&#125; adc_init_cfg;<br><br><span class="hljs-function">adc_init_cfg <span class="hljs-title">adc_default_cfg</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br><br><span class="hljs-comment">/* 通过 adc_init_cfg 结构体初始化adc通道 */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">My_adc_init</span><span class="hljs-params">( adc_init_cfg *cfg )</span></span>;<br><br><span class="hljs-comment">/* 读取adc电压值，单位 mv */</span><br><span class="hljs-function"><span class="hljs-type">uint32_t</span> <span class="hljs-title">get_adc_voltage</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">adc_app_main</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br><br></code></pre></td></tr></table></figure>
+
+<p>硬件飞线把 MIC 分贝测量模块的模拟输出口连接到 IO32 上。同时给模块 3V3 供电。</p>
+<p>由于音频信号线都是差分信号，所以没有直接从板子上引音频信号。</p>
+<h3 id="Step2-创建-APP"><a href="#Step2-创建-APP" class="headerlink" title="Step2.创建 APP"></a>Step2.创建 APP</h3><p>在 components&#x2F;apps&#x2F; 中复制 app_template.c 文件，重命名为 adc_ctr_rgb.c</p>
+<p>替换变量名： app_template  &#x3D;&gt;  adc_rgbctr</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;interface.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;esp_log.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/FreeRTOS.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/task.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/queue.h&quot;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ADC_RGBCTR_NAME <span class="hljs-string">&quot;ADC_RGBCTR&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ADC_RGBCTR_INFO <span class="hljs-string">&quot;ADC_RGBCTR - Develop by Chery, 2023-2 - v1.0&quot;</span></span><br><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> * TAG = <span class="hljs-string">&quot;template_app&quot;</span>;   <br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">adc_rgbctr_init</span><span class="hljs-params">(<span class="hljs-type">void</span> *pram)</span></span><br><span class="hljs-function"></span>&#123;<br><br>    <span class="hljs-built_in">ESP_LOGI</span>(TAG, <span class="hljs-string">&quot;adc_rgbctr is initialized!\n&quot;</span> );<br>    <span class="hljs-built_in">vTaskDelete</span>(<span class="hljs-literal">NULL</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">adc_rgbctr_main</span><span class="hljs-params">(<span class="hljs-type">void</span> *pram)</span></span><br><span class="hljs-function"></span>&#123;<br><br>    <span class="hljs-built_in">ESP_LOGI</span>(TAG, <span class="hljs-string">&quot;adc_rgbctr main_task is running!\n&quot;</span> );<br>    <span class="hljs-built_in">vTaskDelete</span>(<span class="hljs-literal">NULL</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">adc_rgbctr_delete</span><span class="hljs-params">(<span class="hljs-type">void</span> *pram )</span></span><br><span class="hljs-function"></span>&#123;<br><br>    <span class="hljs-built_in">ESP_LOGI</span>(TAG, <span class="hljs-string">&quot;adc_rgbctr is deleted&quot;</span>);<br>    <span class="hljs-built_in">vTaskDelete</span>(<span class="hljs-literal">NULL</span>);<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">adc_rgbctr_message_handle</span><span class="hljs-params">(APP_MESSAGE_TYPE type, <span class="hljs-type">void</span> *message,<span class="hljs-type">void</span> *ext_info)</span> <span class="hljs-comment">//消息处理 还没写</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-keyword">switch</span> (type)<br>    &#123;<br>    <span class="hljs-keyword">default</span>:<br>        <span class="hljs-keyword">break</span>;<br>    &#125;   <br>    <span class="hljs-built_in">vTaskDelete</span>(<span class="hljs-literal">NULL</span>);<br>&#125;                              <br><br>APP_OBJ adc_rgbctr = &#123;ADC_RGBCTR_NAME, ADC_RGBCTR_INFO, <span class="hljs-number">1024</span>,<br>                       adc_rgbctr_init, adc_rgbctr_main, adc_rgbctr_delete,<br>                       adc_rgbctr_message_handle&#125;;<br><br></code></pre></td></tr></table></figure>
+
+<p>修改 apps 目录下的 Kconfig.projbuild 文件，添加以下代码：</p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs arduino">config USE_ADC_RGBCTR_APP<br>    <span class="hljs-type">bool</span> <span class="hljs-string">&quot;USE_ADC_RGBCTR_APP&quot;</span><br>    help<br>        enable the ADC_control_rgb_APP<br><br></code></pre></td></tr></table></figure>
+
+<p>意思是会在图形化 config 界面内给出 USE_ADC_RGBCTR_APP 选项。如果使能了，宏 CONFIG_USE_ADC_RGBCTR_APP 会为 true。</p>
+<p>修改 apps 目录下的 cmakelist 文件：</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-function"><span class="hljs-title">if</span><span class="hljs-params">(CONFIG_USE_ADC_RGBCTR_APP)</span></span><br><span class="hljs-function"><span class="hljs-title">list</span><span class="hljs-params">(APPEND app_srcs <span class="hljs-string">&quot;adc_ctr_rgb.c&quot;</span>)</span></span><br><span class="hljs-function"><span class="hljs-title">endif</span><span class="hljs-params">()</span></span><br><br></code></pre></td></tr></table></figure>
+
+<p>如果在 config 界面勾选了改 app，会把对应源文件加入编译目录。</p>
+<p>一个 app 源文件及其涉及的相关文件可能会让编译多几十秒，这一步骤是尽可能减少编译文件数目，降低 编译、烧录时的等待时间。</p>
+<p>最后，在 apps&#x2F;include 目录下的 app_list.h 中添加：</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf">extern APP_OBJ adc_rgbctr<span class="hljs-comment">;</span><br><br></code></pre></td></tr></table></figure>
+
+<p>将上面 adc_ctr_rgb.c 文件中定义的 APP 对象加入 list 列表。 main.c 之用引用 app_list.h 即可导入所有 app 文件。</p>
+<p>现在已经新建了名为 adc_rgbctr 的 app，如果想要使用它，首先在图形化 CONFIG 界面使能</p>
+<p>My ESPHAP_App_Configuration -&gt; CONFIG_USE_ADC_RGBCTR_APP</p>
+<p>然后在主函数中安装 app：</p>
+<figure class="highlight scss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs scss"><span class="hljs-built_in">app_install</span>(&amp;uart_i2s_app,APP_TYPE_REAL_TIME);<span class="hljs-comment">//安装app</span><br><span class="hljs-built_in">app_install</span>(&amp;spp_i2s_app,APP_TYPE_REAL_TIME);<br><span class="hljs-built_in">app_install</span>(&amp;a2dp_stream_app,APP_TYPE_REAL_TIME);<br><span class="hljs-built_in">app_install</span>(&amp;adc_rgbctr,APP_TYPE_REAL_TIME); <span class="hljs-comment">//安装刚刚创建的APP</span><br><br><span class="hljs-built_in">apps_Display</span>();<span class="hljs-comment">//打印app列表</span><br><br></code></pre></td></tr></table></figure>
+
+<p>编译、烧录，然后就可以在 monitor 中看见刚刚创建的 APP 信息：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">I</span> (<span class="hljs-number">708</span>) app controller: app_index:<span class="hljs-number">0</span>, name: UART_I2S .<br><br><span class="hljs-attribute">I</span> (<span class="hljs-number">718</span>) app controller: app_index:<span class="hljs-number">1</span>, name: SPP_I2S .<br><br><span class="hljs-attribute">I</span> (<span class="hljs-number">718</span>) app controller: app_index:<span class="hljs-number">2</span>, name: A2DP_STREAM .<br><br><span class="hljs-attribute">I</span> (<span class="hljs-number">728</span>) app controller: app_index:<span class="hljs-number">3</span>, name: ADC_RGBCTR .<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="Step3-编写-APP-功能函数"><a href="#Step3-编写-APP-功能函数" class="headerlink" title="Step3.编写 APP 功能函数"></a>Step3.编写 APP 功能函数</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;interface.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;esp_log.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/FreeRTOS.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/task.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/timers.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/queue.h&quot;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;my_adc.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;rgb_strip.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;driver/gpio.h&quot;</span></span><br><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ADC_RGBCTR_NAME <span class="hljs-string">&quot;ADC_RGBCTR&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> ADC_RGBCTR_INFO <span class="hljs-string">&quot;ADC_RGBCTR - Develop by Chery, 2023-2 - v1.0&quot;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> GPIO_INPUT_IO     32</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> TIMER_PERIOD_MS   50</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> MAX_TRIGGER_COUNT 12000</span><br><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">char</span> * TAG = <span class="hljs-string">&quot;template_app&quot;</span>;   <br><span class="hljs-type">uint32_t</span> list_v[<span class="hljs-number">9</span>];<br><span class="hljs-type">static</span> TimerHandle_t timer;<br><span class="hljs-type">static</span> <span class="hljs-type">uint32_t</span> trigger_count = <span class="hljs-number">0</span>;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> IRAM_ATTR <span class="hljs-title">gpio_isr_handler</span><span class="hljs-params">(<span class="hljs-type">void</span>* arg)</span></span><br><span class="hljs-function"></span>&#123;<br>    trigger_count++;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">static</span> <span class="hljs-type">void</span> <span class="hljs-title">timer_callback</span><span class="hljs-params">(TimerHandle_t xTimer)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-type">uint8_t</span> flash_num = trigger_count *STRIP_LED_NUMBER / MAX_TRIGGER_COUNT;<br>    <span class="hljs-keyword">if</span>(flash_num &gt; STRIP_LED_NUMBER) flash_num = STRIP_LED_NUMBER;<br>    <span class="hljs-built_in">light_rgb_nums</span>(flash_num);<br><br>    trigger_count = <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">push_num</span><span class="hljs-params">(<span class="hljs-type">uint32_t</span> * array, <span class="hljs-type">uint32_t</span> num , <span class="hljs-type">size_t</span> len)</span> </span>&#123;<br>    <span class="hljs-keyword">for</span>(<span class="hljs-type">size_t</span> i = len<span class="hljs-number">-1</span>;i&gt;<span class="hljs-number">0</span>;i--) array[i]=array[i<span class="hljs-number">-1</span>];<br>    array[<span class="hljs-number">0</span>] = num;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">adc_rgbctr_init</span><span class="hljs-params">(<span class="hljs-type">void</span> *pram)</span></span><br><span class="hljs-function"></span>&#123;<br>    adc_init_cfg cfg = <span class="hljs-built_in">adc_default_cfg</span>();<br>    <span class="hljs-built_in">My_adc_init</span>(&amp;cfg);<br><br>    <span class="hljs-comment">// ws2812_initial();</span><br>    <span class="hljs-built_in">strip_rgb_init</span>();<br><br>    <span class="hljs-comment">// Configure GPIO32 as input with pull-up resistor</span><br>    <span class="hljs-type">gpio_config_t</span> io_conf;<br>    io_conf.intr_type = GPIO_INTR_HIGH_LEVEL;<br>    io_conf.pin_bit_mask = (<span class="hljs-number">1ULL</span> &lt;&lt; GPIO_INPUT_IO);<br>    io_conf.mode = GPIO_MODE_INPUT;<br>    io_conf.pull_up_en = <span class="hljs-number">1</span>;<br>    <span class="hljs-built_in">gpio_config</span>(&amp;io_conf);<br><br>    <span class="hljs-comment">// Install ISR service and add ISR handler for GPIO32</span><br>    <span class="hljs-built_in">gpio_install_isr_service</span>(<span class="hljs-number">0</span>);<br>    <span class="hljs-built_in">gpio_isr_handler_add</span>(GPIO_INPUT_IO, gpio_isr_handler, <span class="hljs-literal">NULL</span>);<br>    <span class="hljs-built_in">ESP_LOGI</span>(TAG, <span class="hljs-string">&quot;adc_rgbctr is initialized!\n&quot;</span> );<br>    <span class="hljs-built_in">vTaskDelete</span>(<span class="hljs-literal">NULL</span>);<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">adc_rgbctr_main</span><span class="hljs-params">(<span class="hljs-type">void</span> *pram)</span></span><br><span class="hljs-function"></span>&#123;<br><br>    <span class="hljs-built_in">ESP_LOGI</span>(TAG, <span class="hljs-string">&quot;adc_rgbctr main_task is running!\n&quot;</span> );<br>    timer = <span class="hljs-built_in">xTimerCreate</span>(<span class="hljs-string">&quot;timer&quot;</span>, <span class="hljs-built_in">pdMS_TO_TICKS</span>(TIMER_PERIOD_MS), pdTRUE, <span class="hljs-literal">NULL</span>, timer_callback);<br>    <span class="hljs-built_in">xTimerStart</span>(timer, <span class="hljs-number">0</span>);<br>    <span class="hljs-built_in">vTaskDelete</span>(<span class="hljs-literal">NULL</span>);<br><br>&#125;<br><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">adc_rgbctr_delete</span><span class="hljs-params">(<span class="hljs-type">void</span> *pram )</span></span><br><span class="hljs-function"></span>&#123;<br><br>    <span class="hljs-built_in">xTimerStop</span>(timer, <span class="hljs-number">0</span>);<br>    <span class="hljs-built_in">xTimerDelete</span>(timer, <span class="hljs-number">0</span>);<br>    <span class="hljs-built_in">ESP_LOGI</span>(TAG, <span class="hljs-string">&quot;adc_rgbctr is deleted&quot;</span>);<br>    <span class="hljs-built_in">vTaskDelete</span>(<span class="hljs-literal">NULL</span>);<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="Step4-测试"><a href="#Step4-测试" class="headerlink" title="Step4.测试"></a>Step4.测试</h3><p>fine</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/IOT/" class="print-no-link">#IOT</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【IOT开发】ESP-IDF&amp;ADF 开发框架搭建</div>
+      <div>http://example.com/2022/11/17/【IOT开发】ESP-IDF&amp;ADF开发架构/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" title="【课程学习】信号分析处理">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【课程学习】信号分析处理</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ES8388%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" title="【IOT开发】ES8388驱动">
+                        <span class="hidden-mobile">【IOT开发】ES8388驱动</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

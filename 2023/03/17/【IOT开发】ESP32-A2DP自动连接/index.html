@@ -1,0 +1,674 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="A2DP 自动连接ESP32官方例程，A2DP无法做到开机即连。这在蓝牙而集中是一个“理所当然”的功能。 解决方案查找相关例程、issue，没有找到类似的问题。 查看官方文档，在 A2DP 协议中找到了相应的 API： esp_err_t**esp_a2d_sink_connect(esp_bd_addr_t remote_bda)** Connect to remote bluetooth A2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【IOT开发】ESP32-A2DP自动连接">
+<meta property="og:url" content="http://example.com/2023/03/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP32-A2DP%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="A2DP 自动连接ESP32官方例程，A2DP无法做到开机即连。这在蓝牙而集中是一个“理所当然”的功能。 解决方案查找相关例程、issue，没有找到类似的问题。 查看官方文档，在 A2DP 协议中找到了相应的 API： esp_err_t**esp_a2d_sink_connect(esp_bd_addr_t remote_bda)** Connect to remote bluetooth A2">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
+<meta property="article:published_time" content="2023-03-17T03:34:37.000Z">
+<meta property="article:modified_time" content="2023-03-25T17:04:17.236Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="IOT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
+  
+  
+  
+  <title>【IOT开发】ESP32-A2DP自动连接 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【IOT开发】ESP32-A2DP自动连接"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-17 11:34" pubdate>
+          2023年3月17日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          55 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【IOT开发】ESP32-A2DP自动连接</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="A2DP-自动连接"><a href="#A2DP-自动连接" class="headerlink" title="A2DP 自动连接"></a>A2DP 自动连接</h1><p>ESP32官方例程，A2DP无法做到开机即连。这在蓝牙而集中是一个“理所当然”的功能。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>查找相关例程、issue，没有找到类似的问题。</p>
+<p>查看官方文档，在 A2DP 协议中找到了相应的 API：</p>
+<p><strong>esp_err_t**<strong>esp_a2d_sink_connect</strong></strong>(<strong><strong>esp_bd_addr_t</strong></strong> <strong><strong>remote_bda</strong></strong>)**</p>
+<p>Connect to remote bluetooth A2DP source device. This API must be called after esp_a2d_sink_init() and before esp_a2d_sink_deinit().</p>
+<p><strong>Return</strong></p>
+<ul>
+<li>ESP_OK: connect request is sent to lower layer successfully</li>
+<li>ESP_INVALID_STATE: if bluetooth stack is not yet enabled</li>
+<li>ESP_FAIL: others</li>
+</ul>
+<p>查看 PC 的地址：</p>
+<p>f0:9e:4a:80:5c:db</p>
+<p>在初始化时调用 API，可以在开机时实现自动连接。</p>
+<p>修改 APP 功能，使其能自动连接设备。现在需要知道上一次连接设备的地址，并自动连接最近所连接的设备。</p>
+<p>地址 structure 以队列存储，存储上限为 6 。自动连接 list[0] 的地址，如果连接错误会连 list[1]。以此类推。</p>
+<h2 id="地址记忆实现"><a href="#地址记忆实现" class="headerlink" title="地址记忆实现"></a>地址记忆实现</h2><p>第一步需要获取所连接设备的 MAC 地址</p>
+<p>找到可以给出所连接设备地址的结构体：</p>
+<p>A2DP 协议， esp_a2d_cb_param_t * a2d ，一个回调函数指针的成员：a2d-&gt;conn_stat.remote_bda</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief  ESP_A2D_CONNECTION_STATE_EVT</span><br><span class="hljs-comment"> */</span><br><span class="hljs-keyword">struct</span> <span class="hljs-title class_">a2d_conn_stat_param</span> &#123;<br>    <span class="hljs-type">esp_a2d_connection_state_t</span> state;      <span class="hljs-comment">/*!&lt; one of values from esp_a2d_connection_state_t */</span><br>    <span class="hljs-type">esp_bd_addr_t</span> remote_bda;              <span class="hljs-comment">/*!&lt; remote bluetooth device address */</span><br>    <span class="hljs-type">esp_a2d_disc_rsn_t</span> disc_rsn;           <span class="hljs-comment">/*!&lt; reason of disconnection for &quot;DISCONNECTED&quot; */</span><br>&#125; conn_stat; <br><br></code></pre></td></tr></table></figure>
+
+<p>尝试在 APP 层修改代码，不修改 firmware 代码，以保证程序的可移植性。但是能给出地址的指针都在驱动车封装，相应的对象都做了 static 修饰，无法在 c 文件外部调用。</p>
+<p>实在没有找到调用某个接口得 remote_bda 的方法，最后选择修改官方的底层代码。</p>
+<p>最后修改了 ADF 的 a2dp_stream 驱动代码：</p>
+<p>…\esp\esp-adf\components\bluetooth_service\a2dp_stream.c</p>
+<p>添加：</p>
+<figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><code class="hljs reasonml"><br><span class="hljs-built_in">char</span> my_remote_bd_addr<span class="hljs-literal">[<span class="hljs-number">6</span>]</span>;<br>static uint8_t remote_add_index = <span class="hljs-number">0</span>;<br>static const <span class="hljs-built_in">char</span>* remote_key_id<span class="hljs-literal">[<span class="hljs-number">6</span>]</span> = &#123; <span class="hljs-string">&quot;ra_key1&quot;</span>, <span class="hljs-string">&quot;ra_key2&quot;</span>, <span class="hljs-string">&quot;ra_key3&quot;</span>, <span class="hljs-string">&quot;ra_key4&quot;</span>, <span class="hljs-string">&quot;ra_key5&quot;</span>, <span class="hljs-string">&quot;ra_key6&quot;</span> &#125;;<br><br>static void nvs<span class="hljs-constructor">_write_add_to_flash( )</span><br>&#123;<br>    nvs_handle handle;<br>    static const <span class="hljs-built_in">char</span> *NVS_CUSTOMER = <span class="hljs-string">&quot;a2dp_add_data&quot;</span>;<br>    static const <span class="hljs-built_in">char</span> *KEY = <span class="hljs-string">&quot;key&quot;</span>;<br>    <span class="hljs-built_in">char</span> *INDEX_KEY = remote_key_id<span class="hljs-literal">[<span class="hljs-identifier">remote_add_index</span>]</span> ;<br><br>    <span class="hljs-constructor">ESP_ERROR_CHECK( <span class="hljs-params">nvs_open</span>( NVS_CUSTOMER, NVS_READWRITE, &amp;<span class="hljs-params">handle</span>)</span> );<br>    <span class="hljs-constructor">ESP_ERROR_CHECK( <span class="hljs-params">nvs_set_blob</span>( <span class="hljs-params">handle</span>, INDEX_KEY, &amp;<span class="hljs-params">my_remote_bd_addr</span>, <span class="hljs-params">sizeof</span>(<span class="hljs-params">my_remote_bd_addr</span>)</span>) );<br>    <span class="hljs-constructor">ESP_ERROR_CHECK( <span class="hljs-params">nvs_set_i8</span>( <span class="hljs-params">handle</span>, KEY, <span class="hljs-params">remote_add_index</span>)</span> );<br>    <span class="hljs-constructor">ESP_ERROR_CHECK( <span class="hljs-params">nvs_commit</span>(<span class="hljs-params">handle</span>)</span> );<br>    nvs<span class="hljs-constructor">_close(<span class="hljs-params">handle</span>)</span>;<br><br>&#125;<br><br>void nvs<span class="hljs-constructor">_read_add_from_flash(<span class="hljs-params">void</span>)</span><br>&#123;<br>    nvs_handle handle;<br>    static const <span class="hljs-built_in">char</span> *NVS_CUSTOMER = <span class="hljs-string">&quot;a2dp_add_data&quot;</span>;<br>    static const <span class="hljs-built_in">char</span> *KEY = <span class="hljs-string">&quot;key&quot;</span>;<br>    uint32_t str_length = <span class="hljs-number">32</span>;<br>    int8_t  value;<br><br>    <span class="hljs-constructor">ESP_ERROR_CHECK( <span class="hljs-params">nvs_open</span>(NVS_CUSTOMER, NVS_READWRITE, &amp;<span class="hljs-params">handle</span>)</span> );<br>    ESP_ERROR_CHECK ( nvs<span class="hljs-constructor">_get_i8(<span class="hljs-params">handle</span>, KEY, &amp;<span class="hljs-params">value</span>)</span> );<br>    remote_add_index=value;<br><br>    <span class="hljs-built_in">char</span> *INDEX_KEY = remote_key_id<span class="hljs-literal">[<span class="hljs-identifier">remote_add_index</span>]</span> ;<br>    ESP_ERROR_CHECK ( nvs<span class="hljs-constructor">_get_blob(<span class="hljs-params">handle</span>, INDEX_KEY, &amp;<span class="hljs-params">my_remote_bd_addr</span>, &amp;<span class="hljs-params">str_length</span>)</span> );<br>    <span class="hljs-built_in">char</span> *bda = my_remote_bd_addr;<br><br>    <span class="hljs-comment">// ESP_LOGI(TAG, &quot;[add_index:]%d\r\n&quot; ,remote_add_index);</span><br>    <span class="hljs-comment">// ESP_LOGI(TAG, &quot;[add:] [%02x:%02x:%02x:%02x:%02x:%02x]&quot;,</span><br>    <span class="hljs-comment">//         bda[0], bda[1], bda[2], bda[3], bda[4], bda[5]);</span><br><br>    nvs<span class="hljs-constructor">_close(<span class="hljs-params">handle</span>)</span>;<br>&#125;<br><br>static void my<span class="hljs-constructor">_a2d_sink_cb(<span class="hljs-params">esp_a2d_cb_event_t</span> <span class="hljs-params">event</span>, <span class="hljs-params">esp_a2d_cb_param_t</span> <span class="hljs-operator">*</span><span class="hljs-params">param</span>)</span><br>&#123;<br>    <span class="hljs-keyword">if</span>(event<span class="hljs-operator"> == </span>ESP_A2D_CONNECTION_STATE_EVT<span class="hljs-operator"> &amp;&amp; </span>param-&gt;conn_stat.state<span class="hljs-operator"> == </span>ESP_A2D_CONNECTION_STATE_CONNECTED)<br>    &#123;<br>        <span class="hljs-constructor">ESP_LOGI(TAG, <span class="hljs-string">&quot;my_a2d_sink_cb is run!\n&quot;</span> )</span>;<br>        nvs<span class="hljs-constructor">_read_add_from_flash()</span>; <span class="hljs-comment">//读取index值，然后再读取地址值</span><br><br>        esp_a2d_cb_param_t *a2d = (esp_a2d_cb_param_t *)(param);<br>        uint8_t<span class="hljs-operator"> * </span>addr = a2d-&gt;conn_stat.remote_bda;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-built_in">int</span> i=<span class="hljs-number">0</span>;i&lt;<span class="hljs-number">6</span>;i++) my_remote_bd_addr<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span>=addr<span class="hljs-literal">[<span class="hljs-identifier">i</span>]</span>;<br>        remote_add_index++; <span class="hljs-keyword">if</span>(remote_add_index<span class="hljs-operator"> == </span><span class="hljs-number">6</span>) remote_add_index =<span class="hljs-number">0</span> ; <span class="hljs-comment">//更新 index 状态，在0~6循环</span><br>        nvs<span class="hljs-constructor">_write_add_to_flash()</span>;  <span class="hljs-comment">// 把index值和 add值 写入对应的地址</span><br>    &#125;<br>&#125;<br>         <br>esp_bd_addr_t* get<span class="hljs-constructor">_remote_ba_addr_last( <span class="hljs-params">void</span> )</span><br>&#123;<br>    nvs<span class="hljs-constructor">_read_add_from_flash()</span>; <span class="hljs-comment">//读取index值，然后再读取地址值</span><br>    return &amp;my_remote_bd_addr;<br>&#125;<br><br>esp_bd_addr_t* get<span class="hljs-constructor">_remote_ba_addr_before(<span class="hljs-params">uint8_t</span> <span class="hljs-params">before_index</span>)</span><br>&#123;<br>    uint8_t index = ( remote_add_index  +<span class="hljs-number">6</span> - before_index ) %<span class="hljs-number">6</span>;<br>    <span class="hljs-built_in">char</span> *INDEX_KEY = remote_key_id<span class="hljs-literal">[<span class="hljs-identifier">index</span>]</span> ;<br><br>    nvs_handle handle;<br>    static const <span class="hljs-built_in">char</span> *NVS_CUSTOMER = <span class="hljs-string">&quot;a2dp_add_data&quot;</span>;<br>    uint32_t str_length = <span class="hljs-number">32</span>;<br>    <span class="hljs-constructor">ESP_ERROR_CHECK( <span class="hljs-params">nvs_open</span>(NVS_CUSTOMER, NVS_READWRITE, &amp;<span class="hljs-params">handle</span>)</span> );<br>    ESP_ERROR_CHECK ( nvs<span class="hljs-constructor">_get_blob(<span class="hljs-params">handle</span>, INDEX_KEY, &amp;<span class="hljs-params">my_remote_bd_addr</span>, &amp;<span class="hljs-params">str_length</span>)</span> );<br>    nvs<span class="hljs-constructor">_close(<span class="hljs-params">handle</span>)</span>;<br>    return &amp;my_remote_bd_addr;<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>修改回调函数：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs csharp"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">bt_a2d_sink_cb</span>(<span class="hljs-params">esp_a2d_cb_event_t <span class="hljs-keyword">event</span>, esp_a2d_cb_param_t *param</span>)</span><br>&#123;<br>...<br><br>    <span class="hljs-keyword">switch</span> (<span class="hljs-keyword">event</span>) &#123;<br>        <span class="hljs-keyword">case</span> ESP_A2D_CONNECTION_STATE_EVT:<br>            my_a2d_sink_cb(<span class="hljs-keyword">event</span>, param); <span class="hljs-comment">// the callback added to change the bd_add.</span><br>...<br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>对应的 a2dp_stream.h 文件添加以下接口的声明：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs cpp"><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief      return the mac address of the last connected device.</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-type">esp_bd_addr_t</span>* <span class="hljs-title">get_remote_ba_addr_last</span><span class="hljs-params">( <span class="hljs-type">void</span> )</span></span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief      return the mac address of remembered devices. The maximum number of devices is 6.</span><br><span class="hljs-comment"> * </span><br><span class="hljs-comment"> * @param[in]  before_index The before_index of the address. </span><br><span class="hljs-comment"> *              For example, if the last index is 5 and the before_index is 1, it will return the address of index-4.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-type">esp_bd_addr_t</span>* <span class="hljs-title">get_remote_ba_addr_before</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span> before_index)</span></span>;<br><br></code></pre></td></tr></table></figure>
+
+<p>经测试，用多台手机和 PC 分别连接 ESP-HAP，可以正确记忆地址并存储。可以掉电记忆。</p>
+<h2 id="自动连接实现"><a href="#自动连接实现" class="headerlink" title="自动连接实现"></a>自动连接实现</h2><p>在 APP 层的对应任务函数中添加 “读取之前所连接的地址，然后连接对应地址” 的功能：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">uint8_t *<span class="hljs-keyword">bda </span>= *get_remote_ba_addr_last();<br>uint8_t <span class="hljs-keyword">add_index_before </span>= <span class="hljs-number">0</span>;<br>ESP_LOGI(TAG, <span class="hljs-string">&quot;a2dp last-connected bd address:, [%02x:%02x:%02x:%02x:%02x:%02x]&quot;</span>,<br>        <span class="hljs-keyword">bda[0], </span><span class="hljs-keyword">bda[1], </span><span class="hljs-keyword">bda[2], </span><span class="hljs-keyword">bda[3], </span><span class="hljs-keyword">bda[4], </span><span class="hljs-keyword">bda[5]);</span><br><span class="hljs-keyword"></span><br>while(<span class="hljs-number">1</span>)<br>&#123;<br>    for(int i=<span class="hljs-number">0</span><span class="hljs-comment">;i&lt;6;i++) my_device_bd_addr[i]=bda[i];</span><br>    esp_err_t err = esp_a2d_sink_connect(my_device_bd_addr);<br><br>    if(err == ESP_OK) <span class="hljs-keyword">break;</span><br><span class="hljs-keyword"></span>    else &#123; <br>        <span class="hljs-keyword">add_index_before++;</span><br><span class="hljs-keyword"></span>        <span class="hljs-keyword">bda </span>= *get_remote_ba_addr_before(<span class="hljs-keyword">add_index_before);</span><br><span class="hljs-keyword"></span>        ESP_LOGI(TAG, <span class="hljs-string">&quot;a2dp reconnect failed&quot;</span>); <br>        vTaskDelay(<span class="hljs-number">200</span>);<br>    &#125;<br><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+<p>现在开机后会自动找以前连接过的设备，直到连接成功。</p>
+<h2 id="其他可能的方法"><a href="#其他可能的方法" class="headerlink" title="其他可能的方法"></a>其他可能的方法</h2><p>连接所记忆的地址，在蓝牙协议中应该是一个“理所当然的”事情，自己想方设法用 flash 存储地址，再主动调接口连接就显得很不优雅。连接是 GATT 协议层的事情，而手机和 PC 明显有记录之前连接过设备的地址和服务。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/espressif/esp-idf/issues/10107">https://github.com/espressif/esp-idf/issues/10107</a></p>
+<p>“The ESP32 HID device set the SDP attribute <code>HIDReconnectInitiate</code> to <code>True</code>, it indicates that the HID device will be primarily responsible for connection re-establishment.”</p>
+<p><a target="_blank" rel="noopener" href="https://www.esp32.com/viewtopic.php?t=11468#p46410">https://www.esp32.com/viewtopic.php?t=11468#p46410</a></p>
+<p>“It seems this is not done in the ESP firmware, it is done in the phone application code instead. I’m not sure if this is the correct way to do it or if there are more optimal ways, but here’s what I did. In your Android phone application, in the line of code that starts the GATT connection from the Android side (Android Studio or whatever you’re using) set it to auto-connect.”</p>
+<p>windows 是有蓝牙自动连接设置的，一些业余的解决蓝牙自动连接的答案也都是依靠 PC 端来做的：</p>
+<p><img src="/img/boxcnd4QpXZS8tVrGRsRpdWUpkg.png" srcset="/img/loading.gif" lazyload></p>
+<p>而之前在 ESP32 跑的一些蓝牙例程，例如 SPP BLE_SPP  HID THROUGHPUT 都是需要“手动点一下连接”</p>
+<p>如果能修改类似 <code>HIDReconnectInitiate</code> 的参数，让出重建连接任务的控制权，是否可以不用改记忆地址、调用连接接口这些步骤，然 PC Windows 来负责 reconnect.</p>
+<p>目前还没找到 A2DP 类似的宏定义。</p>
+<h2 id="BUG-记录："><a href="#BUG-记录：" class="headerlink" title="BUG 记录："></a>BUG 记录：</h2><p>falsh 读写报错：</p>
+<p>ESP_ERROR_CHECK failed: esp_err_t 0x110c (ESP_ERR_NVS_INVALID_LENGTH) at 0x40091a80</p>
+<p>0x40091a80: _esp_error_check_failed at D:&#x2F;Users&#x2F;chery&#x2F;esp&#x2F;Espressif&#x2F;frameworks&#x2F;esp-idf-v4.4.3&#x2F;components&#x2F;esp_system&#x2F;esp_err.c:42</p>
+<p>func: nvs_read_add_from_flash</p>
+<p>expression: nvs_get_str(handle, INDEX_KEY, my_remote_bd_addr, &amp;str_length)</p>
+<p>ESP_ERR_NVS_INVALID_LENGTH 错误是读取的空间不够。很玄学，&amp;str_length 照大了给，可能是类似于 str 要读取末尾的&#x2F;0。<a target="_blank" rel="noopener" href="https://www.esp32.com/viewtopic.php?p=36770">https://www.esp32.com/viewtopic.php?p=36770</a></p>
+<p>最后是用 nvs_get_blob 接口代替了 nvs_get_str</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/IOT/" class="print-no-link">#IOT</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【IOT开发】ESP32-A2DP自动连接</div>
+      <div>http://example.com/2023/03/17/【IOT开发】ESP32-A2DP自动连接/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/25/%E3%80%90%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E3%80%91%E5%9F%BA%E4%BA%8E%E7%A3%81%E5%BC%BA%E8%AE%A1%E3%80%81IMU%E7%9A%84%E7%BB%84%E5%90%88%E5%AF%BC%E8%88%AA%E7%AE%97%E6%B3%95/" title="【项目总结】基于磁强计、IMU的组合导航算法">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【项目总结】基于磁强计、IMU的组合导航算法</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" title="【课程学习】信号分析处理">
+                        <span class="hidden-mobile">【课程学习】信号分析处理</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

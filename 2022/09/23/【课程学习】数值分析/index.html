@@ -1,0 +1,917 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="Hi，这是数值分析课程中的笔记。原文档 基础概念&amp;线代复习计算机中的浮点数计算： 表示： x &#x3D; (−1)^s ·(0.a_1a2 ···at ) ·β^e &#x3D; (−1)s ·m ·β ^e−t 符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位 类似于科学计数法 和之前学的二级制浮点数表示有点相似，但又不完全相同 Matlab 默认的数据类型是 double">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【数值分析】课程学习_上">
+<meta property="og:url" content="http://example.com/2022/09/23/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="Hi，这是数值分析课程中的笔记。原文档 基础概念&amp;线代复习计算机中的浮点数计算： 表示： x &#x3D; (−1)^s ·(0.a_1a2 ···at ) ·β^e &#x3D; (−1)s ·m ·β ^e−t 符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位 类似于科学计数法 和之前学的二级制浮点数表示有点相似，但又不完全相同 Matlab 默认的数据类型是 double">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/learning.png">
+<meta property="article:published_time" content="2022-09-23T05:35:51.000Z">
+<meta property="article:modified_time" content="2023-04-18T11:15:12.266Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="课程学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/learning.png">
+  
+  
+  
+  <title>【数值分析】课程学习_上 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【数值分析】课程学习_上"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-23 13:35" pubdate>
+          2022年9月23日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          73 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【数值分析】课程学习_上</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Hi，这是数值分析课程中的笔记。<br><a target="_blank" rel="noopener" href="https://fuaqwpa97c.feishu.cn/docs/doccnU0HETzfRwippru7U4Js6Rb">原文档</a></p>
+<h2 id="基础概念-线代复习"><a href="#基础概念-线代复习" class="headerlink" title="基础概念&amp;线代复习"></a>基础概念&amp;线代复习</h2><p>计算机中的浮点数计算：</p>
+<p>表示：</p>
+<p>x &#x3D; (−1)^s ·(0.a_1a2 ···at ) ·β^e &#x3D; (−1)s ·m ·β ^e−t</p>
+<p>符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位</p>
+<p>类似于科学计数法</p>
+<p>和之前学的二级制浮点数表示有点相似，但又不完全相同</p>
+<p>Matlab 默认的数据类型是 double</p>
+<p>向前误差分析 f(x∗) &#x3D; (x)2(1 + 2δ)   ;f(x)&#x3D;x^2</p>
+<p>向后误差分析[f (x)]∗ &#x3D; f (x(1 +  ̃δ))”</p>
+<p>条件数：|f (x + δx) −f (x)| &#x2F;|f (x)| ≤ κ(x)|δx|&#x2F;|x|</p>
+<p>κ(x) 自变量变化引起函数值的变化  类似于灵敏度  太大是病态的</p>
+<p>κ(x)&#x3D; |xf ‘(x) &#x2F;f (x)   |</p>
+<p>避免相近的数相减  会严重损失有效数字</p>
+<p>避免和绝对值大的数相乘、和绝对值小的数相除</p>
+<p>减少运算次数：  x3 −6.1x2 + 3.2x + 1.5 -&gt;  ((x −6.1)x + 3.2)x + 1.5</p>
+<p>选公式： ln(1+x)  ln(1+x&#x2F;1-x)  的 Taylor 展开算 ln2 后者强</p>
+<p>MATLBA - norm  求范数</p>
+<p>矩阵的 1 范数是列向量绝对值和的最大值；</p>
+<p>无穷范数  是  行向量绝对值和的最大值</p>
+<p><img src="/img/boxcn8pK2ehbz4Fv4HT0915vTKe.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcnfYRXAQip6FeW8U0DKb31Hf.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcngKMMV3UScej79kMfYRQFkc.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcnCj56vsx0pyKpzgiw1e8yPf.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="线性方程组的直接解法"><a href="#线性方程组的直接解法" class="headerlink" title="线性方程组的直接解法"></a>线性方程组的直接解法</h2><p>下三角方程的解法：</p>
+<p><img src="/img/boxcnIwG0hKezC9VDkLFfAWOkoe.png" srcset="/img/loading.gif" lazyload></p>
+<p>向前迭代 复杂度 O(n^2)</p>
+<p>上三角方程算法差不多，复杂度同样量级</p>
+<h3 id="高斯消元"><a href="#高斯消元" class="headerlink" title="高斯消元"></a>高斯消元</h3><p>本质上是找到一个非奇异矩阵，使得 A&#x3D;LU  LU 分解</p>
+<p>算法复杂度是 O(n^3)；迭代的过程 相当于每次左乘一个单位向量 l&#x3D;(0,0,…ak+1&#x2F;ak…an&#x2F;ak)。</p>
+<p>A&#x3D;LU Ly&#x3D;b  Ux&#x3D;y</p>
+<p>非奇异矩阵，若顺序主子式均不为 0.则存在唯一  LU&#x3D;A，分解唯一； 顺序主子式 det ！&#x3D;0 保证第 k 步的 akk！&#x3D;0.  如果遇到—选主元？</p>
+<p>如何作 LU 分解？</p>
+<p><img src="/img/boxcnJsiIKQNPfZi5dhxhA7qN5e.png" srcset="/img/loading.gif" lazyload></p>
+<p>A 的第一行 等于 L 的第一行 × U 的每一列  先让，A 的第一行和 U 的第一行是相等的。</p>
+<p>然后  A 的第一列， &#x3D; L 的每一行 × U 的第一列。注意 u11 已知了，所以可以直接求解出 L 第一列</p>
+<p>之后就如此往复，求 U 的 i 行、L 的 i 列</p>
+<p>doolittle 分解算法：</p>
+<p><img src="/img/boxcnJwWaTJMeMgPa4FvGceaT1f.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是上面的，往复求  U 的第 k 行、L 的第 k 列。</p>
+<p>[L,U]&#x3D;lu(A) MATLAB 分解</p>
+<p>一些特殊矩阵的分解可以优化：例如三对角矩阵。</p>
+<p>参考一维 poisson 方程的求解，使用数值解近似，就会需要求解一个三对角矩阵。</p>
+<p><img src="/img/boxcnncXEaaIG0YBAZdAoJLrtec.png" srcset="/img/loading.gif" lazyload></p>
+<p>u1&#x3D;b1; li &#x3D; ai&#x2F;ui−1 ; ui &#x3D; bi − lici−1,</p>
+<p>追赶法  复杂度 On； amtlab 接口 Thomas</p>
+<h3 id=""><a href="#" class="headerlink" title=""></a></h3><p>如果是循环三对角方程，也有对应的计算方法。</p>
+<p><img src="/img/boxcnDvpbKE3EtQE5tUpustRDJs.png" srcset="/img/loading.gif" lazyload></p>
+<p>Gauss 消去：对角元素等于 0 或非常小的情况。</p>
+<p>选主元：在解到第 k 步时，选 akk–ank 中 最大模的元素与 akk 进行交换行。</p>
+<p>在每次消去前，选主元，换行。是一种牺牲复杂度换取更高精度的方法。</p>
+<p>即：存在排列阵 P ，使得：PA&#x3D;LU</p>
+<p>[L,U,P]&#x3D;lu(A)  matlab 计算方法，会默认给你选主元。如果输出不带 P，会给你 × 进去。</p>
+<h3 id="cholesky-分解"><a href="#cholesky-分解" class="headerlink" title="cholesky 分解"></a>cholesky 分解</h3><p>分解时，U 可以再分解成 DU* 对角阵 D 和单位上三角阵 U*</p>
+<p>若 AT&#x3D;A 对称矩阵；则存在单位下三角矩阵： A&#x3D;LDLT    利用特殊矩阵的性质，尽可能减小计算量。</p>
+<p>正定阵： A   存在唯一的 对角元素为正的 下三角阵 L A&#x3D;LLT   （L~&#x3D;LD^1&#x2F;2 不是单位下三角了）</p>
+<p>在设计算法时，利用 U&#x3D;LT，可以进行一定的计算简化。</p>
+<p><img src="/img/boxcnavEPbSbeJcmDNyAjRGvGCh.png" srcset="/img/loading.gif" lazyload></p>
+<p>cholesky 分解，也就是正定对称矩阵的分解，可以检验对称阵 A 是否正定。能做完这个算法就是正定的</p>
+<p>MATLAB 函数 chol(A)，A&#x3D;R’R</p>
+<p>可以通过线性方程组求解的方法求矩阵的逆。</p>
+<p>X 是 A 的逆矩阵，则 AX&#x3D;I   Axi&#x3D;ei  ，A 乘上 X 的每一列，等于 I 的对应列</p>
+<h3 id="条件数"><a href="#条件数" class="headerlink" title="条件数"></a>条件数</h3><p>在直接法求解线性方程组的过程中，由于舍入误差的存在，微小的扰动可能造成解很大的变化。</p>
+<p><img src="/img/boxcn6FLXbdJD9ZE8KqyiVyMxEg.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以定义了一个条件数，来描述解的变化随扰动的变化情况：</p>
+<p><img src="/img/boxcnG8U8rBLZbhPd9YYCcWxZ4b.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcnlnvlNIXCUqDNswlrhlcpXe.png" srcset="/img/loading.gif" lazyload></p>
+<p>矩阵条件数-计算机计算数学中产生的问题，</p>
+<p><img src="/img/boxcnaLpuZ4kPO2XUDEwzonnLtg.png" srcset="/img/loading.gif" lazyload></p>
+<p>具体如何通过 COND A ，还不太懂。。常用的是 2 - 1 -∞ 范数。</p>
+<p>计算机总是存在舍入误差，所以算的是 (A+δA) * (x+δx)  &#x3D; (b&#x3D;δb)</p>
+<p>b！&#x3D;0，且 δA 够小，使得 ||A-1||||δA||＜1              有：</p>
+<p><img src="/img/boxcnhJQr2Fnq7dvAtozgvgMSYd.png" srcset="/img/loading.gif" lazyload></p>
+<p>性质：</p>
+<p>condA&gt;&#x3D;1;condA&#x3D;condA-1 ,</p>
+<p>condαA&#x3D;condA</p>
+<p>若 A 为正交阵，ATA&#x3D;I  ||A2||&#x3D;1  cond2A&#x3D;1</p>
+<p>若 U 为正交阵   cond2AU&#x3D;cond2UA&#x3D;cond2A</p>
+<p><img src="/img/boxcnmZHxlxlACZgpxkV8q7u1ee.png" srcset="/img/loading.gif" lazyload></p>
+<p>condA&gt;&gt;1 则是病态的；条件数的值与范数的选取有关。</p>
+<p>MATLAB 命令  cond</p>
+<p><img src="/img/boxcnmmW1BtUZzrQJcGk2un2fsf.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以使用可计算的 r，去衡量计算结果的精确度。残差的大小去衡量解的误差。</p>
+<p>需要注意的是，使用 r 衡量解的 δx 时，需要 condA 不是病态的。</p>
+<p>矩阵的条件数和行列式没有必然的联系，病态的出现主要是某些列向量近似线性相关了。</p>
+<p>粗略地说，如果用主元素法或平方根法解方程组，设 A 和 b 的元素准确到 s 位数，且 condA&#x3D;10^t，t&lt;s，则计算的解向量大约有 s-t 为有效数字的准确度。</p>
+<p>预处理</p>
+<p>一般会做一些预处理，把 condA 降下去。</p>
+<p>可以考虑矩阵的行列分别乘上不同的 const，即寻找可逆对角阵 D1 D2（左行右列），将方程组 Ax&#x3D;b 变成：</p>
+<p>D1AD2y&#x3D;D1b  ，x&#x3D;D2y</p>
+<p>理论最优： min  cond（D1AD2）； 通过计算量来优化精度。</p>
+<h2 id="非线性方程组的迭代解法"><a href="#非线性方程组的迭代解法" class="headerlink" title="非线性方程组的迭代解法"></a>非线性方程组的迭代解法</h2><h3 id="迭代法思路"><a href="#迭代法思路" class="headerlink" title="迭代法思路"></a>迭代法思路</h3><p>45° 卷，卷也卷不动，躺也躺不平；</p>
+<p>很多时候的数学问题都是优化问题-find min。常见的：如果能找到函数的下界，可以构造一个单调递减的序列，主要是迭代的函数，让序列逐渐逼近目标 min。所以迭代法的关键就是找到迭代的函数，让序列以一定方法逼近目标值。</p>
+<p>如果带有约束，可以引入 lagrange 乘子把约束融入目标函数，变为无约束问题。</p>
+<p>解方程组的更，采用不动点迭代。</p>
+<p>ax&#x3D;b  &#x3D;&#x3D;&gt; ax-b&#x3D;0   &#x3D;&#x3D;&gt;     1&#x2F;c(ax-b)+x&#x3D;x,不动点代换 G（x）&#x3D;x+1&#x2F;c(ax-b)</p>
+<p>通过一定的迭代方法， 使目标序列逐渐逼近不动点。</p>
+<p>序列收敛：简单的求极限</p>
+<p><img src="/img/boxcnTAx8DezIlBCAcGAZPUq5Re.png" srcset="/img/loading.gif" lazyload></p>
+<p>注意，Jacobi 矩阵 各偏导都存在，向量值函数不一定可导。</p>
+<p><img src="/img/boxcnbzPewGgjBkKvyR7onwgOcd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcnVNIB1gaQR6c6TH1DCoDqkg.png" srcset="/img/loading.gif" lazyload></p>
+<p>本课程基本都是使用的 线性 定常 单步迭代-即最简单的迭代公式。</p>
+<p>收敛阶：形容方程组在多少阶次下的收敛性质</p>
+<p><img src="/img/boxcnFgzMLFG7CiaGPnAiT67czb.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是说收敛的阶次高低。本课程线性方程组基本都是 P&#x3D;1。有给结论：P&#x3D;1 线性方程组的迭代收敛性不依赖于初值的选取。而非线性方程组一般是没有全局收敛性的，所以一般要选取到充分靠近解 X*的初值。初值的选取不同是两种迭代方法最大的区别。</p>
+<p><img src="/img/boxcnpXTZS0ScOnFQlStPE7Xd4f.png" srcset="/img/loading.gif" lazyload></p>
+<p>某个作业题用到了这个性质。</p>
+<p>非线性迭代需要一个迭代终止条件：r^(k)&lt;ε (非病态) ; x(k+1)-x(k)&lt; ε （超线性收敛） ;max 次数 N</p>
+<p>方程组求根问题，等价转化位映射不动点问题。</p>
+<p>为什么一定要不动点迭代？不动点迭代的方法比零点迭代更加简单吗？在构造不动点迭代的时候，本身就有了一个迭代公式 G，只要再考察 G 是不是压缩的就可以了。</p>
+<p><img src="/img/boxcnJUpKJLpIP30TsBXv3Yxg8d.png" srcset="/img/loading.gif" lazyload></p>
+<p>ax&#x3D;b  &#x3D;&#x3D;  ax-b&#x3D;0   &#x3D;&#x3D;     1&#x2F;c(ax-b)+x&#x3D;x,不动点代换 G（x）&#x3D;x+1&#x2F;c(ax-b)</p>
+<p>压缩映射依赖于范数选取。那如何判断是不是压缩的呢？不懂 nie，所有的范数都满足压缩条件才，还是某个范数满足即可？</p>
+<p>理论基石：压缩映射原理</p>
+<p><img src="/img/boxcnsTxsBuT8HBbQPpCfESIYfd.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以，有压缩映射-》找到不动点 -》迭代求解线性方程组</p>
+<p>证明：构造 x（k+1）&#x3D;G（k）  ；证明 x（k）收敛，然后即可证明  lim x(k)&#x3D;G(x)  ,唯一性设俩不动点，他们相等即可。满足压缩映射即可收敛–</p>
+<p>F（x）&#x3D;0  等价到一个映射问题，再构造一个不动点迭代，即可保证收敛。映射只需满足：压缩、内映射。局部收敛情况：找到的 G 在 D 的子域，x <em>的领域内 ，内映射 ，则可以在 S 内找到不动点，x</em> 称为 S 吸引点，S 为 x <em>吸引域。 –  x</em> 局部收敛。</p>
+<p>在实际应用中需要考虑收敛域吗？好像没怎么考虑过-起始点都是题目给的，如果没给一般就取零向量</p>
+<p><img src="/img/boxcnBUQAr2B8dRtbYLvJejmIYf.png" srcset="/img/loading.gif" lazyload></p>
+<p>意思是在判断不动点吸引域的时候， 计算 G‘x*的谱半径比计算压缩条件更简单，这个是可以严格证明的。所以谱半径怎么算？ λI-A&#x3D;0 ，求 max λ ，哪里简单了</p>
+<p>也可用用缩放，谱半径小于无穷（1、2，any）范数  简化</p>
+<p>上面只教了如何验证迭代矩阵函数 G 是收敛的，但是如何构造还是有说法的，凭空构造不太合理。接下来的介绍的一些方法就是讲如何构造 G</p>
+<h3 id="Newton-迭代"><a href="#Newton-迭代" class="headerlink" title="Newton 迭代"></a>Newton 迭代</h3><p>不求逆 解方程  LUΔx&#x3D;-Fx</p>
+<p><img src="/img/boxcn77q5yCQ7VoxIeqYE31UtHh.png" srcset="/img/loading.gif" lazyload></p>
+<p>基本原理：长得很像是 taylor 展开。然后 X*&#x3D;X(k+1)-最后一次迭代。</p>
+<p>G&#x3D;x&#x3D;x-F’x^-1 Fx； 不动点等价于 Fx*&#x3D;0；</p>
+<p>所以迭代过程：F’x(k) Δx&#x3D;-Fx(k)</p>
+<p><img src="/img/boxcn6iShNLHlYfYjpczWr1rbcb.png" srcset="/img/loading.gif" lazyload></p>
+<p>收敛条件：</p>
+<p><img src="/img/boxcnZskIJayXD4AQHZcYIF1r0g.png" srcset="/img/loading.gif" lazyload></p>
+<p>也记不住。主要就是说，至少是超线性收敛，满足–连续还平方收敛，收敛速度快。</p>
+<p>Newton 迭代第一第二步计算量很大，</p>
+<p>可以考虑用 F’(X0) 代替所有的 F’X – chord 方法；但是只能求解线性收敛的方程组。</p>
+<p>一种折中的方法：m 次迭代更新一次 F‘x Jacobi   Shamanskii 方法 ；m+1 阶收敛，能保证超线性</p>
+<p>在 F’x 非奇异或者病态时候使用的。遇到 F‘Xk 奇异或严重病态时 使用阻尼 Newton 法</p>
+<p><img src="/img/boxcnt1uQFINxVBKodGIuPLoz3b.png" srcset="/img/loading.gif" lazyload></p>
+<p>这保证 F‘不理想的时候也能继续算的。引入一个阻尼参数，让其非病态奇异；阻尼的作用类似于往同一个方向慢一点迭代，以避免病态带来的过大误差。</p>
+<p>离散 Newton，其实就是超短步长 h，数值逼近 Jacobi 矩阵。</p>
+<p>需要注意的是，相较于一般的求微分方法，这里没有使用 1&#x2F;h[F(x+h)-F(x)] ,这是在避免两个相近数相减破坏有效位数</p>
+<p><img src="/img/boxcnyaAXIFl1DjXnByK5X8ftfc.png" srcset="/img/loading.gif" lazyload></p>
+<p>取 hk&#x3D;Fxk 则收敛速度是二阶；在数值微分时，条件数和步长 h 成反比。</p>
+<h2 id="线性方程组的迭代解法"><a href="#线性方程组的迭代解法" class="headerlink" title="线性方程组的迭代解法"></a>线性方程组的迭代解法</h2><h3 id="线性迭代思路"><a href="#线性迭代思路" class="headerlink" title="线性迭代思路"></a>线性迭代思路</h3><p>之前直接求解线性方程的方法是针对满矩阵设计的，但是实际问题中的 A 一般是大型稀疏矩阵，直接法并不适用。所以可以设计适合于稀疏版本的直接法，用迭代法（基于稀疏矩阵的）来求解。</p>
+<p>稀疏矩阵 LU 分解后不一定稀疏。所以需要建构对应的算法</p>
+<p>邻接矩阵 – 填充效应</p>
+<p>MATLAB 函数 对称正定阵 pcg  preconditioned conjugate gradients method</p>
+<p>bicgstab biconjugate gradients stabilized method</p>
+<p>gmres_ generalized minimum residual method</p>
+<p>colamd_ 线性方程直接解；重排可以减小填充效应，但是无法避免 ；</p>
+<p>考虑直接迭代法</p>
+<p>线性方程组的迭代解法，思路还是转换成某个方程的不动点求解问题。</p>
+<p>为什么要有一个 Q 呢？为什么不是(A+I)x-b&#x3D;x 呢？  –  因为需要构造相应的迭代矩阵 B 是吗，Q 非奇异是构造的条件。Q&#x3D;I 就是最简单的迭代方法。</p>
+<p><img src="/img/boxcnPTseBxMdsAIn6Es7hMRCrh.png" srcset="/img/loading.gif" lazyload></p>
+<p>线性方程迭代法，可以变换成 Bx+f&#x3D;x ； f 是线性映射。 (I-B)x&#x3D;f 有唯一解，I-B 可逆； 这仍然是一个不动点迭代问题。</p>
+<p>收敛的条件：B 的范数小于 1，且 B 的范数越小收敛越快。</p>
+<p><img src="/img/boxcnoFrHnIgWERw0F9PJwXiXQc.png" srcset="/img/loading.gif" lazyload></p>
+<p>实际应用时大多是求谱半径 &lt;1,收敛速度也与谱半径息息相关。</p>
+<p><img src="/img/boxcnHbcSCAzKRRdNf7Uhdu63kf.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到解的收敛速度是和矩阵范数相关的</p>
+<p><img src="/img/boxcn89tzth3YYUJjrWhWXtvmpb.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后用谱半径作计算，是因为：</p>
+<p><img src="/img/boxcndItkvcbsYKSfA4t88folBy.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是说，计算的收敛速度是 k 区域无穷时候的平均收敛速度。渐近收敛速度</p>
+<h3 id="J-GS-方法"><a href="#J-GS-方法" class="headerlink" title="J-GS 方法"></a>J-GS 方法</h3><p>这几种方法主要区别在于迭代矩阵的构造。考虑矩阵的分裂：</p>
+<p>A&#x3D;M-N  B&#x3D;M^-1N ， f&#x3D;M^-1b</p>
+<p>常用的分裂方式：A&#x3D;D-L-U  分解成对角阵、严格下三角、严格上三角</p>
+<p>jacobi 迭代方法中，M&#x3D;D，N&#x3D;L+U   ; Bj&#x3D; M^-1N&#x3D;D^-1(L+U)&#x3D;I-D^-1A  f&#x3D; D^-1b</p>
+<p><img src="/img/boxcnPm58to9PSydQQtaPxOPe4c.png" srcset="/img/loading.gif" lazyload></p>
+<p>GS  gauss-seidel 方法：</p>
+<p>和 Jacobi 方法不同的就是每迭代更新一行，下一行就用新的值迭代。表现在迭代矩阵上就是：</p>
+<p>M&#x3D;D-L  N&#x3D;U</p>
+<p>BG&#x3D; M^-1N&#x3D;(D-L)^-1U&#x3D;I - (D-L)^-1A</p>
+<p><img src="/img/boxcnF29JUWlBDXnJCgVh9ZOgtg.png" srcset="/img/loading.gif" lazyload></p>
+<p>一些特殊矩阵的收敛：对角占优</p>
+<p>对角占优矩阵：对角线上的元素绝对值比非对角线上的都大，&gt;&#x3D;；严格对角占优-都是严格大；弱占优-有一些可以取等，则非奇异</p>
+<p>不可约若对角占优，非奇异  ；不可约是啥玩意—如果存在一个排列阵 P 使得 P’AP 为一个分块上三角阵，我们就称矩阵 A 是可约的，否则就称该矩阵是不可约的。</p>
+<p>上面的两种矩阵，J 方法和 GS 方法收敛。</p>
+<p>证明方法，想办法证明 ρ&lt;1</p>
+<p>A 对称，对角元为正； Ax&#x3D;B</p>
+<p>J 方法收敛的充分条件是 A 以及 2D-A 均正定</p>
+<p>GS 方法收敛的条件是 A 对称正定</p>
+<h3 id="SOR-方法"><a href="#SOR-方法" class="headerlink" title="SOR-方法"></a>SOR-方法</h3><p>使用系数 ω 加快收敛速度</p>
+<p><img src="/img/boxcnyyPSMrDK7M45rdmo1FcYQd.png" srcset="/img/loading.gif" lazyload></p>
+<p>体现松弛因子思路的式子：x(k+1)&#x3D;ωX(k+1) +(1-ω)x(k) ，ω &gt;1 加速迭代；ω∈(0，2)</p>
+<p><img src="/img/boxcn1edX12i9K6zfckt3rSFigb.png" srcset="/img/loading.gif" lazyload></p>
+<p>只需要背一个 M 的形式，由 GS 方法 D-L 变化而来：</p>
+<p>$$<br>M&#x3D;1&#x2F;ω(D-ωL) ； N&#x3D;M-A&#x3D;1&#x2F;ω[(1-ω) D+ωU]<br>$$</p>
+<p>迭代矩阵：B&#x3D;I-M^-1A</p>
+<p>对阵正定阵-ω 在 0-2 收敛 证明过程：—- 利用对称、正定的性质，证明构造的任意对称正定阵的 SOR 迭代矩阵 λ&lt;1</p>
+<p>最有松弛因子：</p>
+<p><img src="/img/boxcn9s1ohdTtmCtlvR3jngyWHd.png" srcset="/img/loading.gif" lazyload></p>
+<p>构造迭代矩阵的过程，相当于在构造迭代思路中的 Q-1，预处理矩阵。</p>
+<p><img src="/img/boxcnXsZgjyUWaqlURQtArMuUDg.png" srcset="/img/loading.gif" lazyload></p>
+<p>在计算迭代法时，一定要避免矩阵相乘和求逆；总之可以通过各种方法换算成矩阵 × 向量。</p>
+<p>编程和手算时候，使用迭代法求解大型稀疏矩阵问题，要避免求逆、矩阵乘法等复杂操作。</p>
+<h3 id="共轭梯度法"><a href="#共轭梯度法" class="headerlink" title="共轭梯度法"></a>共轭梯度法</h3><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/98642663">共轭梯度法（一）：线性共轭梯度 - 知乎 (zhihu.com)</a></p>
+<p>比经典方法更快的一种方法， 基于变分–求解方程组的问题等价转化成求解一个特殊的二次函数最小值问题。有一个很大的限制：要求 A 是对称正定。</p>
+<p><img src="/img/boxcnqwTS9RMcLsIhJadWfcLKGh.png" srcset="/img/loading.gif" lazyload></p>
+<p>第一个性质是求下降梯度的关键，也是下降向量 r 的来源。第二个性质在推导最速下降和共轭梯度时中会用到。</p>
+<p><img src="/img/boxcnX2KDATCvyp153UDW5G5GxH.png" srcset="/img/loading.gif" lazyload></p>
+<p>最速下降法只保证沿着一系列正交的方向寻找最快的下降方向，最快找到 φxmin</p>
+<p><img src="/img/boxcnTg3PFK0SggjhYEFvFDWfJf.png" srcset="/img/loading.gif" lazyload></p>
+<p>寻找实数 αk 是由微分&#x3D;0 得到的。</p>
+<p><img src="/img/boxcnZCZHeY4KvmNJMCqiNNQzof.png" srcset="/img/loading.gif" lazyload></p>
+<p>这个方法应该不考吧，由一些硬缺陷，也背不下来。。</p>
+<p>性质：相邻两次的搜索方向是正交的；φx 存在极限；k 次迭代后误差的能量模会变小；</p>
+<p><img src="/img/boxcnQBqO4BWAYnuX2LkIVcYxug.png" srcset="/img/loading.gif" lazyload></p>
+<p>上面的式子说明了最速下降法总是收敛的，但是当 λ1&gt;&gt;λn 时，收敛速度会非常慢；而且 rk 很小时，舍入误差太大，所以这个方法在实际计算时很少应用。作为共轭梯度法的启示–</p>
+<p>共轭梯度法-conjugate gradient</p>
+<p>思想和最速下降类似，还是一维极小值搜索，但是搜索的方向不再是 r 正交方向，而是选另一个方向 p；p 的选取有说法了：</p>
+<p><img src="/img/boxcn9QX3GcNrqQXj7Cc6BrKoCd.png" srcset="/img/loading.gif" lazyload></p>
+<p>总之，结论就是 p 序列需要</p>
+<p><img src="/img/boxcnd8JTjRmnK6etDrT13SWz9c.png" srcset="/img/loading.gif" lazyload></p>
+<p>满足 A 共轭</p>
+<p><img src="/img/boxcnpvPzkzYCqF14c1tYKIzqQd.png" srcset="/img/loading.gif" lazyload></p>
+<p>在使用过程中确定 p(k+1)  基于 pk&#x3D;rk+β(k-1)p(k-1) ，即取 rk 和 pk-1 的线性组合。</p>
+<p><img src="/img/boxcnvF6hQZCYz6wxbWtOxY4Gwd.png" srcset="/img/loading.gif" lazyload></p>
+<p>一些有用的性质，证明题可能用到：</p>
+<p><img src="/img/boxcnyzyExeVm64xj0EsZ0rtwbc.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcnlnbkZG2d480eiNa01jLkYb.png" srcset="/img/loading.gif" lazyload></p>
+<p>具体的算法：</p>
+<p><img src="/img/boxcnavLvty7jZPbGgJLeGCyKWh.png" srcset="/img/loading.gif" lazyload></p>
+<p>md，这么长怎么记得住啊</p>
+<p>相较于其他线性方程组的迭代解法，CG 法最大的优势就是至多 n 步可以求解，一般情况下收敛速度都会很快的。例如在解二维大型泊松方程时</p>
+<p>共轭梯度也有预处理：和直接法类似，把条件数弄小。不同的是，CG 方法的预处理中，需要处理后的矩阵还是对称正定的。体现在具体算法上就是</p>
+<p><img src="/img/boxcnCExJUhvm2iHkHyHPCwV3pd.png" srcset="/img/loading.gif" lazyload></p>
+<p>更记不住了。。其中 M 是预处理矩阵，M&#x3D;LLT；z 是减少计算次数的中间变量。</p>
+<p>matlab 函数 pcg</p>
+<h2 id="代数特征值"><a href="#代数特征值" class="headerlink" title="代数特征值"></a>代数特征值</h2><p>一般不通过直接求解特征多项式的值来求特征值，（虽然我平时都是这么做的）</p>
+<p>一般的方法是通过求友矩阵的特征值（他们特征值相等），而友矩阵的性质比较好 ；可以把一个高次代数的求根问题，转换成求一个稀疏矩阵特征值问题。</p>
+<p><img src="/img/boxcnqVpdAth78TpaIQXiOpB3hB.png" srcset="/img/loading.gif" lazyload></p>
+<p>圆盘定理：估计特征值所在的范围，矩阵的 n 个特征值均落在 n 个圆盘上，n 个圆盘是复平面上以 a 对角元为中心每一行非对角元绝对值之和为半径的圆盘。这规定了特征值的取值范围，但是范围有些过大，即很多圆盘都可能没有落有特征值。</p>
+<p><img src="/img/boxcnJ8KkSVHcfFAFNu0vT1rr1e.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是说 λ 落点有对应的区分。最理想的情况当然是每个圆盘落有一个特征值；上面定理中 B 是对角阵，类似于左行右列的相似变换，即变换后有相同的特征值。变化的过程就相当于改变圆盘的半径，让他们互不相交，达到理想的情况。</p>
+<h3 id="幂法"><a href="#幂法" class="headerlink" title="幂法"></a>幂法</h3><p>本质上是一种迭代方法。</p>
+<p>A 的 n 个特征值，λ1&gt;λ2 &gt;&#x3D;…λn</p>
+<p><img src="/img/boxcnAMULMgyhdHAPUfM0xF7Hce.png" srcset="/img/loading.gif" lazyload></p>
+<p>特征值-特征向量定义，当 k-&gt;∞，后面一项趋于零；但是前面的极限就一定存在吗？不一定的，无穷-0-or 1 。所以需要做一个归一化，让范数&#x3D;1。归一化的时候取一个向量的最大值，即无穷范数</p>
+<p>幂迭代其实是求 λ1 的方法，主特征值；还能求主特征向量</p>
+<p><img src="/img/boxcnqcqqg0AwByjw1bMGuBSCQf.png" srcset="/img/loading.gif" lazyload></p>
+<p>迭代方式：不断地左乘 A，然后归一化。</p>
+<p>收敛性：mk 收敛于 λ1，vk 收敛于 xk 的归一化向量；收敛速度是线性收敛，收敛速度取决于 λ1&#x2F;λ2</p>
+<p>逆幂迭代法</p>
+<p>主要的思路就是求 A 逆的特征值，体现在迭代步骤中就是第二步 zk&#x3D;Avk-1  变成 Azk&#x3D;vk-1。这样求出 A 逆的主特征值，相当于 A 的最小特征值。</p>
+<p>得到最大最小的特征值，则可以通过原点位移技巧来求中间的特征值，要求是中间特征值和其他特征值严格分离。</p>
+<p>假设中间特征值和数值 q 最接近，则矩阵(A-qI)^-1 的主特征值为 1&#x2F;(λi-q) 。也就是求（A-qI^-1 的幂迭代。mk 会收敛到 1&#x2F;(λi-q)。确定 q 就是在确定圆盘，通过近似特征向量来确定。</p>
+<p>幂法的优势是足够简单，循环迭代归一取极限，但是迭代多次才得到一个特征值，速度太慢了。总得有些一次性求出 n 个特征值的方法，QR 迭代。</p>
+<h3 id="householder-变换"><a href="#householder-变换" class="headerlink" title="householder 变换"></a>householder 变换</h3><p>作 QR 分解的一种工具</p>
+<p><img src="/img/boxcnZZRQLLpc3Vo5njCRpQs7Je.png" srcset="/img/loading.gif" lazyload></p>
+<p>w 定义了之后的 householder 变换，P u 相当于 u 与 w 垂直的平面镜像，初等反射。</p>
+<p>性质：</p>
+<p><img src="/img/boxcnqtJVrUEy3Gj50yQWZwiQ6g.png" srcset="/img/loading.gif" lazyload></p>
+<p>正交对称；正交变换不改变二范数；利用第五个性质可以构造 w</p>
+<p><img src="/img/boxcnM4a3Gk5XJZBUwlrRDvQSdg.png" srcset="/img/loading.gif" lazyload></p>
+<p>e1 是只有第一个分离的方向向量，需要使 ke1 的二范数等于 x 的二范数，同时符号与 x1||x||2 相反（为了避免相近数相减）</p>
+<p>W  P&#x3D;I-2wwT，Px&#x3D;ke1</p>
+<p>上面构造的变换使得 x 变换后除了 x_1 都为零；类似的，可以构造使得 j+1~k 变换后为 0 的 P；子矩阵-</p>
+<p>此时 u 的 j~k 分离不为 0：</p>
+<p><img src="/img/boxcntvrv5WYWQHeC6iRzvyCrPd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcnExhbARq1NLE3NR3ufkbzn6.png" srcset="/img/loading.gif" lazyload></p>
+<p>w&#x3D;u&#x2F;||u||2 变换后的 Px:</p>
+<p><img src="/img/boxcn7BHA95ZkOCbcDfTkh4hRBd.png" srcset="/img/loading.gif" lazyload></p>
+<p>就像是从原来的 x 中取中间一截置 0.对应的变换矩阵，除了中间一截都是单位阵形式。中间的部分 P‘，类似于之前的整个变换。</p>
+<p>givens 变换，在二维是一个旋转变换矩阵：</p>
+<p><img src="/img/boxcnlRH1deaIevIQwuuNA2cPec.png" srcset="/img/loading.gif" lazyload></p>
+<p>Jx 等价于将 x 顺时针旋转 θ 角</p>
+<p>推广到 n 维的情况，J(i，k，θ)相当于变换 i j 两行，左乘 J</p>
+<p><img src="/img/boxcnWcTLI5oVVJqvdMcSwH1wzc.png" srcset="/img/loading.gif" lazyload></p>
+<p>具体的计算过程很像三角函数的公式。x，y，sqrt(x2+y2)</p>
+<h3 id="QR-分解"><a href="#QR-分解" class="headerlink" title="QR 分解"></a>QR 分解</h3><p>一次性求出 n 个特征值的方法，QR 迭代。A1&#x3D;A;AK&#x3D;QKRK;AK+1&#x3D;RKQK</p>
+<p><img src="/img/boxcnp4pC5RjGLnUiWyM0Xs9fNg.png" srcset="/img/loading.gif" lazyload></p>
+<p>ATA&#x3D;RTQTQR&#x3D;RTR，可以看成是 ATA 的 cholesky 分解。</p>
+<p>用 householder 变换或 givens 变化把 P2P1R 变成上三角矩阵，然后 Q&#x3D;P2P1 T。R 对角线元素有非正，则中间分别左右乘对角阵 D。</p>
+<p>变换好难啊-注意 householder 和 givens 的变换矩阵 P 都是正交阵，所以 Q 也是正交。</p>
+<p>谱分解定理：</p>
+<p>AX&#x3D;XD &lt; &#x3D;&#x3D;&gt; Axi&#x3D;λixi  ，只是 X 是 xi 特征向量组合成的矩阵，D 是 λi 对角阵 ；看上去很合理啊，</p>
+<p>QR 迭代，希望迭代到一个对角阵。迭代的过程是在不断的相似变换。</p>
+<p><img src="/img/boxcntuV5YIgPdmdfPmErLIATob.png" srcset="/img/loading.gif" lazyload></p>
+<p>H-共轭转置，是正交矩阵 QQT&#x3D;I 的推广；承酉矩阵相当于酉相似变换</p>
+<p>雷姆了，第一次见到酉矩阵的用处。Schur 分解和 QR 分解很像，有一个很好的性质：</p>
+<p><img src="/img/boxcntrJ5YgwWPrUnRMoyTHvkpd.png" srcset="/img/loading.gif" lazyload></p>
+<p>不放大误差；但是注意共轭是在复数域，所以计算 U 会很复杂。</p>
+<p>Schur 分解：</p>
+<p><img src="/img/boxcnpyqFYG66tdyRfcdWqoY2ab.png" srcset="/img/loading.gif" lazyload></p>
+<p>类似于上三角矩阵分解，注意正交阵变换不改变特征值，所以对角元素就是特征值。QR 迭代的目标就是得到最后的上三角形式。</p>
+<p>A1&#x3D;A;AK&#x3D;QKRK;AK+1&#x3D;RKQK  &#x3D;&#x3D;&gt;R&#x3D;Q^TA&#x3D;A(K+1)Q^T  &#x3D;&#x3D;&gt; Q^TAQ&#x3D;A(K+1)</p>
+<p>hessenberg 矩阵：</p>
+<p><img src="/img/boxcnRQVRNyvNHHZ1OkKpNUPeOf.png" srcset="/img/loading.gif" lazyload></p>
+<p>这个就是 schur 分解的形式很相似，但是约束更弱。</p>
+<p>变换过程：使用 householder 变换，对于第 j 列，a1j<del>ajj 不变，但是 aj+1j</del>anj 变为 0</p>
+<p>注意左乘完 householder 变换阵 Pi 再右乘一个 Pi，作相似变换-不改变特征值；变成 hessenberg 矩阵而不是直接变成上三角阵，是因为在 hsh 变换的时候，如果按着上三角阵变，中间会把之前的 0 变回去。</p>
+<p>n-2 次 hsh 相似变换就可以把 A 变成上 hessenberg 矩阵；注意，正交相似变换保证对称性，所以若 A 是对称阵，则变换完的矩阵是三对角阵。</p>
+<h3 id="QR-迭代"><a href="#QR-迭代" class="headerlink" title="QR 迭代"></a>QR 迭代</h3><p><img src="/img/boxcnPJrMbNxn5wAgfOtcXp28Ag.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcn6kCIXneFECPwdxmBdMrnVM.png" srcset="/img/loading.gif" lazyload></p>
+<p>每次迭代都要错一次 QR 分解。</p>
+<p>就讲到这了，晦气  差最后一步不讲完害我白复习那么久</p>
+<p><img src="/img/boxcn4uqSxxcA2qDViwy5cpkROd.png" srcset="/img/loading.gif" lazyload></p>
+<p>迭代求解的思路</p>
+<h2 id="期中题目"><a href="#期中题目" class="headerlink" title="期中题目"></a>期中题目</h2>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="print-no-link">#课程学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【数值分析】课程学习_上</div>
+      <div>http://example.com/2022/09/23/【课程学习】数值分析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月23日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" title="【文献学习】磁强计的应用">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【文献学习】磁强计的应用</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/15/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91I2S%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/" title="【调研学习】I2S音频驱动">
+                        <span class="hidden-mobile">【调研学习】I2S音频驱动</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="基于卡尔曼滤波器的磁强计、IMU 组合导航算法研究背景介绍由三轴加速度计和三轴陀螺仪组成的惯性测量单元 (IMU) 广泛用于自主导航系统。然而，IMU 的漂移会导致位置和姿态测量存在显著的累积误差。IMU 测量的主要参数是加速度和角速率，其他参数例如速度、位移和旋转角度是通过对加速度或角速率随时间积分得到的。然而，漂移和积分误差导致长时间运动测量中存在大量累积误差，甚至导致结果发散。对于长时间稳定">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【项目总结】基于磁强计、IMU的组合导航算法">
+<meta property="og:url" content="http://example.com/2023/03/25/%E3%80%90%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E3%80%91%E5%9F%BA%E4%BA%8E%E7%A3%81%E5%BC%BA%E8%AE%A1%E3%80%81IMU%E7%9A%84%E7%BB%84%E5%90%88%E5%AF%BC%E8%88%AA%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="基于卡尔曼滤波器的磁强计、IMU 组合导航算法研究背景介绍由三轴加速度计和三轴陀螺仪组成的惯性测量单元 (IMU) 广泛用于自主导航系统。然而，IMU 的漂移会导致位置和姿态测量存在显著的累积误差。IMU 测量的主要参数是加速度和角速率，其他参数例如速度、位移和旋转角度是通过对加速度或角速率随时间积分得到的。然而，漂移和积分误差导致长时间运动测量中存在大量累积误差，甚至导致结果发散。对于长时间稳定">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/learning.png">
+<meta property="article:published_time" content="2023-03-25T10:32:22.000Z">
+<meta property="article:modified_time" content="2023-03-25T16:59:37.439Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="课程学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/learning.png">
+  
+  
+  
+  <title>【项目总结】基于磁强计、IMU的组合导航算法 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【项目总结】基于磁强计、IMU的组合导航算法"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-03-25 18:32" pubdate>
+          2023年3月25日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          77 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【项目总结】基于磁强计、IMU的组合导航算法</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="基于卡尔曼滤波器的磁强计、IMU-组合导航算法研究"><a href="#基于卡尔曼滤波器的磁强计、IMU-组合导航算法研究" class="headerlink" title="基于卡尔曼滤波器的磁强计、IMU 组合导航算法研究"></a>基于卡尔曼滤波器的磁强计、IMU 组合导航算法研究</h1><h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>由三轴加速度计和三轴陀螺仪组成的惯性测量单元 (IMU) 广泛用于自主导航系统。然而，IMU 的漂移会导致位置和姿态测量存在显著的累积误差。IMU 测量的主要参数是加速度和角速率，其他参数例如速度、位移和旋转角度是通过对加速度或角速率随时间积分得到的。然而，漂移和积分误差导致长时间运动测量中存在大量累积误差，甚至导致结果发散。对于长时间稳定测量，需要额外的辅助传感器来补充 IMU 系统，以构建用于漂移补偿的组合系统。这些辅助传感器包括超声波传感器、激光测距传感器、相机、太阳传感器和磁强计。</p>
+<p>磁导航系统和惯性导航系统的算法融合度较高，能够实现全态姿动态测量，同时运算量能够在微控制器平台实现，实现成本较低，是自主导航以及姿态检测方案中常用的组合系统。</p>
+<p>在本项目中，将基于磁力计补偿惯性传感器的漂移和累积误差的方法来进行实时姿态估计。其工作主要包括卡尔曼滤波器的原理解释、组合导航应用仿真、结果分析与讨论。</p>
+<h3 id="磁强计-IMU-导航简介"><a href="#磁强计-IMU-导航简介" class="headerlink" title="磁强计 +IMU 导航简介"></a>磁强计 +IMU 导航简介</h3><p>IMU 惯性导航系统是以陀螺仪和加速度计为敏感器件的导航参数解算系统。</p>
+<p>地磁定位导航技术基于地磁场是一个矢量场, 其强度大小和方向是位置的函数。同时地磁场具有丰富的总强度、矢量强度、磁倾角、磁偏角和强度梯度等特征，为地磁匹配提供了充足的信息。因此，将地磁场作为一个天然的坐标系, 利用地磁场的测量信息实现定位导航。</p>
+<p>该系统可以实现卫星的自主导航，不依靠外部信息，仅利用星上自备的测量设备实时地确定自身的位置和速度。</p>
+<h3 id="导航坐标系"><a href="#导航坐标系" class="headerlink" title="导航坐标系"></a>导航坐标系</h3><p>地球：可简要分为：圆球体、大地面包围成的球体、椭球体 ；一般的做法会将地球等效成椭球体，不同维度下的曲率半径不同，重力加速度不同，但是有恒定的地球自转角速度。</p>
+<p>惯性坐标系是无加速度的或者处于匀速直线运动状态。而宇宙空间中的所有物体都处在运动中，因此需要根据不同的导航对象来选取惯性坐标系。</p>
+<p>地心惯性坐标系 ： 做匀速直线运动 忽略了行星公转 ；忽略太阳、月亮及其它星体的引力，以及由于这些引力而存在的地球轨道运动。</p>
+<p>发射点惯性坐标系（简称 li 系）：发射时刻的发射点惯性坐标系作为测量该载体飞行位置的基准。</p>
+<p>地球坐标系（简称 e 系）：地球坐标系是原点在地心，坐标轴固定在地球上的右手正交坐标系。近似认为它相对惯性坐标系固有转动角速率旋转。ＯＺ 轴指向北极，ＯＸ 和 ＯＹ 轴都在赤道平面内。</p>
+<p>地理坐标系（简称 t 系）：相对于大地水准面定义的东北天坐标系。其中，东北天坐标系原点为载体质心在大地水准面上的投影。x 轴沿参考椭球卯酉圈方向指向东，y 轴沿参考椭球子无圈方向指向北。</p>
+<p>载体坐标系（简称 b 系）固连在运载体的参考坐标系  坐标原点为运载体的重心，by 轴沿载体横轴指向右翼，bx 轴沿载体纵轴指向机头方向。</p>
+<p>导航坐标系（简称 n 系）。导航坐标系是在根据导航的需要求解载体导航信息时选取的参考坐标系。对于捷联惯性导航系统来说，导航信息并不在载体坐标系内求解，但惯性传感器的测量姿态值是在载体坐标系内进行的。因此，必须将惯性传感器的输出值变换到导航坐标系中，再进行导航信息的计算。</p>
+<h3 id="姿态角与四元数"><a href="#姿态角与四元数" class="headerlink" title="姿态角与四元数"></a>姿态角与四元数</h3><p>姿态角，也叫欧拉角，姿态角是载体坐标系和导航坐标系之间的三个夹角</p>
+<p>航向角：载体纵轴 bx 与北向轴（N）之间的夹角，在水平面测量，顺时针为正；</p>
+<p>俯仰角：载体纵轴 bx 与水平面之间的夹角，在垂直面中测量，抬头为正；</p>
+<p>横滚角：载体横轴 by 与水平面之间的夹角，在横截面测量，左边抬头为正。</p>
+<p><img src="/img/boxcnqCeBqY5a87xRcVBN0zf9Qc.png" srcset="/img/loading.gif" lazyload></p>
+<p>旋转矩阵：</p>
+<p><img src="/img/boxcnOM54fnwSXJCbCRz5Ya02XU.png" srcset="/img/loading.gif" lazyload></p>
+<p>从 n 系到 b 系，坐标点可以通过三个姿态角相关的旋转矩阵得到。</p>
+<p><img src="/img/boxcnFFov2cuynn5nknbMfx8Vwh.png" srcset="/img/loading.gif" lazyload></p>
+<p>姿态矩阵 – 捷联姿态测量系统中姿态的更新就是根据惯性传感器在载体坐标系中测得值实时的计算出姿态矩阵，然后从姿态矩阵中提取出所需的载体姿态信息。</p>
+<p>四元数：</p>
+<p>测量器件本身跟随着载体既有平移又有旋转运动，使得问题描述与求解变得非常困难。四元数的理论可将此类问题归为刚体绕定点的转动问题，从而有效地解决了这一问题。</p>
+<p>不是从三个旋转角的分量描述，而是找到一个转轴 μ ，可以用 ijk 三个坐标轴表示 μ 的方向。一个坐标或一个矢量相对于某一坐标系的旋转，转角为 θ：</p>
+<p><img src="/img/boxcnb69zPcepTMoDAxzerWY0qg.png" srcset="/img/loading.gif" lazyload></p>
+<p>q 是旋转四元数 ；R‘为旋转后的投影： R’ &#x3D;q’Rq</p>
+<p><img src="/img/boxcnvn707yzGkdUCJmYeBvoTEg.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以和方向余弦矩阵法 都是表示旋转后坐标系之间的转换，本质上是等价的。</p>
+<p>利用四元数求解姿态的具体算法：</p>
+<p>求解四元数姿态微分方程式：</p>
+<p>$$<br>dq&#x2F;dt&#x3D; 1&#x2F;2  q × ω<br>$$</p>
+<p><img src="/img/boxcnezOlwbNPre7cn6YR6DuTTh.png" srcset="/img/loading.gif" lazyload></p>
+<p>假设角速度的采样周期为 T，则四阶龙格-库塔法计算的形式如下：</p>
+<p><img src="/img/boxcnVm2my58Ik2s6yqhO0TdVrd.png" srcset="/img/loading.gif" lazyload></p>
+<p>在利用四元数进行载体姿态解算中通常需要进行正交化处理，从而消除非正交误差对姿态解算精度的影响，其主要目的是使采用四元数方法获得的姿态转移矩阵随机漂移误差达到最小，可以由四元数的四个参数的平方和与四元数的模相比的方法进行归一化处理。</p>
+<h2 id="卡尔曼滤波算法"><a href="#卡尔曼滤波算法" class="headerlink" title="卡尔曼滤波算法"></a>卡尔曼滤波算法</h2><p>卡尔曼滤波器的主要作用可以概括为在带有噪声的系统中寻找状态量的最优估计。</p>
+<p><img src="/img/boxcnBmur9ItlTMWzenWfkLadTd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcncrHaCyxgBQat1zqnYpGOle.png" srcset="/img/loading.gif" lazyload></p>
+<p>在设计滤波器时，可以选择估计值的权重和观测值的权重，来对结果进行修正。</p>
+<p>经典的卡尔曼滤波器仅适用于线性系统，要求信号满足叠加性和齐次性，噪声满足正态分布。</p>
+<p>状态空间表达式：状态方程和观测方程。</p>
+<p><img src="/img/boxcnwOv8TrHz6tpMy6SCJt5Nac.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们最关心的是 Xk，当前的所测量实际物理量。每一个状态和之前的状态以及过程噪声息息相关。观测就是说对当前状态好会有一个转移，然后会有一个误差。我们可以使用状态方程得到当前的估计值，然后再结合观测值，加权得到当前的最优估计值。</p>
+<p>我们的噪声序列，假设是满足正态分布。</p>
+<p>一维方差-噪声的方差，QK RK； 状态的方差 估计方差 Xt</p>
+<p>如果状态是多维，则会有不同的噪声，需要用到协方差矩阵(协方差用来描述随机变量的相关性)</p>
+<p>在实现过程中需要定义超参数：类似于 PID，一个模型很难算出来 PID，需要人工训练；超参数，需要人工训练，很难一开始就确定。在 kalman 滤波器中 Q R 的噪声方差也需要自己训练。</p>
+<h3 id="计算过程"><a href="#计算过程" class="headerlink" title="计算过程"></a>计算过程</h3><p><img src="/img/boxcnSlHOtti5etcz8tiVKD7Odf.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用上一次的结果预测当前值，同时使用观测值修正</p>
+<p>上图中，上面是预测，下面是更新。Kt 是 kalman 增益，量测更新 Kt 是观测值的权重。Pt 是协方差矩阵在不断更新</p>
+<p>主要的公式 or 过程：</p>
+<ol>
+<li>先验估计 Xk 估&#x3D;A Xk-1 估 +μ Bk，其中 A 决定了是不是线性系统</li>
+<li>先验估计协方差 最优估计的协方差，会是上一个估计的协方差矩阵左乘右乘状态转移矩阵<br>cov(Ax,Ax)&#x3D;Acov(x,x)A^T</li>
+<li>修正估计 右下角的公式，得到 kalman 滤波在最终值的值  Kk kalman 增益，决定了观测值的权</li>
+<li>更新增益 Kk 左三公式。和 Q 和 R 都有关，性质就是 Q+R 作分母，那个方差小权重就高</li>
+</ol>
+<p>整体过程就是不断地预测、然后修正、更新值再给到下一次作预测、如此循环迭代。</p>
+<h3 id="关键参数的选择"><a href="#关键参数的选择" class="headerlink" title="关键参数的选择"></a>关键参数的选择</h3><p>Q&amp;R  过程噪声方差矩阵 Q 模型理想与否   观测噪声 R 取决于传感器性能</p>
+<p>由于 X0  P0 会迭代，可以取 X0&#x3D;0，P 小一点，方便收敛。</p>
+<p>使用 kalman 滤波时的注意事项</p>
+<ol>
+<li>选择状态量、观测量</li>
+<li>构建迭代方程、</li>
+<li>初始化参数</li>
+<li>带入公式、进行迭代</li>
+<li>适当调节超参数</li>
+</ol>
+<h3 id="kf-在惯性导航应用"><a href="#kf-在惯性导航应用" class="headerlink" title="kf 在惯性导航应用"></a>kf 在惯性导航应用</h3><p>IMU 信号输出：</p>
+<ol>
+<li>选择状态量<br>陀螺仪噪声协方差  Q_angle<br>陀螺仪漂移噪声协方差  Q_bias<br>角度测量噪声协方差 R_angle<br>测量得的角速度 Newguro<br>采样周期 Dt</li>
+<li>方程构建<br>先验估计：明确当前的角度值、漂移值的预测模型<br>预测误差协方差矩阵：P&#x3D;APA^T+Q ;多维协方差矩阵；注意不同噪声 大多数时候是独立的，cov &#x3D;0<br>测量方程： Z&#x3D;CX+V  在实际应用的 C 代码中不用模拟噪声 V，本省的输出就是带噪的<br>计算 kalman 增益：K&#x3D;PC (CPC+R)^-1<br>最优估计方程：X&#x3D;X+K(Z-CX)<br>更新协方差阵：P&#x3D;[I-KC]P</li>
+</ol>
+<p>有了数学方程，而且还是时域的，代码只是数学的简单延续。</p>
+<h2 id="SIN-仿真"><a href="#SIN-仿真" class="headerlink" title="SIN 仿真"></a>SIN 仿真</h2><h3 id="四元数计算、欧拉角、位置速度参数转换"><a href="#四元数计算、欧拉角、位置速度参数转换" class="headerlink" title="四元数计算、欧拉角、位置速度参数转换"></a>四元数计算、欧拉角、位置速度参数转换</h3><p>首先是基于上面坐标系、四元数等基础知识的数学函数，主要是四元数与方向向量、欧拉角、旋转矩阵之间的转换，四元数与向量的乘积，归一化等基础操作。</p>
+<p>例如下面是从四元数到旋转矩阵的转换函数：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">function</span> Cnb = q2mat(qnb)<br> <span class="hljs-attribute">q11</span> = qnb(<span class="hljs-number">1</span>)*qnb(<span class="hljs-number">1</span>); q12 = qnb(<span class="hljs-number">1</span>)*qnb(<span class="hljs-number">2</span>); q13 = qnb(<span class="hljs-number">1</span>)*qnb(<span class="hljs-number">3</span>); q14 = qnb(<span class="hljs-number">1</span>)*qnb(<span class="hljs-number">4</span>); <br> <span class="hljs-attribute">q22</span> = qnb(<span class="hljs-number">2</span>)*qnb(<span class="hljs-number">2</span>); q23 = qnb(<span class="hljs-number">2</span>)*qnb(<span class="hljs-number">3</span>); q24 = qnb(<span class="hljs-number">2</span>)*qnb(<span class="hljs-number">4</span>); <br> <span class="hljs-attribute">q33</span> = qnb(<span class="hljs-number">3</span>)*qnb(<span class="hljs-number">3</span>); q34 = qnb(<span class="hljs-number">3</span>)*qnb(<span class="hljs-number">4</span>); <br> <span class="hljs-attribute">q44</span> = qnb(<span class="hljs-number">4</span>)*qnb(<span class="hljs-number">4</span>);<br> <span class="hljs-attribute">Cnb</span> =<span class="hljs-meta"> [ q11+q22-q33-q44, 2*(q23-q14), 2*(q24+q13);</span><br><span class="hljs-meta"> 2*(q23+q14), q11-q22+q33-q44, 2*(q34-q12);</span><br><span class="hljs-meta"> 2*(q24-q13), 2*(q34+q12), q11-q22-q33+q44 ];</span><br><span class="hljs-meta"></span><br></code></pre></td></tr></table></figure>
+
+<p>其余的基础函数实现不在这里给出，详情可以参考：</p>
+<p><img src="/img/boxcnIpApVINYHWvgil9kC1VJPf.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="误差导入："><a href="#误差导入：" class="headerlink" title="误差导入："></a>误差导入：</h3><p>实际地球重力场中如果垂线偏差较大而又不能精确补偿，将会带来不利影响，它等效于加速度计偏值误差或者水平失准角误差。姿态需要初始化，对于 IMU 是根据测地球自转角速度以及重力加速度进行姿态初始化。而磁强计可以靠地磁场对姿态进行初始化。</p>
+<figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs abnf"><span class="hljs-attribute">phi</span> <span class="hljs-operator">=</span> [<span class="hljs-number">0.1</span><span class="hljs-comment">; 0.2; 3]*arcmin; qnb = qaddphi(qnb, phi); % 失准角</span><br><br></code></pre></td></tr></table></figure>
+
+<p><img src="/img/boxcndkItdVAgUYckaE5fSA6Kib.png" srcset="/img/loading.gif" lazyload></p>
+<p>圆锥误差和划船误差是理论推导时存在的误差形式，学界已有较多补偿方式。这里采用的是最经典的基于泰勒展开的多子样补偿算法。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs matlab"><span class="hljs-comment">% cnscl.m 圆锥误差和划船误差补偿</span><br><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">[phim, dvbm]</span> = <span class="hljs-title">cnscl</span><span class="hljs-params">(wm, vm)</span></span><br> cs = [ [<span class="hljs-number">2</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> ]/<span class="hljs-number">3</span><br> [<span class="hljs-number">9</span>, <span class="hljs-number">27</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> ]/<span class="hljs-number">20</span><br> [<span class="hljs-number">54</span>, <span class="hljs-number">92</span>, <span class="hljs-number">214</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span> ]/<span class="hljs-number">105</span><br> [<span class="hljs-number">250</span>, <span class="hljs-number">525</span>, <span class="hljs-number">650</span>, <span class="hljs-number">1375</span>, <span class="hljs-number">0</span> ]/<span class="hljs-number">504</span><br> [<span class="hljs-number">2315</span>, <span class="hljs-number">4558</span>, <span class="hljs-number">7296</span>, <span class="hljs-number">7834</span>, <span class="hljs-number">15797</span>]/<span class="hljs-number">4620</span> ]; <span class="hljs-comment">% 2-6 子样补偿系数</span><br> wmm = sum(wm,<span class="hljs-number">1</span>); vmm = sum(vm,<span class="hljs-number">1</span>); dphim = <span class="hljs-built_in">zeros</span>(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>); scullm = <span class="hljs-built_in">zeros</span>(<span class="hljs-number">1</span>,<span class="hljs-number">3</span>);<br> n = <span class="hljs-built_in">size</span>(wm, <span class="hljs-number">1</span>); <span class="hljs-comment">% 子样数</span><br><span class="hljs-keyword">if</span> n&gt;<span class="hljs-number">1</span><br> csw = cs(n<span class="hljs-number">-1</span>,<span class="hljs-number">1</span>:n<span class="hljs-number">-1</span>)*wm(<span class="hljs-number">1</span>:n<span class="hljs-number">-1</span>,:); csv = cs(n<span class="hljs-number">-1</span>,<span class="hljs-number">1</span>:n<span class="hljs-number">-1</span>)*vm(<span class="hljs-number">1</span>:n<span class="hljs-number">-1</span>,:);<br> dphim = <span class="hljs-built_in">cross</span>(csw,wm(n,:)); <span class="hljs-comment">% 圆锥补偿量</span><br> scullm = <span class="hljs-built_in">cross</span>(csw,vm(n,:))+<span class="hljs-built_in">cross</span>(csv,wm(n,:)); <span class="hljs-comment">% 划船补偿量</span><br> <span class="hljs-keyword">end</span><br>phim = (wmm+dphim)&#x27;;<br>dvbm = (vmm+<span class="hljs-number">0.5</span>*<span class="hljs-built_in">cross</span>(wmm,vmm)+scullm)&#x27;;<br><br></code></pre></td></tr></table></figure>
+
+<p>IMU 的误差系统为无阻尼振荡系统，这里直接给出了一组精度较好的近似解析解，它全面包括了陀螺常值漂移误差、加速度计常值偏值误差、角度随机游走误差、速度随机游走误差。</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs matlab"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">[wm, vm]</span> = <span class="hljs-title">imuadderr</span><span class="hljs-params">(wm, vm, eb, web, db, wdb, ts)</span></span><br> m = <span class="hljs-built_in">size</span>(wm,<span class="hljs-number">1</span>); sts = <span class="hljs-built_in">sqrt</span>(ts);<br> wm = wm + [ ts*eb(<span class="hljs-number">1</span>) + sts*web(<span class="hljs-number">1</span>)*<span class="hljs-built_in">randn</span>(m,<span class="hljs-number">1</span>), ...<br> ts*eb(<span class="hljs-number">2</span>) + sts*web(<span class="hljs-number">2</span>)*<span class="hljs-built_in">randn</span>(m,<span class="hljs-number">1</span>), ...<br> ts*eb(<span class="hljs-number">3</span>) + sts*web(<span class="hljs-number">3</span>)*<span class="hljs-built_in">randn</span>(m,<span class="hljs-number">1</span>) ];<br> vm = vm + [ ts*db(<span class="hljs-number">1</span>) + sts*wdb(<span class="hljs-number">1</span>)*<span class="hljs-built_in">randn</span>(m,<span class="hljs-number">1</span>), ...<br> ts*db(<span class="hljs-number">2</span>) + sts*wdb(<span class="hljs-number">2</span>)*<span class="hljs-built_in">randn</span>(m,<span class="hljs-number">1</span>), ...<br> ts*db(<span class="hljs-number">3</span>) + sts*wdb(<span class="hljs-number">3</span>)*<span class="hljs-built_in">randn</span>(m,<span class="hljs-number">1</span>) ];<br><br><span class="hljs-comment">%在这里考虑了陀螺随机常值漂移误差 eb、角度随机游走误差 web，</span><br><span class="hljs-comment">%以及加速度计随机常值偏值误差 db、速度随机游走误差 wdb。</span><br><br></code></pre></td></tr></table></figure>
+
+<h3 id="SINS-参数更新："><a href="#SINS-参数更新：" class="headerlink" title="SINS 参数更新："></a>SINS 参数更新：</h3><p>ins 的参数更新主要是基于角速度四元数微分方程的姿态更新算法；从 g 系变换到 n 系，在进行一次积分的速度更新算法；再积分一次得到的位置更新算法。</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs perl">function [qnb, vn, <span class="hljs-keyword">pos</span>, eth] = insupdate(qnb, vn, <span class="hljs-keyword">pos</span>, wm, vm, ts)<br> nn = size(wm,<span class="hljs-number">1</span>); nts = nn*ts;<br> [phim, dvbm] = cnscl(wm, vm); % 圆锥误差/划船误差补偿<br> eth = earth(<span class="hljs-keyword">pos</span>, vn); % 地球相关参数计算<br> vn1 = vn + rv2m(-eth.wnin*nts/<span class="hljs-number">2</span>)*qmulv(qnb,dvbm) + eth.gcc*nts; % 速度更新<br> vn = (vn+vn1)/<span class="hljs-number">2</span>;<br> <span class="hljs-keyword">pos</span> = <span class="hljs-keyword">pos</span> + [vn(<span class="hljs-number">2</span>)/eth.RMh;vn(<span class="hljs-number">1</span>)/eth.clRNh;vn(<span class="hljs-number">3</span>)]*nts; % 位置更新<br> vn = vn1; <br> qnb = qmul(rv2<span class="hljs-string">q(-eth.wnin*nts)</span>, qmul(qnb, rv2<span class="hljs-string">q(phim)</span>)); % 姿态更新<br> qnb = qnormlz(qnb);<br><br></code></pre></td></tr></table></figure>
+
+<h3 id="kalman-滤波器实现："><a href="#kalman-滤波器实现：" class="headerlink" title="kalman 滤波器实现："></a>kalman 滤波器实现：</h3><p><img src="/img/boxcnEfetsFyZkFI26r7EkoPYOb.png" srcset="/img/loading.gif" lazyload></p>
+<ol>
+<li>先验估计 Xk 估&#x3D;A Xk-1 估 +μ Bk，其中状态转移矩阵决定了是不是线性系统</li>
+<li>先验估计协方差 最优估计的协方差，会是上一个估计的协方差矩阵左乘右乘状态转移矩阵<br>cov(Ax,Ax)&#x3D;Acov(x,x)A^T</li>
+<li>修正估计 右下角的公式，得到 kalman 滤波在最终值的值  Kk kalman 增益，决定了观测值的权</li>
+<li>更新增益 Kk 左三公式。和 Q 和 R 都有关，性质就是 Q+R 作分母，那个方差小权重就高</li>
+</ol>
+<p>整体过程就是不断地预测、然后修正、更新值再给到下一次作预测、如此循环迭代。Q&amp;R  过程噪声方差矩阵 Q 模型理想与否   观测噪声 R 取决于传感器性能。由于 X0  P0 会迭代，可以取 X0&#x3D;0，P 小一点，方便收敛。</p>
+<p>使用 kalman 滤波时的注意事项</p>
+<ol>
+<li>选择状态量、观测量</li>
+<li>构建迭代方程</li>
+<li>初始化参数</li>
+<li>带入公式、进行迭代</li>
+<li>适当调节超参数</li>
+</ol>
+<p>初始化：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs matlab"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">kf</span> = <span class="hljs-title">kfinit</span><span class="hljs-params">(Qk, Rk, P0, Phikk_1, Hk, Tauk)</span></span><br> [kf.m, kf.n] = <span class="hljs-built_in">size</span>(Hk);<br> kf.Qk = Qk; kf.Rk = Rk; kf.Pk = P0; kf.Xk = <span class="hljs-built_in">zeros</span>(kf.n,<span class="hljs-number">1</span>);<br> kf.Phikk_1 = Phikk_1; kf.Hk = Hk;<br> <span class="hljs-keyword">if</span> nargin&lt;<span class="hljs-number">6</span>, kf.Tauk = <span class="hljs-built_in">eye</span>(kf.n);<br> <span class="hljs-keyword">else</span> kf.Tauk = Tauk; <br> <span class="hljs-keyword">end</span><br><br></code></pre></td></tr></table></figure>
+
+<p>更新：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs routeros">function kf = kfupdate(kf, Zk, TimeMeasBoth)<br> <span class="hljs-keyword">if</span> <span class="hljs-attribute">nargin</span>==1, TimeMeasBoth = <span class="hljs-string">&#x27;T&#x27;</span>;<br> elseif <span class="hljs-attribute">nargin</span>==2, TimeMeasBoth = <span class="hljs-string">&#x27;B&#x27;</span>; end<br> <span class="hljs-keyword">if</span> <span class="hljs-attribute">TimeMeasBoth</span>==&#x27;T&#x27; || <span class="hljs-attribute">TimeMeasBoth</span>==&#x27;B&#x27; % 时间更新<br> kf.Xkk_1 = kf.Phikk_1*kf.Xk;<br> kf.Pkk_1 = kf.Phikk_1*kf.Pk*kf.Phikk_1<span class="hljs-string">&#x27; + kf.Tauk*kf.Qk*kf.Tauk&#x27;</span>;<br> <span class="hljs-keyword">else</span> % <span class="hljs-attribute">TimeMeasBoth</span>==&#x27;M&#x27;<br> kf.Xkk_1 = kf.Xk;<br> kf.Pkk_1 = kf.Pk; <br> end<br> <span class="hljs-keyword">if</span> <span class="hljs-attribute">TimeMeasBoth</span>==&#x27;M&#x27; || <span class="hljs-attribute">TimeMeasBoth</span>==&#x27;B&#x27; % 量测更新<br> kf.PXZkk_1 = kf.Pkk_1*kf.Hk<span class="hljs-string">&#x27;;</span><br><span class="hljs-string"> kf.PZkk_1 = kf.Hk*kf.PXZkk_1 + kf.Rk;</span><br><span class="hljs-string"> kf.Kk = kf.PXZkk_1/kf.PZkk_1;</span><br><span class="hljs-string"> kf.Xk = kf.Xkk_1 + kf.Kk*(Zk-kf.Hk*kf.Xkk_1);</span><br><span class="hljs-string"> kf.Pk = kf.Pkk_1 - kf.Kk*kf.PZkk_1*kf.Kk&#x27;</span>;<br> <span class="hljs-keyword">else</span> % <span class="hljs-attribute">TimeMeasBoth</span>==&#x27;T&#x27;<br> kf.Xk = kf.Xkk_1;<br> kf.Pk = kf.Pkk_1; <br> end<br> kf.Pk = (kf.Pk+kf.Pk<span class="hljs-string">&#x27;)/2; % P阵对称化</span><br><span class="hljs-string"></span><br></code></pre></td></tr></table></figure>
+
+<h3 id="SINS-仿真主程序："><a href="#SINS-仿真主程序：" class="headerlink" title="SINS 仿真主程序："></a>SINS 仿真主程序：</h3><p>首先是初始化采样时间、初始导航参数，然后引入误差，并进行一定时长的导航参数仿真。</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">nn</span> = <span class="hljs-number">2</span><span class="hljs-comment">; ts = 0.1; nts = nn*ts; % 子样数和采样时间</span><br><span class="hljs-attr">att</span> = [<span class="hljs-number">0</span><span class="hljs-comment">; 0; 30]*arcdeg; </span><br>vn = [<span class="hljs-number">0</span><span class="hljs-comment">;0;0]; </span><br>pos = [<span class="hljs-number">40</span>*arcdeg<span class="hljs-comment">; 116*arcdeg; 100];</span><br>qnb = a2qua(att)<span class="hljs-comment">; % 姿态、速度和位置初始化</span><br><br>eth = earth(pos, vn)<span class="hljs-comment">;</span><br>wm = qmulv(qconj(qnb),eth.wnie)*ts<span class="hljs-comment">; vm = qmulv(qconj(qnb),-eth.gn)*ts;</span><br>wm = repmat(wm<span class="hljs-string">&#x27;, nn, 1); vm = repmat(vm&#x27;</span>, nn, <span class="hljs-number">1</span>)<span class="hljs-comment">; </span><br>phi = [<span class="hljs-number">0.1</span><span class="hljs-comment">; 0.2; 3]*arcmin; qnb = qaddphi(qnb, phi); % 失准角</span><br>eb = [<span class="hljs-number">0.01</span><span class="hljs-comment">;0.015;0.02]*dph; web = [0.001;0.001;0.001]*dpsh; % 陀螺常值零偏，角度随机游走系数</span><br>db = [<span class="hljs-number">80</span><span class="hljs-comment">;90;100]*ug; wdb = [1;1;1]*ugpsHz; % 加速度计常值偏值，速度随机游走系数</span><br>qnb = qaddphi(qnb, phi)<span class="hljs-comment">;% 仿真静态IMU数据</span><br><br>len = fix(<span class="hljs-number">3600</span>/ts)<span class="hljs-comment">; % 仿真时长</span><br>avp = zeros(len, <span class="hljs-number">10</span>)<span class="hljs-comment">; kk = 1; t = 0; % 记录导航结果 [att, vn, pos, t]</span><br>for k=<span class="hljs-number">1</span>:nn:len<br> t = t + nts<span class="hljs-comment">;</span><br> [wm, vm] = imuadderr(wm, vm, eb, web, db, wdb, ts)<span class="hljs-comment">;</span><br> [qnb, vn, pos] = insupdate(qnb, vn, pos, wm, vm, ts)<span class="hljs-comment">; </span><br> vn(<span class="hljs-number">3</span>) = <span class="hljs-number">0</span><span class="hljs-comment">;</span><br>avp(kk,:) = [q2att(qnb)<span class="hljs-comment">; vn; pos; t]&#x27;; </span><br>kk = kk+<span class="hljs-number">1</span><span class="hljs-comment">;</span><br>end<br><br></code></pre></td></tr></table></figure>
+
+<p>加入磁强计定位和卡拉曼滤波：</p>
+<figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs matlab">nn = <span class="hljs-number">2</span>; ts = <span class="hljs-number">0.1</span>; nts = nn*ts; <span class="hljs-comment">% 子样数和采样时间</span><br>att0 = [<span class="hljs-number">0</span>; <span class="hljs-number">0</span>; <span class="hljs-number">30</span>]*arcdeg; qnb0 = a2qua(att0); vn0 = [<span class="hljs-number">0</span>;<span class="hljs-number">0</span>;<span class="hljs-number">0</span>]; pos0 = [<span class="hljs-number">34</span>*arcdeg; <span class="hljs-number">108</span>*arcdeg; <span class="hljs-number">100</span>];<br>qnb = qnb0; vn = vn0; pos = pos0; <span class="hljs-comment">% 姿态、速度和位置初始化</span><br>eth = earth(pos, vn);<br>wm = qmulv(qconj(qnb),eth.wnie)*ts; vm = qmulv(qconj(qnb),-eth.gn)*ts;<br>wm = <span class="hljs-built_in">repmat</span>(wm&#x27;, nn, <span class="hljs-number">1</span>); vm = <span class="hljs-built_in">repmat</span>(vm&#x27;, nn, <span class="hljs-number">1</span>); <span class="hljs-comment">% 静态IMU数据</span><br><br><span class="hljs-comment">%phi = [0.1; 0.2; 3]*arcmin; qnb = qaddphi(qnb, phi); % 失准角</span><br>eb = [<span class="hljs-number">0.01</span>;<span class="hljs-number">0.015</span>;<span class="hljs-number">0.02</span>]*dph; web = [<span class="hljs-number">0.001</span>;<span class="hljs-number">0.001</span>;<span class="hljs-number">0.001</span>]*dpsh; <span class="hljs-comment">% 陀螺常值零偏，角度随机游走系数</span><br>db = [<span class="hljs-number">80</span>;<span class="hljs-number">90</span>;<span class="hljs-number">100</span>]*ug; wdb = [<span class="hljs-number">1</span>;<span class="hljs-number">1</span>;<span class="hljs-number">1</span>]*ugpsHz; <span class="hljs-comment">% 加速度计常值偏值，速度随机游走系数</span><br><br>Qk = <span class="hljs-built_in">diag</span>([web; wdb; <span class="hljs-built_in">zeros</span>(<span class="hljs-number">9</span>,<span class="hljs-number">1</span>)])^<span class="hljs-number">2</span>*nts;<br>rk = [[<span class="hljs-number">0.1</span>;<span class="hljs-number">0.1</span>;<span class="hljs-number">0.1</span>];[[<span class="hljs-number">10</span>;<span class="hljs-number">10</span>]/Re;<span class="hljs-number">10</span>]]; Rk = <span class="hljs-built_in">diag</span>(rk)^<span class="hljs-number">2</span>;<span class="hljs-comment">%kalman 误差矩阵</span><br>P0 = <span class="hljs-built_in">diag</span>([[<span class="hljs-number">0.1</span>;<span class="hljs-number">0.1</span>;<span class="hljs-number">10</span>]*arcdeg; [<span class="hljs-number">1</span>;<span class="hljs-number">1</span>;<span class="hljs-number">1</span>]; [[<span class="hljs-number">10</span>;<span class="hljs-number">10</span>]/Re;<span class="hljs-number">10</span>]; [<span class="hljs-number">0.1</span>;<span class="hljs-number">0.1</span>;<span class="hljs-number">0.1</span>]*dph; [<span class="hljs-number">100</span>;<span class="hljs-number">100</span>;<span class="hljs-number">100</span>]*ug])^<span class="hljs-number">2</span>;<br>Hk = [<span class="hljs-built_in">zeros</span>(<span class="hljs-number">6</span>,<span class="hljs-number">3</span>),<span class="hljs-built_in">eye</span>(<span class="hljs-number">6</span>),<span class="hljs-built_in">zeros</span>(<span class="hljs-number">6</span>)];<span class="hljs-comment">%初始增益矩阵</span><br>kf = kfinit(Qk, Rk, P0, <span class="hljs-built_in">zeros</span>(<span class="hljs-number">15</span>), Hk); <span class="hljs-comment">% kf滤波器初始化</span><br><br>len = <span class="hljs-built_in">fix</span>(<span class="hljs-number">3600</span>/ts); <span class="hljs-comment">% 仿真时长</span><br>avp = <span class="hljs-built_in">zeros</span>(len, <span class="hljs-number">10</span>); xkpk = <span class="hljs-built_in">zeros</span>(len, <span class="hljs-number">2</span>*kf.n+<span class="hljs-number">1</span>); kk = <span class="hljs-number">1</span>; t = <span class="hljs-number">0</span>; <span class="hljs-comment">% 记录导航结果</span><br><span class="hljs-keyword">for</span> k=<span class="hljs-number">1</span>:nn:len<br> t = t + nts;<br> [wm1, vm1] = imuadderr(wm, vm, eb, web, db, wdb, ts);<br> [qnb, vn, pos, eth] = insupdate(qnb, vn, pos, wm1, vm1, ts);<br> kf.Phikk_1 = <span class="hljs-built_in">eye</span>(<span class="hljs-number">15</span>) + kfft15(eth, q2mat(qnb), sum(vm1,<span class="hljs-number">1</span>)&#x27;/nts)*nts;<br> kf = kfupdate(kf);<br> <span class="hljs-keyword">if</span> <span class="hljs-built_in">mod</span>(t,<span class="hljs-number">1</span>)&lt;nts<br> mag = [vn0; pos0] + rk.*<span class="hljs-built_in">randn</span>(<span class="hljs-number">6</span>,<span class="hljs-number">1</span>); <span class="hljs-comment">% 速度位置仿真</span><br> kf = kfupdate(kf, [vn;pos]-mag, <span class="hljs-string">&#x27;M&#x27;</span>);<br> vn(<span class="hljs-number">3</span>) = vn(<span class="hljs-number">3</span>) - kf.Xk(<span class="hljs-number">6</span>); kf.Xk(<span class="hljs-number">6</span>) = <span class="hljs-number">0</span>; <span class="hljs-comment">% ·反馈</span><br> <span class="hljs-keyword">end</span><br> avp(kk,:) = [qq2phi(qnb,qnb0); vn; pos; t]&#x27;;<br> xkpk(kk,:) = [kf.Xk; <span class="hljs-built_in">diag</span>(kf.Pk); t]; kk = kk+<span class="hljs-number">1</span>;<br><span class="hljs-keyword">end</span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="结果讨论"><a href="#结果讨论" class="headerlink" title="结果讨论"></a>结果讨论</h2><h3 id="kalman-滤波效果"><a href="#kalman-滤波效果" class="headerlink" title="kalman 滤波效果"></a>kalman 滤波效果</h3><p>未使用 kalman 滤波时的导航结果：</p>
+<p><img src="/img/boxcn6XiLGgzwy2m8ncFPeKqDed.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到无论是方向角还是速度、位置参数，都是发散较大的，结果几乎无法使用。</p>
+<p>在引入磁强计信号定期更新观测矩阵的 kalman 滤波器后，可以看到导航的结果有较好的收敛：误差量级比之前小了几个量级。</p>
+<p><img src="/img/boxcnZvDyRriQcD8tr5GKlMEkPf.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="修正参数精度对估计影响"><a href="#修正参数精度对估计影响" class="headerlink" title="修正参数精度对估计影响"></a><strong>修正参数精度对估计影响</strong></h3><p>用于修正累积误差的磁强计传感器不同的精度，会导致修正结果的不同。主要结论是：修正的结果都能收敛，但是稳定后的误差限以及收敛速度不同。磁强计精度越高，收敛越快，收敛后误差越小。</p>
+<p><img src="/img/boxcnSaet0xzVI0nYdveCDVNGSe.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="误差矩阵更新度对结果的影响"><a href="#误差矩阵更新度对结果的影响" class="headerlink" title="误差矩阵更新度对结果的影响"></a>误差矩阵更新度对结果的影响</h3><p>在实际的计算过程中，实时更新误差矩阵能带来更好的估计。在仿真代码中不进行 QR 矩阵更新，也能收敛，但是收敛效果不好。</p>
+<p><img src="/img/boxcnv3Y9yLd6880JXTckf4ZqAb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcnO54ViMuRdejfO52wnAOnzf.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h3><ol>
+<li>没有基于磁强计参数计算初始姿态以及实时航向角信息。<br>在仿真过程中，磁强计的修正结果直接以精确值 + 随机误差的形式给出，而不是通过三轴磁强参数通过一定的计算方法给出，距离实际应用的算法还有待改进。</li>
+<li>由于没有计算磁强计的组合系统，系统仍是线性的，没有用到 EKF、UKF 等算法。</li>
+</ol>
+<p>实际组合导航系统的量测矩阵会是非线性的，目前也有很多关于非线性卡尔曼滤波器的研究。但是目前的仿真系统作了一定的简化，没有用到扩展卡尔曼滤波器等方法。</p>
+<ol>
+<li>误差都是理论的正态分布随机误差，是仿真模型，没有获得实际传感器信号输入。</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="print-no-link">#课程学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【项目总结】基于磁强计、IMU的组合导航算法</div>
+      <div>http://example.com/2023/03/25/【项目总结】基于磁强计、IMU的组合导航算法/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年3月25日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/18/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91TMR-%E9%9A%A7%E9%81%93%E7%A3%81%E9%98%BB%E6%95%88%E5%BA%94/" title="【文献学习】TMR-隧道磁阻效应">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【文献学习】TMR-隧道磁阻效应</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP32-A2DP%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5/" title="【IOT开发】ESP32-A2DP自动连接">
+                        <span class="hidden-mobile">【IOT开发】ESP32-A2DP自动连接</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

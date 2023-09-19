@@ -1,0 +1,706 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="学习使用IIS芯片驱动音频。I2S(Inter-IC Sound)总线–集成电路内置音频总线，是由飞利浦半导体公司针对数字音频设备之间的音频数据传输而定制的一种音频总线标准。采用独立的时钟线和数据线，在主设备和从设备之间能够实现同步传输。I2S驱动需要硬件支持，所以之前使用的STM32都没有I2S功能，而ESP32支持音频开发，大多都搭载了I2S接口。在此记录I2S驱动学习时考虑到的一些问题，并通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【调研学习】I2S音频驱动">
+<meta property="og:url" content="http://example.com/2022/09/15/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91I2S%E9%9F%B3%E9%A2%91%E9%A9%B1%E5%8A%A8/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="学习使用IIS芯片驱动音频。I2S(Inter-IC Sound)总线–集成电路内置音频总线，是由飞利浦半导体公司针对数字音频设备之间的音频数据传输而定制的一种音频总线标准。采用独立的时钟线和数据线，在主设备和从设备之间能够实现同步传输。I2S驱动需要硬件支持，所以之前使用的STM32都没有I2S功能，而ESP32支持音频开发，大多都搭载了I2S接口。在此记录I2S驱动学习时考虑到的一些问题，并通">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
+<meta property="article:published_time" content="2022-09-15T02:40:45.000Z">
+<meta property="article:modified_time" content="2022-09-15T03:16:41.215Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="IOT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
+  
+  
+  
+  <title>【调研学习】I2S音频驱动 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【调研学习】I2S音频驱动"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-15 10:40" pubdate>
+          2022年9月15日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          110 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【调研学习】I2S音频驱动</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>学习使用IIS芯片驱动音频。<br>I2S(Inter-IC Sound)总线–集成电路内置音频总线，是由飞利浦半导体公司针对数字音频设备之间的音频数据传输而定制的一种音频总线标准。采用独立的时钟线和数据线，在主设备和从设备之间能够实现同步传输。I2S驱动需要硬件支持，所以之前使用的STM32都没有I2S功能，而ESP32支持音频开发，大多都搭载了I2S接口。<br>在此记录I2S驱动学习时考虑到的一些问题，并通过调研尝试给出解答。</p>
+<h2 id="1-IIS各个引脚接口的作用是什么，如何使用IO口模拟IIS接口-初始化代码长啥样？"><a href="#1-IIS各个引脚接口的作用是什么，如何使用IO口模拟IIS接口-初始化代码长啥样？" class="headerlink" title="1.IIS各个引脚接口的作用是什么，如何使用IO口模拟IIS接口-初始化代码长啥样？"></a>1.IIS各个引脚接口的作用是什么，如何使用IO口模拟IIS接口-初始化代码长啥样？</h2><p>IIS总线，最简就是三条线：<br>BLCK-位时钟，bit clock，BCLK最低不低于采样频率*采样位数声道数<br>RLCK - 也叫WS，Word Select CLK ，左右声道选择时钟。0-左声道；1-右声道<br>SD serial data ，如果是MCU to I2Schip，在MCU是Dout，I2S芯片的Din</p>
+<p>由MCU向I2S解码芯片传数据并播放，加上GND VCC一共五条线。<br>除此之外，一些I2S设备（ES8388）还需要主时钟，用于主从设备的同步，或者产生BCK；主时钟一般是MCU的主频，会高很多；如果是由声音采集的设备一般都需要主时钟和另一个Dout脚向MCU返回采集的PCM数据。<br>常用的数据传输标准由飞利浦标准、左对齐、短PCM格式。Philip FormatRLCK变化后第2个BCLK脉冲处变换声道数据，就是有一位延时。左对齐就是在WS电位变化时改变声道数据。PCM Short Format是每次变换WS都会有一个1周期的脉冲，动一次变换一次左右。<br><img src="/img/ESP-SPP/i2s-philipformat.png" srcset="/img/loading.gif" lazyload alt="i2s-philipformat"></p>
+<p>I2S在STM32中不适用，不过在ESP32中用到比较多。ESP32无论是基于ESP-IDF架构的工程还是基于arduino的工程，使用的I2S驱动头文件都是&lt;driver&#x2F;i2s.h&gt;<br>驱动的架构：<br><img src="/img/ESP-SPP/I2S_structure.PNG" srcset="/img/loading.gif" lazyload alt="I2S_structure"><br>主要使用的是APP层接口，移植的话可能需要基于driver层修改。主要还是使用STD模式。</p>
+<ul>
+<li>i2s.h: The header file of legacy I2S APIs (for apps using legacy driver).</li>
+<li>i2s_std.h: The header file that provides standard communication mode specific APIs (for apps using new driver with standard mode).</li>
+<li>i2s_pdm.h: The header file that provides PDM communication mode specific APIs (for apps using new driver with PDM mode).</li>
+<li>i2s_tdm.h: The header file that provides TDM communication mode specific APIs (for apps using new drivers with TDM mode).</li>
+</ul>
+<p>在<code>i2s.h</code>中使用的是最常见的总线协议初始化方式：封装好一个结构体，然后给出结构体参数配饰，再允许初始化函数；使用时会有类似于start者或write 函数运行。<br>引脚配置一般会在initial 结构体内。<br>在i2s.h 中，相关的配置结构体 :</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">typedef</span> <span class="hljs-keyword">struct</span> &#123;<br>    <span class="hljs-type">int</span> mck_io_num;     <span class="hljs-comment">/*!&lt; MCK in out pin. Note that ESP32 supports setting MCK on GPIO0/GPIO1/GPIO3 only*/</span><br>    <span class="hljs-type">int</span> bck_io_num;     <span class="hljs-comment">/*!&lt; BCK in out pin*/</span><br>    <span class="hljs-type">int</span> ws_io_num;      <span class="hljs-comment">/*!&lt; WS in out pin*/</span><br>    <span class="hljs-type">int</span> data_out_num;   <span class="hljs-comment">/*!&lt; DATA out pin*/</span><br>    <span class="hljs-type">int</span> data_in_num;    <span class="hljs-comment">/*!&lt; DATA in pin*/</span><br>&#125; <span class="hljs-type">i2s_pin_config_t</span>;  <span class="hljs-comment">// 引脚配置 </span><br><br>...<br><span class="hljs-type">i2s_driver_config_t</span>;  <span class="hljs-comment">// 驱动配置 包括I2S的工作模式、采样率、位深、dma配置、数据格式等等。</span><br><br><span class="hljs-type">i2s_port_t</span>;<br><span class="hljs-comment">// 端口号，也就是一个MCU有几个I2S端口；</span><br><span class="hljs-comment">//sco_caps.h里面的SOC_I2S_NUM 决定最多有几个I2S口  一般是1</span><br></code></pre></td></tr></table></figure>
+<p>一些最基础的函数：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_set_pin</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num, <span class="hljs-type">const</span> <span class="hljs-type">i2s_pin_config_t</span> *pin)</span></span>;<br><br><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_driver_install</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num, <span class="hljs-type">const</span> <span class="hljs-type">i2s_config_t</span> *i2s_config, <span class="hljs-type">int</span> queue_size, <span class="hljs-type">void</span> *i2s_queue)</span></span>;<br><span class="hljs-comment">//初始化函数。 端口号一般是0；配置结构体先初始化好，然后给出I2S事件队列。</span><br><br><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_driver_uninstall</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num)</span></span>;<br><br><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_write</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *src, <span class="hljs-type">size_t</span> size, <span class="hljs-type">size_t</span> *bytes_written, TickType_t ticks_to_wait)</span></span>;<br><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_write_expand</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *src, <span class="hljs-type">size_t</span> size, <span class="hljs-type">size_t</span> src_bits, <span class="hljs-type">size_t</span> aim_bits, <span class="hljs-type">size_t</span> *bytes_written, TickType_t ticks_to_wait)</span></span>;<br><span class="hljs-comment">//主要用前者吧；expand增加数据量而不增加精度,主要是为了让数据格式适配总线配置</span><br><br><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_set_sample_rates</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num, <span class="hljs-type">uint32_t</span> rate)</span></span>;<br><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_set_clk</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num, <span class="hljs-type">uint32_t</span> rate, <span class="hljs-type">uint32_t</span> bits_cfg, <span class="hljs-type">i2s_channel_t</span> ch)</span></span>;<br><span class="hljs-comment">//  Similar to i2s_set_sample_rates(), but also sets bit width.</span><br><br><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_stop</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num)</span></span>;<br><span class="hljs-function"><span class="hljs-type">esp_err_t</span> <span class="hljs-title">i2s_start</span><span class="hljs-params">(<span class="hljs-type">i2s_port_t</span> i2s_num)</span></span>;<br><span class="hljs-comment">/* It is not necessary to call this function after i2s_driver_install(),</span><br><span class="hljs-comment"> * however it is necessary to call it after i2s_stop().</span><br><span class="hljs-comment"> */</span><br> <br></code></pre></td></tr></table></figure>
+
+<p>虽然官方的说明文档给到的应用层是i2s.h 也就是包含上面函数的头文件，但是在一些高级的应用中都额外封装了一层，例如 esp-adf中 i2s_stream.h 把I2S和audio_common，audio_pipeline 进行整合，让I2S流适应更多的音频数据传输模式。<br>在peripherals&#x2F;i2s 给出的最简化的I2S初始化例程：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;driver/i2s.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/queue.h&quot;</span></span><br><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">int</span> i2s_num = <span class="hljs-number">0</span>; <span class="hljs-comment">// i2s port number</span><br><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">i2s_config_t</span> i2s_config = &#123;<br>     .mode = I2S_MODE_MASTER | I2S_MODE_TX,<br>     .sample_rate = <span class="hljs-number">44100</span>,<br>     .bits_per_sample = <span class="hljs-number">16</span>,<br>     .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,<br>     .communication_format = I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB,<br>     .intr_alloc_flags = <span class="hljs-number">0</span>, <span class="hljs-comment">// default interrupt priority</span><br>     .dma_buf_count = <span class="hljs-number">8</span>,<br>     .dma_buf_len = <span class="hljs-number">64</span>,<br>     .use_apll = <span class="hljs-literal">false</span><br>&#125;;<br><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">i2s_pin_config_t</span> pin_config = &#123;<br>    .bck_io_num = <span class="hljs-number">26</span>,<br>    .ws_io_num = <span class="hljs-number">25</span>,<br>    .data_out_num = <span class="hljs-number">22</span>,<br>    .data_in_num = I2S_PIN_NO_CHANGE<br>&#125;;<br><br>...<br><br>    <span class="hljs-built_in">i2s_driver_install</span>(i2s_num, &amp;i2s_config, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);   <span class="hljs-comment">//install and start i2s driver</span><br><br>    <span class="hljs-built_in">i2s_set_pin</span>(i2s_num, &amp;pin_config);<br><br>    <span class="hljs-built_in">i2s_set_sample_rates</span>(i2s_num, <span class="hljs-number">22050</span>); <span class="hljs-comment">//set sample rates</span><br><br>    <span class="hljs-built_in">i2s_driver_uninstall</span>(i2s_num); <span class="hljs-comment">//stop &amp; destroy i2s driver</span><br><br></code></pre></td></tr></table></figure>
+
+<h2 id="2-IIS-Data数据流如何写入，格式有要求吗？"><a href="#2-IIS-Data数据流如何写入，格式有要求吗？" class="headerlink" title="2.IIS Data数据流如何写入，格式有要求吗？"></a>2.IIS Data数据流如何写入，格式有要求吗？</h2><p>调用上述的 i2s_write 接口。<br>写入数据：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">uint8_t</span> *data_wr = (<span class="hljs-type">uint8_t</span> *)<span class="hljs-built_in">malloc</span>(<span class="hljs-built_in">sizeof</span>(<span class="hljs-type">uint8_t</span>) * <span class="hljs-number">400</span>);<br><span class="hljs-type">size_t</span> i2s_bytes_write = <span class="hljs-number">0</span>;<br><span class="hljs-built_in">i2s_write</span>(I2S_NUM_0, data_wr, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">uint8_t</span>) * <span class="hljs-number">400</span>, &amp;i2s_bytes_write, <span class="hljs-number">100</span>);<br></code></pre></td></tr></table></figure>
+
+<p>关于data格式，可以是 u8* 也可以是u16*  u32*  int<em>，因为参数定义的是void</em><br>数据传入都是bit流的模式，只要注意与编码 .bits_per_sample 位数对应即可。<br>已经读过的数据会让&amp;i2s_bytes_write累加。</p>
+<p>在各个audio框架中，想要把音源数据换成自己的数据，找到write语句，更改即可。</p>
+<h2 id="3-典型的A2DP协议-驱动IIS的流程？"><a href="#3-典型的A2DP协议-驱动IIS的流程？" class="headerlink" title="3.典型的A2DP协议 驱动IIS的流程？"></a>3.典型的A2DP协议 驱动IIS的流程？</h2><p>数据流：<br><code>[Bluetooth] ---&gt; bt_stream_reader ---&gt; i2s_stream_writer ---&gt; codec_chip ---&gt; speaker</code><br>程序：<br>[ 1 ] Create Bluetooth service  初始化A2DP蓝牙协议</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;esp_hf_client_api.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;bluetooth_service.h&quot;</span></span><br><br>    <span class="hljs-type">bluetooth_service_cfg_t</span> bt_cfg = &#123;<br>             .device_name = <span class="hljs-string">&quot;ESP-ADF-AUDIO&quot;</span>,<br>            .mode = BLUETOOTH_A2DP_SINK,<br>        &#125;;<br>    <span class="hljs-built_in">bluetooth_service_start</span>(&amp;bt_cfg);<br>    <span class="hljs-built_in">esp_hf_client_register_callback</span>(bt_hf_client_cb);<br>    <span class="hljs-built_in">esp_hf_client_init</span>();<br></code></pre></td></tr></table></figure>
+<p>[ 2 ] Start codec chip 初始化I2S编码解码芯片</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">audio_board_handle_t</span> board_handle = <span class="hljs-built_in">audio_board_init</span>();<br><span class="hljs-built_in">audio_hal_ctrl_codec</span>(board_handle-&gt;audio_hal, AUDIO_HAL_CODEC_MODE_DECODE, AUDIO_HAL_CTRL_START);<br></code></pre></td></tr></table></figure>
+<p>[ 3 ] Create audio pipeline for playback 构建音频通道  并为pipeline绑定各种功能</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;i2s_stream.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;board.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;filter_resample.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;raw_stream.h&quot;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_element.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_pipeline.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_event_iface.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_mem.h&quot;</span></span><br><br><br><span class="hljs-type">static</span> <span class="hljs-type">audio_element_handle_t</span>  raw_read, bt_stream_reader, i2s_stream_writer, i2s_stream_reader;<br><span class="hljs-type">static</span> <span class="hljs-type">audio_pipeline_handle_t</span> pipeline_d, pipeline_e;<br><br>...<br>    <span class="hljs-comment">//先初始化俩通道 编码和解码通道</span><br>    <span class="hljs-type">audio_pipeline_cfg_t</span> pipeline_cfg = <span class="hljs-built_in">DEFAULT_AUDIO_PIPELINE_CONFIG</span>();<br>    pipeline_d = <span class="hljs-built_in">audio_pipeline_init</span>(&amp;pipeline_cfg);<br>    pipeline_e = <span class="hljs-built_in">audio_pipeline_init</span>(&amp;pipeline_cfg);<br>    <br>    <span class="hljs-comment">//构建i2sstream  to write data 并read data</span><br>    <span class="hljs-type">i2s_stream_cfg_t</span> i2s_cfg1 = <span class="hljs-built_in">I2S_STREAM_CFG_DEFAULT</span>();<br>    i2s_cfg1.type = AUDIO_STREAM_WRITER;<br>    i2s_stream_writer = <span class="hljs-built_in">i2s_stream_init</span>(&amp;i2s_cfg1);<br>    <span class="hljs-type">i2s_stream_cfg_t</span> i2s_cfg2 = <span class="hljs-built_in">I2S_STREAM_CFG_DEFAULT</span>();<br>    i2s_cfg2.type = AUDIO_STREAM_READER;<br>    i2s_stream_reader = <span class="hljs-built_in">i2s_stream_init</span>(&amp;i2s_cfg2);<br>    <span class="hljs-comment">//audio 板使用的编解码芯片ES8388不仅有播放，还有从数字mic录音的功能 所以这里初始化了reader</span><br><br>    <span class="hljs-comment">//配置从蓝牙通道传过来的数据流</span><br>    <span class="hljs-type">raw_stream_cfg_t</span> raw_cfg = <span class="hljs-built_in">RAW_STREAM_CFG_DEFAULT</span>();<br>    raw_cfg.type = AUDIO_STREAM_READER;<br>    raw_read = <span class="hljs-built_in">raw_stream_init</span>(&amp;raw_cfg);<br>    bt_stream_reader = <span class="hljs-built_in">bluetooth_service_create_stream</span>();<br>    <br>    <span class="hljs-comment">//注册信息 到音频通道pipeline 并建立链接</span><br>    <span class="hljs-built_in">audio_pipeline_register</span>(pipeline_d, bt_stream_reader, <span class="hljs-string">&quot;bt&quot;</span>);<br>    <span class="hljs-built_in">audio_pipeline_register</span>(pipeline_d, i2s_stream_writer, <span class="hljs-string">&quot;i2s_w&quot;</span>);<br>    <span class="hljs-built_in">audio_pipeline_register</span>(pipeline_e, i2s_stream_reader, <span class="hljs-string">&quot;i2s_r&quot;</span>);<br>    <span class="hljs-built_in">audio_pipeline_register</span>(pipeline_e, raw_read, <span class="hljs-string">&quot;raw&quot;</span>);<br>    <br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *link_d[<span class="hljs-number">2</span>] = &#123;<span class="hljs-string">&quot;bt&quot;</span>, <span class="hljs-string">&quot;i2s_w&quot;</span>&#125;;<br>    <span class="hljs-built_in">audio_pipeline_link</span>(pipeline_d, &amp;link_d[<span class="hljs-number">0</span>], <span class="hljs-number">2</span>);<br>    <span class="hljs-type">const</span> <span class="hljs-type">char</span> *link_e[<span class="hljs-number">2</span>] = &#123;<span class="hljs-string">&quot;i2s_r&quot;</span>, <span class="hljs-string">&quot;raw&quot;</span>&#125;;<br>    <span class="hljs-built_in">audio_pipeline_link</span>(pipeline_e, &amp;link_e[<span class="hljs-number">0</span>], <span class="hljs-number">2</span>);<br>    <br>    <span class="hljs-comment">//初始化外设  包括audio板的按键外设 和 Bluetooth音频输入外设</span><br>    <span class="hljs-type">esp_periph_config_t</span> periph_cfg = <span class="hljs-built_in">DEFAULT_ESP_PERIPH_SET_CONFIG</span>();<br>    <span class="hljs-type">esp_periph_set_handle_t</span> set = <span class="hljs-built_in">esp_periph_set_init</span>(&amp;periph_cfg);<br>    <span class="hljs-built_in">audio_board_key_init</span>(set);<br>    <span class="hljs-type">esp_periph_handle_t</span> bt_periph = <span class="hljs-built_in">bluetooth_service_create_periph</span>();<br>    <span class="hljs-built_in">esp_periph_start</span>(set, bt_periph);<br></code></pre></td></tr></table></figure>
+
+<p> [ 4 ] 根据各种事件进行事件触发<br> <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">//根据相应的指令 播放or暂停事件</span><br><span class="hljs-keyword">if</span> (---)<br>    <span class="hljs-built_in">periph_bluetooth_play</span>(bt_periph);<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>  (---)<br>    <span class="hljs-built_in">periph_bluetooth_pause</span>(bt_periph);<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>  (---)<br>    <span class="hljs-built_in">periph_bluetooth_next</span>(bt_periph);<br><span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (---)<br>    <span class="hljs-built_in">periph_bluetooth_prev</span>(bt_periph);<br></code></pre></td></tr></table></figure><br> [ 5 ]  任务链最后就是释放内存<br> <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs c++">    <span class="hljs-comment">//结束任务 释放内存</span><br>    <span class="hljs-built_in">audio_pipeline_stop</span>(pipeline_d);<br>... 各种<span class="hljs-function">stop</span><br><span class="hljs-function">    <span class="hljs-title">audio_pipeline_unregister</span><span class="hljs-params">(pipeline_d, bt_stream_reader)</span></span>;<br>... 各种<span class="hljs-function">unregister</span><br><span class="hljs-function">    <span class="hljs-title">audio_pipeline_remove_listener</span><span class="hljs-params">(pipeline_d)</span></span>;<br>...<br>    <span class="hljs-built_in">audio_pipeline_deinit</span>(pipeline_d);<br>...<br>    <span class="hljs-built_in">bluetooth_service_destroy</span>();<br></code></pre></td></tr></table></figure></p>
+<h2 id="4-编码解码的控制？目前有-mp3-aac-的编解码。"><a href="#4-编码解码的控制？目前有-mp3-aac-的编解码。" class="headerlink" title="4.编码解码的控制？目前有 mp3 aac 的编解码。"></a>4.编码解码的控制？目前有 mp3 aac 的编解码。</h2><p>可以找到相应的解码头文件。 aac、flac（Free Lossless Audio Codec -free无损压缩）、mp3。<br>在ESP32中配置相应的解码器，可以将收到的数据解码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;mp3_decoder.h&quot;</span></span><br><br><span class="hljs-built_in">ESP_LOGI</span>(TAG, <span class="hljs-string">&quot;Create mp3 decoder to decode mp3 file.&quot;</span>);<br><span class="hljs-type">mp3_decoder_cfg_t</span> mp3_cfg = <span class="hljs-built_in">DEFAULT_MP3_DECODER_CONFIG</span>();<br>mp3_decoder = <span class="hljs-built_in">mp3_decoder_init</span>(&amp;mp3_cfg);<br><br><span class="hljs-built_in">audio_element_set_read_cb</span>(mp3_decoder, mp3_music_read_cb, <span class="hljs-literal">NULL</span>);<br><span class="hljs-comment">//mp3_music_read_cb 在解码完成后的回调函数 继续解码下一段数据</span><br><span class="hljs-comment">//这里的回调函数决定了从哪里读mp3原始二进制数据 一般是file</span><br><br><span class="hljs-built_in">audio_pipeline_register</span>(pipeline, mp3_decoder, <span class="hljs-string">&quot;mp3&quot;</span>);<br> <span class="hljs-comment">//需要在音频通道中注册mp3解码器 </span><br></code></pre></td></tr></table></figure>
+<p>传输时可以把数据压缩后，在ESP32中调用相应的解码器解码，再播放。<br>上面的例子封装程度比较高，在 配置完audio_pipeline 的解码器、I2S输出通道后，run时会自动写入I2S数据流，所以没有解码后的数据写入语句。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_element.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_pipeline.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_event_iface.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_mem.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;audio_common.h&quot;</span></span><br><br><span class="hljs-built_in">audio_pipeline_run</span>(pipeline);<br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief    Start Audio Pipeline.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> *           With this function audio_pipeline will create tasks for all elements,</span><br><span class="hljs-comment"> *           that have been linked using the linking functions.</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> * @param[in]  pipeline   The Audio Pipeline Handle</span><br><span class="hljs-comment"> *</span><br><span class="hljs-comment"> */</span><br>由于之前绑定了mp3解码器和i2s writer，run会触发绑定元素的事件：解码并写入。<br><span class="hljs-comment">//---各种错误检查 前置判断 如果正确的话，就会执行：</span><br>...<br>    <span class="hljs-built_in">audio_element_run</span>(el_item-&gt;el); <br>...<br><span class="hljs-comment">//---其中el_item 是输入Pipeline绑定的元素，el是对应的事件</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="5-DMA-IIS怎么使用，对于SRAM-是必需吗，不用SRAM会有何限制？流畅播放的典型缓存有多大？"><a href="#5-DMA-IIS怎么使用，对于SRAM-是必需吗，不用SRAM会有何限制？流畅播放的典型缓存有多大？" class="headerlink" title="5.DMA IIS怎么使用，对于SRAM 是必需吗，不用SRAM会有何限制？流畅播放的典型缓存有多大？"></a>5.DMA IIS怎么使用，对于SRAM 是必需吗，不用SRAM会有何限制？流畅播放的典型缓存有多大？</h2><p>不需要额外的命令，I2S驱动会自动调用DMA通道。write、read 命令在I2S总线的TX RX通道都有对应的DMA通道，两者独立。<br>I2S的数据传输：<br>I2S外设的所有数据传输都是通过DMA实现的。当发送或接收的数据达到一个 DMA 缓冲区的大小时，将触发 I2S_OUT_EOF 或 I2S_IN_SUC_EOF 中断。<br>具体的触发程序、回调函数没有说明的在哪一层，但是原理是收数据-到一定量-传到I2S数据缓存区。</p>
+<p>SRAM不是必须的，可以用flash存。虽然flash的读写速度不如SRAM，但是也足够音频播放的数据读写了。<br>使用时，音频数据类似于一个环形链表，“环形”地读写新的数据。<br>注意程序设计时不要把数据链表读到内存，会放不下。之前写的程序把80k的缓存数据都放在内存，RAM基本就满了，不是合适的设计。可以放在flash内。某个例程中flash内数据表的大小约为60KB。<br>4MB ESP32的flash分区默认的是前1MB存运行程序，后3MB存数据，为了保护安全程序中不会修改固件分区的flash内容。</p>
+<p>具体的flash操作API使用：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;esp_partition.h&quot;</span></span><br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> PARTITION_NAME   <span class="hljs-string">&quot;storage&quot;</span></span><br><span class="hljs-comment">//flash record size, for recording 5 seconds&#x27; data</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> FLASH_RECORD_SIZE         (EXAMPLE_I2S_CHANNEL_NUM * EXAMPLE_I2S_SAMPLE_RATE * EXAMPLE_I2S_SAMPLE_BITS / 8 * 5)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> FLASH_ERASE_SIZE          (FLASH_RECORD_SIZE % FLASH_SECTOR_SIZE == 0) ? FLASH_RECORD_SIZE : FLASH_RECORD_SIZE + (FLASH_SECTOR_SIZE - FLASH_RECORD_SIZE % FLASH_SECTOR_SIZE)</span><br><span class="hljs-comment">//sector size of flash</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> FLASH_SECTOR_SIZE         (0x1000)</span><br><span class="hljs-comment">//flash read / write address</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> FLASH_ADDR                (0x200000)</span><br><br><br><span class="hljs-comment">/*</span><br><span class="hljs-comment"> * @brief erase flash for recording</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">example_erase_flash</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span>;<br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief debug buffer data</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">example_disp_buf</span><span class="hljs-params">(<span class="hljs-type">uint8_t</span>* buf, <span class="hljs-type">int</span> length)</span></span>;<br><br><span class="hljs-comment">//具体使用时的程序：</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">example_flashuse_task</span><span class="hljs-params">(<span class="hljs-type">void</span>*arg)</span></span><br><span class="hljs-function"></span>&#123;<br>    <span class="hljs-comment">//0.验证flash空间 </span><br>    <span class="hljs-type">const</span> <span class="hljs-type">esp_partition_t</span> *data_partition = <span class="hljs-literal">NULL</span>;<br>    data_partition = <span class="hljs-built_in">esp_partition_find_first</span>(ESP_PARTITION_TYPE_DATA,<br>            ESP_PARTITION_SUBTYPE_DATA_FAT, PARTITION_NAME);<br>    <span class="hljs-keyword">if</span> (data_partition != <span class="hljs-literal">NULL</span>) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;partiton addr: 0x%08x; size: %d; label: %s\n&quot;</span>, data_partition-&gt;address, data_partition-&gt;size, data_partition-&gt;label);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-built_in">ESP_LOGE</span>(TAG, <span class="hljs-string">&quot;Partition error: can&#x27;t find partition name: %s\n&quot;</span>, PARTITION_NAME);<br>        <span class="hljs-built_in">vTaskDelete</span>(<span class="hljs-literal">NULL</span>);<br>    &#125;<br>    <span class="hljs-comment">//1. Erase flash</span><br>    <span class="hljs-built_in">example_erase_flash</span>();<br>    <span class="hljs-type">int</span> i2s_read_len = EXAMPLE_I2S_READ_LEN;<br>    <span class="hljs-type">int</span> flash_wr_size = <span class="hljs-number">0</span>;<br>    <span class="hljs-type">size_t</span> bytes_read, bytes_written;<br><br>    <span class="hljs-comment">//2. write data to flash</span><br>    <span class="hljs-type">uint8_t</span>* flash_write_buff = (<span class="hljs-type">uint8_t</span>*) <span class="hljs-built_in">calloc</span>(i2s_read_len, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">char</span>));<br>    <span class="hljs-keyword">while</span> (flash_wr_size &lt; FLASH_RECORD_SIZE) &#123;<br><br>        <span class="hljs-comment">//每次写入的数据flash_write_buff 长度write_buff_len data_partition记录分区和flash_wr_size分区后多少bytes开始写入</span><br>        <span class="hljs-comment">//在此修改flash_write_buff的值</span><br>        <br>        <span class="hljs-built_in">esp_partition_write</span>(data_partition, flash_wr_size, flash_write_buff, write_buff_len);<br>        flash_wr_size += write_buff_len;<br>    &#125;<br>    <span class="hljs-built_in">free</span>(flash_write_buff);<br>    flash_write_buff = <span class="hljs-literal">NULL</span>;<br><br>    <span class="hljs-comment">//3. Read flash</span><br>    <span class="hljs-type">uint8_t</span>* flash_read_buff = (<span class="hljs-type">uint8_t</span>*) <span class="hljs-built_in">calloc</span>(i2s_read_len, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">char</span>));<br><br>    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> rd_offset = <span class="hljs-number">0</span>; rd_offset &lt; flash_wr_size; rd_offset += FLASH_SECTOR_SIZE) &#123;<br>        <span class="hljs-comment">//read I2S(ADC) original data from flash</span><br>        <span class="hljs-built_in">esp_partition_read</span>(data_partition, rd_offset, flash_read_buff, FLASH_SECTOR_SIZE);<br>        <br>        <span class="hljs-comment">//在此对读出的FLASH_SECTOR_SIZE 长度的数据flash_read_buff进行操作 </span><br>    &#125;<br><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<h2 id="6-比起IIC-DAC-或者直接DAC的方案，IIS的优势在哪？位深-频率-or数据处理逻辑？"><a href="#6-比起IIC-DAC-或者直接DAC的方案，IIS的优势在哪？位深-频率-or数据处理逻辑？" class="headerlink" title="6.比起IIC-DAC 或者直接DAC的方案，IIS的优势在哪？位深 频率 or数据处理逻辑？"></a>6.比起IIC-DAC 或者直接DAC的方案，IIS的优势在哪？位深 频率 or数据处理逻辑？</h2><p>目前所接触到的音频输出方式有三种：<br>1.MCU内置DAC通道输出<br>2.外置I2C-DAC 模块输出<br>3.外置I2S 解码 模块输出</p>
+<table>
+<thead>
+<tr>
+<th align="center"></th>
+<th align="center">内置DAC</th>
+<th align="center">I2C-DAC</th>
+<th align="center">I2S</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">外接芯片</td>
+<td align="center">N</td>
+<td align="center">Y</td>
+<td align="center">Y</td>
+</tr>
+<tr>
+<td align="center">频率</td>
+<td align="center">&gt;48K</td>
+<td align="center">高速模式可勉强&gt;48K</td>
+<td align="center">&gt;48K</td>
+</tr>
+<tr>
+<td align="center">位深</td>
+<td align="center">8~12bit</td>
+<td align="center">8~24bit <br />高位DAC芯片很贵</td>
+<td align="center">16~32bit<br />24bit标配</td>
+</tr>
+<tr>
+<td align="center">数据格式</td>
+<td align="center">PCM-DAC</td>
+<td align="center">PCM-DAC</td>
+<td align="center">PCM &amp; PDM &amp;DAC</td>
+</tr>
+<tr>
+<td align="center">总线通信带宽</td>
+<td align="center">∞ 无片外通信</td>
+<td align="center">I2C总线带宽<br />高速约3.4Mbit&#x2F;s</td>
+<td align="center">32bit-96K<br />音频够用</td>
+</tr>
+</tbody></table>
+<p>相较于I2C协议，I2S协议同样是同步时钟，无需应答，使用两条数据线实现双工通信，无抢占，可以实现更高频的通信。<br>I2S是专门为数字音频传输设计的，在音频输出时使用更合理。但是其他类型的DAC输出控制可能就不太适用。高质量音频输出还是得I2S解码芯片。<br>此外，手动写DAC，需要自己配置timer， 周期&#x3D;1s&#x2F;fs 。高频时每次都只进行一次DAC操作，占用CPU资源较多。而I2S协议，在ESP32的架构中，配有FIFO寄存器搭配MCLK分频的预设时钟进行通信，时序设计会简单很多。</p>
+<h2 id="7-使用ESP32内部ADC-DAC-Mode可行吗？如何使用，有无接口？"><a href="#7-使用ESP32内部ADC-DAC-Mode可行吗？如何使用，有无接口？" class="headerlink" title="7.使用ESP32内部ADC&#x2F;DAC Mode可行吗？如何使用，有无接口？"></a>7.使用ESP32内部ADC&#x2F;DAC Mode可行吗？如何使用，有无接口？</h2><p>I2S 输出可以直接路由DAC通道输出(GPIO 25 和 GPIO 26),而不通过外部 I2S 编解码器.<br>ADC&#x2F;DAC Mode<br>ADC and DAC modes only exist on ESP32 and are only supported on I2S0. Actually, they are two sub-modes of LCD&#x2F;Camera mode. I2S0 can be routed directly to the internal analog-to-digital converter(ADC) and digital-to-analog converter(DAC). In other words, ADC and DAC peripherals can read or write continuously via I2S0 DMA. As they are not an actual communication mode, the I2S driver does not implement them.</p>
+<p>使用内部DAC进行模拟输出：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;driver/i2s.h&quot;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;freertos/queue.h&quot;</span></span><br><br><span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">int</span> i2s_num = <span class="hljs-number">0</span>; <span class="hljs-comment">// i2s port number</span><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> * @brief I2S ADC/DAC mode init.</span><br><span class="hljs-comment"> */</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">example_i2s_init</span><span class="hljs-params">(<span class="hljs-type">void</span>)</span></span><br><span class="hljs-function"></span>&#123;<br>     <span class="hljs-type">int</span> i2s_num = EXAMPLE_I2S_NUM;<br>     <span class="hljs-type">i2s_config_t</span> i2s_config = &#123;<br>        .mode = I2S_MODE_MASTER | I2S_MODE_RX | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN | I2S_MODE_ADC_BUILT_IN,<br>        .sample_rate =  EXAMPLE_I2S_SAMPLE_RATE,<br>        .bits_per_sample = EXAMPLE_I2S_SAMPLE_BITS,<br>        .communication_format = I2S_COMM_FORMAT_STAND_MSB,<br>        .channel_format = EXAMPLE_I2S_FORMAT,<br>        .intr_alloc_flags = <span class="hljs-number">0</span>,<br>        .dma_buf_count = <span class="hljs-number">2</span>,<br>        .dma_buf_len = <span class="hljs-number">1024</span>,<br>        .use_apll = <span class="hljs-number">1</span>,<br>     &#125;;<br>     <span class="hljs-comment">//install and start i2s driver</span><br>     <span class="hljs-built_in">i2s_driver_install</span>(i2s_num, &amp;i2s_config, <span class="hljs-number">0</span>, <span class="hljs-literal">NULL</span>);<br>     <span class="hljs-comment">//init DAC pad</span><br>     <span class="hljs-built_in">i2s_set_dac_mode</span>(I2S_DAC_CHANNEL_BOTH_EN);<br>     <span class="hljs-comment">//init ADC pad</span><br>     <span class="hljs-built_in">i2s_set_adc_mode</span>(I2S_ADC_UNIT, I2S_ADC_CHANNEL);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>设置initial后，不用设置I2Spin，配置DAC通道使能即可。<br>写入依然是：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-type">uint8_t</span>* i2s_write_buff = (<span class="hljs-type">uint8_t</span>*) <span class="hljs-built_in">calloc</span>(i2s_read_len, <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">char</span>));<br><br><span class="hljs-built_in">i2s_write</span>(EXAMPLE_I2S_NUM, i2s_write_buff, FLASH_SECTOR_SIZE, &amp;bytes_written, portMAX_DELAY); <br></code></pre></td></tr></table></figure>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/IOT/" class="print-no-link">#IOT</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【调研学习】I2S音频驱动</div>
+      <div>http://example.com/2022/09/15/【调研学习】I2S音频驱动/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月15日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/23/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" title="【数值分析】课程学习_上">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【数值分析】课程学习_上</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/09/06/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91%E8%93%9D%E7%89%99-%E9%9F%B3%E9%A2%91-%E5%8D%8F%E8%AE%AE%E6%A0%88/" title="【调研学习】蓝牙-音频-协议栈">
+                        <span class="hidden-mobile">【调研学习】蓝牙-音频-协议栈</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

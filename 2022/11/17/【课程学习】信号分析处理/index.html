@@ -1,0 +1,745 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="测试信号分析与处理课程笔记 WEEK3 DFS一些简单的性质：线性、奇偶虚实 - 实信号 频域幅值偶对称相位奇对称 对于一个 δ 信号，频谱是一个 A&#x3D;1 横线 ；直流信号的频谱是 2pi δ 时域乘 exp(jωt) 频域频移 -ω  ；时移 to 频 AXexp(jωto) 相位变化 时域拉伸  频域 f 变窄 ，同时幅值 a 压缩 时域卷积 等于 频域相乘 相关： 频谱  X*Y">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【课程学习】信号分析处理">
+<meta property="og:url" content="http://example.com/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="测试信号分析与处理课程笔记 WEEK3 DFS一些简单的性质：线性、奇偶虚实 - 实信号 频域幅值偶对称相位奇对称 对于一个 δ 信号，频谱是一个 A&#x3D;1 横线 ；直流信号的频谱是 2pi δ 时域乘 exp(jωt) 频域频移 -ω  ；时移 to 频 AXexp(jωto) 相位变化 时域拉伸  频域 f 变窄 ，同时幅值 a 压缩 时域卷积 等于 频域相乘 相关： 频谱  X*Y">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/learning.png">
+<meta property="article:published_time" content="2022-11-17T03:35:10.000Z">
+<meta property="article:modified_time" content="2022-11-17T04:07:43.553Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="课程学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/learning.png">
+  
+  
+  
+  <title>【课程学习】信号分析处理 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【课程学习】信号分析处理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-11-17 11:35" pubdate>
+          2022年11月17日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【课程学习】信号分析处理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>测试信号分析与处理课程笔记</p>
+<h2 id="WEEK3-DFS"><a href="#WEEK3-DFS" class="headerlink" title="WEEK3 DFS"></a>WEEK3 DFS</h2><p>一些简单的性质：线性、奇偶虚实 - 实信号 频域幅值偶对称相位奇对称</p>
+<p>对于一个 δ 信号，频谱是一个 A&#x3D;1 横线 ；直流信号的频谱是 2pi δ</p>
+<p>时域乘 exp(jωt) 频域频移 -ω  ；时移 to 频 AXexp(jωto) 相位变化</p>
+<p>时域拉伸  频域 f 变窄 ，同时幅值 a 压缩</p>
+<p>时域卷积 等于 频域相乘</p>
+<p>相关： 频谱  X*Y</p>
+<p>离散信号的频谱是周期函数  DTFT Discrete-time Fourier Transform</p>
+<p>所有有限长的信号 可以看作无限长加矩形窗  窗会导致频谱出现失真</p>
+<p>所以在时域内对信号截断时，窗长会影响频谱分辨率  窗长太短会导致频谱分辨率过低</p>
+<p><img src="/img/boxcnqVhVYo9hzLmBtz82R0PNQe.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcngCYTtALcBGuFa5oUjzgctg.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="WEEK5-DFT"><a href="#WEEK5-DFT" class="headerlink" title="WEEK5 DFT"></a>WEEK5 DFT</h2><p>FS 连续周期信号的傅里叶级数</p>
+<p>FT  DTFT</p>
+<p>DFS 离散周期信号的离散 Fourier</p>
+<p><img src="/img/boxcniOAQLEg2AxE3reTCxSn1eg.png" srcset="/img/loading.gif" lazyload></p>
+<p>DFT：在做 DFS 时  取一个周期表征信号</p>
+<p>DFT 是 DFS 简化的表达；这是表征的周期信号的一个运算。</p>
+<p>计算机的数组（时域 or 频域）只有 离散、有限长   计算机的处理结果 需要周期延拓</p>
+<p>离散傅里叶变换，实质上是用来表征离散傅里叶级数的。。</p>
+<p>工程信号：截取、采样离散化；本质上是采样到一段连续有限长的信号，然后离散、作 DTFT  ，然后频域周期延拓并离散化，相当于时域卷积频域采样脉冲。最后就是 DFS 离散周期 -》离散周期。最后再取一个周期，计算机中的 DFT</p>
+<p>DFT 后的坐标轴 0~fs 间隔是 fs&#x2F;N；</p>
+<p>实信号 幅值谱关于频率 N&#x2F;2 偶对称  幅值谱奇对称</p>
+<p>移位：相位变化 ； 卷积：循环卷积  离散卷积的矩阵 对角线上也有内容。y(n)&#x3D;x(n)卷积 h(n)</p>
+<p>DFT 对应的是循环卷积；可以通过一定的变换计算线性卷积 ，线性卷积的原序列 x(n) h(m) 都补 0 到 n+m-1 的长度，再作 DFT 频域相乘再 IDFT</p>
+<p>DFT 的分辨率？</p>
+<p>分辨率和哪些因素有关？仅仅是采样点数 N 和采样频率 fs 吗？需要考虑频率分辨率和时间分辨率。</p>
+<p>频谱分析的算法也会影响分辨率。</p>
+<p>FT 的频域分辨率，由截断长度决定，矩形窗第一个过零点 2pi&#x2F;T。DTFT 会多出一个采样，2pi&#x2F;N。主瓣宽度-分辨率，也是由采样点数 N 决定。都是时域长度越长，频域分辨率越高。分辨率不够会导致谱泄露。</p>
+<p>对于 DFT，也是由采样频率和采样点数确定。 fs&#x2F;N&lt;&#x3D;Δf</p>
+<p>当截图的时间长度不变，增加采样点能提高分辨率。-？ 有用，但不明显</p>
+<p>补 0–？通过补 0 能增加采样点数。但是只能提高计算分辨率，但是实际没啥用。但是当数据过短，可以起到一定的“插值”作用，计算间隔会变密集，减小栅栏效应。看起来更舒服，但本质分辨率不够补 0 也没办法解决的。</p>
+<p>此外，补 0 到 2 的整数次幂，有利于 FFT 的计算。</p>
+<p>进行 DFT 时，先确定 fs。一般会高于 10fc。</p>
+<p>对周期信号进行截取要尽量整周期截取。不能补 0。采样点数最好是 2 的整数次幂。</p>
+<p>FFT  W&#x3D;e-j 2pi&#x2F;N  利用周期性和对称性</p>
+<h2 id="WEEK6-随机系统-线性系统"><a href="#WEEK6-随机系统-线性系统" class="headerlink" title="WEEK6 随机系统&amp;线性系统"></a>WEEK6 随机系统&amp;线性系统</h2><p>随机信号的某些数学特征值可能是不变的  需要统计特性</p>
+<p>平稳随机过程：随机过程的统计特征不随时间变化</p>
+<p>平稳随机过程判据：均值与 t 无关，Rxx 与时间起点无关</p>
+<p>严格的平稳随机过程：概率密度函数不随采样时刻变化；平稳随机过程的统计特征不依赖于采样时刻</p>
+<p>数学特征：均值、均方值、方差、相关函数、协方差；功率谱密度函数</p>
+<p>遍历：一定是平稳的随机信号，各态历经，可以用任意一个样本的全部时间历程数学特征描述</p>
+<p>概率密度函数  Px  概率分布函数 Fx  Px&#x3D;dFx&#x2F;dx</p>
+<p>均值：m ； m_x&#x3D;E(X(n))&#x3D;∫ xp(x,n)dx</p>
+<p>均方值： ψ^2_x (t) &#x3D; E(x(t)^2)</p>
+<p>方差： σ^2_x (t) &#x3D; E((X-u)^2)&#x3D;ψ^2-u^2</p>
+<p>自相关函数：Rxx&#x3D;E(X(n)X(n+m))  性质：偶函数，极大值在 0 取得，R(0)&#x3D;ψ^2  R(∞)&#x3D;u^2 ;</p>
+<p>互相关函数：Rxy&#x3D;E(X(n)Y(n+m))  实 平稳信号的互相关：Rxy(τ)&#x3D;Ryx(-τ)</p>
+<p>协方差函数：可以描述两个随机变量的线性独立关系、正交关系及相关系数。</p>
+<p>随机信号在频域的特性：</p>
+<p><img src="/img/boxcn7BAiij4Ix64Ws0zhsLbCSd.png" srcset="/img/loading.gif" lazyload></p>
+<p>频域 功率谱</p>
+<p>线性系统</p>
+<p><img src="/img/boxcnYHRimLV7LBN0ClOYpb8QVe.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/boxcn23klKItgvmQISiZuxhEG2c.png" srcset="/img/loading.gif" lazyload></p>
+<p>输入过程与输出过程的互相关函数等 于系统的冲激响应函数与输入过程的 自相关函数之卷积积分</p>
+<p>平稳随机信号– 自功率谱密度函数 《&#x3D;》 自相关函数  傅里叶变换对</p>
+<p><img src="/img/boxcnkZItfOwbXFoHvEf4Ic2XLf.png" srcset="/img/loading.gif" lazyload></p>
+<p>预测 辨识  诊断；</p>
+<h2 id="功率谱经典估计法"><a href="#功率谱经典估计法" class="headerlink" title="功率谱经典估计法"></a>功率谱经典估计法</h2><p>用数字特征判断平稳；估计-计算方法 ；用偏差和方差进行估计</p>
+<p>平稳随机过程-用数字特征表示，与时间起点无关；各态历经–</p>
+<p>相关函数的估计：</p>
+<p><img src="/img/boxcnw3dFaCP8fjrqCF9GCycR7c.png" srcset="/img/loading.gif" lazyload></p>
+<p>上面这张图展示的是 FFT 作快速自相关估计</p>
+<p>注意补 0 – 线性卷积 补到 2n</p>
+<p><img src="/img/boxcnR7ipeuN50NzuqjmolBSEJg.png" srcset="/img/loading.gif" lazyload></p>
+<p>自相关函数  Rxx 保留同频的周期性</p>
+<p>xcorr MATLAB 求相关函数的函数</p>
+<p>应用：信号分析</p>
+<p>心电信号的检查-自相关函数估计信噪比-人体运动检测-</p>
+<p>对信号采样时，理想情况当然是频谱 δ 函数（时域 C），但大多数时候都是 sinc 函数，即时域窗函数采样。</p>
+<p>加窗： 实际就是如何安排时间窗内的权值 ； 使信号在窗的边缘为 0 ，以减少由于截取所产生的波形不连续效应 ；我们希望信号经过窗函数加权后，不要丢失太多信息</p>
+<p>对平稳随机信号，功率谱密度函数 与 相关函数 互为傅立叶变换对</p>
+<p>周期图法 (Periodogram) 直接建立在功 率谱的定义式上。(直接法) ；作 FFT 后求模平方&#x2F;N</p>
+<p>自相关法：功率谱密度函数 与 相关函数 互为傅立叶变换对 ；对信号补 0、求线性卷积、求模平方 ÷N</p>
+<p>两种方法原理本质上是相同的。渐进无偏的非一致估计，方差不为 0</p>
+<p>自相关函数-时域中的卷积-DFT-频域中的乘积-IDFT-自相关函数</p>
+<p><img src="/img/boxcnZa17nq6FK2oYRWemvWOgpd.png" srcset="/img/loading.gif" lazyload></p>
+<p>功率谱估计：样本在单位频带内的平均功率</p>
+<p>功率谱密度和自相关函数是傅里叶变化对</p>
+<p>为什么要估计功率谱？这是一个频域分析的重要方法，做频谱分析的 FFT 要求是能量有限的信号，但很多周期信号往往不是；但大多数信号都是功率有限的，适用情况更广；功率谱有平方环节，能够加大主要信号和干扰的数值差；用偏差和方差评估质量。</p>
+<p>谱估计的周期图法</p>
+<p>直接法  频谱功率谱定义式</p>
+<p>间接法 维纳辛钦公式 求自相关谱再 DFT</p>
+<p>改进：</p>
+<p>method1：加窗平滑法 ：先作自相关估计 Rxx，再选取合适的窗截取 vm，最后作 DFT</p>
+<p>偏差会变大，但是会渐进无偏 方差性能有明显提升，是有效估计。方差的减小是以牺牲分辨率为代价的！</p>
+<p>方法 2：平均周期图法，K 个独立同分布的随机变量的均值方差，等于单个变量方差的 1&#x2F;K</p>
+<p>长数据 N 分成 K 段，每段 M &#x3D; N &#x2F; K，每 段用周期图法求谱 ，然后求平均</p>
+<p>独立性不是很好满足；渐进一致估计，改善了方差性能</p>
+<p>功率谱，隐含的就是用一组数据遍历，所以分析的数据会有一些震荡。</p>
+<p>K↑, M↓, 偏差大, 方差小,  谱曲线平滑；反之，曲线起伏激烈，谱线的尖 峰保留。</p>
+<p>几种求功率谱的方法及其改进；主要目的是让谱方差趋于零，有效估计</p>
+<p>welch 普估计法：</p>
+<p>把 N 个数据分成 N 段，每段相互独立，也可以互相交叠； 再把每段数据乘上窗函数 ，作 IDFT 后求平均</p>
+<p>直接计算的谱估计方差不趋于零，无效估计；计算量也比较大，可以用自相关函数变换；基本的出发点是分更多段使方差减小，同时选择窗优化。</p>
+<p><img src="/img/boxcn3wBeYbJpfjUREgT6qlff9g.png" srcset="/img/loading.gif" lazyload></p>
+<p>评价：渐近无偏一致估计</p>
+<p>周期图法和自相关法等效，渐近无偏非一致估计</p>
+<p><img src="/img/boxcn4xGer0VmS5JsDcgca0wXGh.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="现代功率谱估计方法"><a href="#现代功率谱估计方法" class="headerlink" title="现代功率谱估计方法"></a>现代功率谱估计方法</h2><p>经典功率谱的估计，方差与分辨率之间存在矛盾。</p>
+<p>现代功率谱估计，主要是通过一个系统建模的方法，保证分辨率的同时减小方差</p>
+<p>白噪声输入，经过线性系统，由输出得到功率谱</p>
+<p>构造线性系统模型；用的最多的是 AR 模型，全极点、</p>
+<p>用白噪声 u 激励线性系统产生信号 x，得到线性系统的参数；进而 可以估计功率谱</p>
+<p>对应的算法，需要由实际的应用背景，了解算法的数学原理与基本概念</p>
+<p>谱分析能干嘛</p>
+<p>判断、识别；故障检测；生物电信号解析</p>
+<h2 id="仿真实验-1"><a href="#仿真实验-1" class="headerlink" title="仿真实验 1"></a>仿真实验 1</h2><p>主要功能：利用 FFT 作相关估计</p>
+<p>基本原理：</p>
+<p><img src="/img/boxcnf8Xwpg44Ux317zzczyfvxf.png" srcset="/img/loading.gif" lazyload></p>
+<p>算法步骤：</p>
+<p>1.对原序列补 N 个零，得到新序列</p>
+<p>2.对 补零后的 X2N 作 FFT 得到 频谱</p>
+<p>3,求模后除以 N，得到自相关频谱</p>
+<p>4.对 1&#x2F;N |X2N(k)| 作 IFFT 得到 估计的自相关谱</p>
+<p>5.变换位置得到 Rxx</p>
+<h2 id="仿真实验-2"><a href="#仿真实验-2" class="headerlink" title="仿真实验 2"></a>仿真实验 2</h2><h2 id="滤波器设计"><a href="#滤波器设计" class="headerlink" title="滤波器设计"></a>滤波器设计</h2><p>主要是学了滤波器的重要参数，巴特沃夫 切比雪夫 模拟低通滤波器的设计过程；中间需要归一化传递函数；通过一些简单的变换可以把低通滤波器的传递函数转化为高通或者带通滤波器。</p>
+<p><img src="/img/boxcnN5P52yLqs1DnWwjyVFl5Xf.png" srcset="/img/loading.gif" lazyload></p>
+<p>在数字滤波器的实现方法上，分为无限冲激响应（IIR）滤波器和有限冲激响应（FIR） 滤波器。这两种滤波器在性能上和设计方法上都存在很大区别</p>
+<p><img src="/img/boxcnwEuqIEa7Hz7S50ZwhsjRvb.png" srcset="/img/loading.gif" lazyload></p>
+<p>指标参数确定后，模拟滤波器设计的任务就是设法构建一个 传输函数 H s，使其传输特性满足给定的技术指标</p>
+<p><img src="/img/boxcnTHxSkd5fqSqJ040Ih02tvb.png" srcset="/img/loading.gif" lazyload></p>
+<p>滤波器的设计一般先设计出原型低通滤 波器，再经过频率变换法转换成所需要的其它类型滤波器</p>
+<p>一般设计上要求 αp&#x3D;3dB，代入上式得 A&#x3D;1</p>
+<p><img src="/img/boxcnmrOtiushvLIhy7Mr11FUVd.png" srcset="/img/loading.gif" lazyload></p>
+<p>将模拟滤波器变换成数字滤波器，实际上是按照模拟滤波器的设计，在保留满足要求的 模拟频率响应的主要特性前提下，设法得到数字滤波器的系统函数 H z( ) 或冲激响应序列 h n( ) 。或者说，要求把 s 平面上的虚轴映射成 z 平面上的单位圆，为了保证数字滤波器也 是稳定的，若模拟系统只在 s 左半平面有极点，则数字滤波器也必须仅在单位圆内有极点。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/" class="print-no-link">#课程学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【课程学习】信号分析处理</div>
+      <div>http://example.com/2022/11/17/【课程学习】信号分析处理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年11月17日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/03/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP32-A2DP%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5/" title="【IOT开发】ESP32-A2DP自动连接">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【IOT开发】ESP32-A2DP自动连接</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-IDF&amp;ADF%E5%BC%80%E5%8F%91%E6%9E%B6%E6%9E%84/" title="【IOT开发】ESP-IDF&amp;ADF 开发框架搭建">
+                        <span class="hidden-mobile">【IOT开发】ESP-IDF&amp;ADF 开发框架搭建</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

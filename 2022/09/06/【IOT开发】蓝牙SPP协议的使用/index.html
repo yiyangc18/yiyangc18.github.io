@@ -1,0 +1,646 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="之前有个项目需要在PC端通过蓝牙发送数据给单片机，由于当时还不太懂蓝牙协议，使用的是PC-USB-BT 到BT-MCU的方案，会多出来一个USB-UART-BT模块硬件。之后调研学习了解到 可以通过搭建SPP协议使得连接到PC蓝牙后生成一个COM号，进行数据传输。本次使用基于 ESP32 的蓝牙串口协议，具体见官方例程：esp-idf\examples\bluetooth\bluedroid\cl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【IOT开发】蓝牙SPP协议的使用">
+<meta property="og:url" content="http://example.com/2022/09/06/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91%E8%93%9D%E7%89%99SPP%E5%8D%8F%E8%AE%AE%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="之前有个项目需要在PC端通过蓝牙发送数据给单片机，由于当时还不太懂蓝牙协议，使用的是PC-USB-BT 到BT-MCU的方案，会多出来一个USB-UART-BT模块硬件。之后调研学习了解到 可以通过搭建SPP协议使得连接到PC蓝牙后生成一个COM号，进行数据传输。本次使用基于 ESP32 的蓝牙串口协议，具体见官方例程：esp-idf\examples\bluetooth\bluedroid\cl">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
+<meta property="article:published_time" content="2022-09-06T13:43:08.000Z">
+<meta property="article:modified_time" content="2023-03-25T10:29:10.389Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="IOT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/esp32-c6-overview.png">
+  
+  
+  
+  <title>【IOT开发】蓝牙SPP协议的使用 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【IOT开发】蓝牙SPP协议的使用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-09-06 21:43" pubdate>
+          2022年9月6日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          46 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【IOT开发】蓝牙SPP协议的使用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>之前有个项目需要在PC端通过蓝牙发送数据给单片机，由于当时还不太懂蓝牙协议，使用的是PC-USB-BT 到BT-MCU的方案，会多出来一个USB-UART-BT模块硬件。之后调研学习了解到 可以通过搭建SPP协议使得连接到PC蓝牙后生成一个COM号，进行数据传输。<br>本次使用基于 ESP32 的蓝牙串口协议，具体见官方例程：<br><code>esp-idf\examples\bluetooth\bluedroid\classic_bt\bt_spp_acceptor</code></p>
+<h2 id="SPP"><a href="#SPP" class="headerlink" title="SPP"></a>SPP</h2><p>把例程编译下载后，在PC端连接上对应的蓝牙服务，会发现多出来两个端口：<br><img src="/img/ESP-SPP/COM.PNG" srcset="/img/loading.gif" lazyload alt="SPP-COM"><br>很自然的生成了两个端口号  注意其中一个是 pc发送，下位机接收服务，另一个是pc接收，ESP32发送服务。具体哪个是发送,可以在蓝牙设备-更多蓝牙选项-COM端口中查看。</p>
+<p>在使用时，遇到了带宽不够的问题，在论坛也遇到了类似问题，但是没有现成的回答。不过之后通过调研找到了可能的解决方案。<br><a target="_blank" rel="noopener" href="https://github.com/espressif/esp-idf/issues/9356">https://github.com/espressif/esp-idf/issues/9356</a><br>我之后给ESPRESSIF技术支持发邮件，他答复了一下，然后我答复了一下他的答复：</p>
+<blockquote>
+<p>Thanks for reply. I think I have solved this problem by increasing the frequency of sending and the amount of data per packet.<br>  1.BT SPP speed is not affected by baud rate, because RFCOMM, the configuration file under SPP, will try to transmit data packets as fast as possible. You can change Virtue BT COM in the Device Manager, but it’s useless for transmission speed. We are used to the design of hardware UART, and the best way to increase the data rate is to change the baud rate, but this is not necessary when using Bluetooth SPP.<br>  2.The default MTU size is 990 bytes, but you can send a larger MTU to get more bandwidth. When increasing the packet size is useless, you can increase the sending frequency. Don’t config the send interval less than 10 ms, because the MAX ACK Fre of BT is about 100 Hz. Higher fre may lead to packet loss. In my Windows PC, the data speed can achieve 1200 kbps-150 kB&#x2F;s with 20 send interval and 3 kB Per packet.</p>
+<blockquote>
+<p>Hi @naragururaj,<br>Thanks for reporting the issue. The SPP throughput can be affected by many reasons:<br>The default MTU size of classic Bluetooth SPP on ESP32 is 990 bytes, and higher throughput can be achieved in the case that data chunck size is close to the MTU size or multiple of MTU size. For example, sending 100 bytes data per second is much better than sending 10 bytes every 100 milliseconds.<br>SPP uses credit based flow control. If the receiver can’t give the credit back to the sender as soon as possible, it can also slow down the throughput.<br>Unnecessary logs in the SPP callback functions.<br>The coexistence of BLE or Wi-Fi on ESP32.<br>Complex electromagnetic environment.</p>
+</blockquote>
+</blockquote>
+<p>总结一下：<br>1.是PC端生成的虚拟串口波特率太低影响的速率吗，如果是的话应该如何更改PC端COM波特率呢？<br>打开蓝牙串口的波特率是协议栈内规定的，貌似没有给出修改接口，但是不影响带宽。蓝牙SPP基于RFCOMM，底层会尽可能多地传输数据，所以改带宽的关键不在波特率。<br>2.我之前开到一个解释：SPP协议的波特率不会影响通信速率，SPP协议层中也没有给出baudrate的配置选项，是因为底层通信不是基于波特率时钟吗？那通信时会有ACK吗？<br>有的。RFCOMM基于Scoket，有ACK。<br>3.在windows PC 与 ESP32 间进行约100kB&#x2F;s的无线数据传输，SPP可以实现吗？如果SPP无法实现，有其他的协议推荐吗？<br>大概能实现，看PC蓝牙的硬件及其是否有其他蓝牙设备，周围的2.4GHz频段有多少干扰。</p>
+<p>SPP对蓝牙模块串口的读写实现通信，建立在串口仿真协议RFCOMM上实现；服务端和客户端对应为BluetoothServerSocket和BluetoothSocket，通过流进行数据传输，和java中的socket很像。<br>RFCOMM，它是蓝牙客户端和服务端的Socket通道，其目的为了解决如何在两个不同设备上的应用程序之间保证一条完整的通信路径，并在它们之间保持同一通信段的问题。设备配对后，还没有通信通道，BluetoothServerSocket监听RFCOMM，BluetoothSocket发起建立RFCOMM连接完成通信通道的建立。大致就像是下面这样：</p>
+<p><img src="/img/ESP-SPP/RFCOMM.PNG" srcset="/img/loading.gif" lazyload alt="RFCOMM"></p>
+<p>这也解释了为什么蓝牙端口有两个COM号，因为需要两个通道<br>什么是socket？<br>socket起源于Unix，而Unix&#x2F;Linux基本哲学之一就是“一切皆文件”，都可以用“open –&gt; write&#x2F;read –&gt; close”模式操作。Socket就是该模式的一个实现，是一种特殊的文件，一些socket函数就是对其进行的操作（读&#x2F;写IO、打开、关闭。<br>Socket是应用层与TCP&#x2F;IP协议族通信的中间软件抽象层，它是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP&#x2F;IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。其实socket也没有层的概念，它只是一个facade设计模式的应用，让编程变的更简单。是一个软件抽象层。</p>
+<p><img src="/img/ESP-SPP/Socket.PNG" srcset="/img/loading.gif" lazyload alt="socket"></p>
+<p>Socket抽象层，会有请求-应答，也就是ACK。那这个ACK是总体传输开始时候的ACK呢，还是同步时钟用的ACK呢？这两个发送的速率是怎样的。如果没有每次包的同步ACK，那么应该有同步位检测，如果同步失败则返回错误ACK。在不同的线程调用同一个socket通道,会致错误产生.</p>
+<p>所以如果要改PC端盖的蓝牙串口，重点是改RFCOMM服务。<br>RFCOMM通过L2CAP来处理单连接上的多路复用，并提供到多个设备的连接，从而提供多个并发连接。<br>RFCOMM数据速率将限制在涉及物理串行端口（类型2设备）的设备中。实现可以选择在虚拟串行端口（类型1设备中）上对数据进行调整。在允许范围内，RFCOMM将提供尽可能高的数据速率<br>什么是类型2？<br>RFCOMM支持两种类型的设备：<br>• 类型1–内部模拟串行端口（或等效端口）。<br>• 类型2–带物理串行端口的中间设备</p>
+<p>PC是type1  PC没有把数据传给真实物理端口。通道打开后，如果持续一段时间（60s）没有数据传输，就会自动关闭通道。或者一方发送关闭通道的命令也行。</p>
+<h2 id="SCO"><a href="#SCO" class="headerlink" title="SCO"></a>SCO</h2><p>在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路<br>最近接触了一下音视频开发相关的项目，不同设备间、不同数据形式间的时间同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。</p>
+<p>百度百科：<br>支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。<br>用保留带宽进行同步通信，即两台设备在LMP层利用保留时隙在物理信道上周期传送传送数据包。这种类型的链接主要用于传送SCO包（语音数据）。SCO 包不包括CRC码，且不进行重传。主要支持传输有时间限制的信息，例如声音。仅仅在ACL链接已经建立之后，才可以建立SCO 链接。</p>
+<blockquote>
+<p>What is SCO in Bluetooth?<br>SCO (Synchronous Connection Oriented Link) This is a voice data link. While Bluetooth is the technology used to connect devices from different manufacturers without wires, the devices still have to talk to each other while providing what ever service they are designed for.<br>SCO is a symmetric link, i.e. fixed slots are allocated for each direction. Since fixed slots are reserved, SCO provides a circuit switched connection. SCO radio links are used for time critical data transfer, particularly for voice data.</p>
+</blockquote>
+<blockquote>
+<p>The Synchronous Connection Oriented link is one of the two possible Bluetooth data link types defined. The SCO link is a symmetric, point-to-point link between the master device and a specific slave device. The SCO link reserves slots between the master and the slave and can therefore be considered to provide a circuit switched connection. The SCO link is usually used to support time critical information, e.g. voice, since time critical SCO packets are never retransmitted. The master device can support up to three SCO links, this might be to the same slave or to different slaves. A slave can support up to a maximum of three SCO links, assuming they are from the same master. If the slave has links from different masters, a maximum of two SCO links are available.</p>
+</blockquote>
+<p>蓝牙物理链路ACL(Asynchronous Connectionless)，另外的一种链路是SCO(Synchronous Connection Oriented)主要用来传输对时间要求很高的数据通信。<br>蓝牙基带技术支持两种连接类型：同步定向连接(SCO)类型和异步无连接(ACL)类型。前者主要用于同步话音传送，后者主要用于分组数据传送。<br>SCO连接为对称连接，利用保留时隙传送数据包。连接建立后，主设备和从设备可以不被选中就发送SCO数据包。SCO数据包既可以传送话音，也可以传送数据，但在传送数据时，只用于重发被损坏的那部分的数据。同步定向链接（SCO）是在匹克网中主单元和从单元之间实现 点到点链接。主单元通过有规律的 使用保留时隙来维持SCO 链接。 </p>
+<p>SCO 链路是通过为传输预留时隙来实现同步的。主设备向从设备发送同步数据包以建立连接。然后，从设备向主设备发回一个数据包，以确认它已收到同步数据包。此后，两个设备同步并可以传输数据。<br>主单元以有规律的时间间隔来发送分组，所以在保留的主―从时隙里，称到从单元的SCO 间隔为Tsco（记数时隙）。在主―从时隙里SCO从单元总是允许响应SCO分组传输。SCO 链接由主单元发送SCO 建立消息，经链接管理（LM）协议来确立。该消息分组含定时参数（如SCO 间隔Tsco 和规定保留时隙补偿Dsco）等。在 SCO 链接不保留的时隙里，主单元可以与任何属于每个时隙基里的从单元进行分组交换。</p>
+<p>所以SCO实现同步的两个核心分别是“间隙”和“回报”。在发送语言等数据时进行主从通信，确定时间同步。<br>在我的项目中，通过编码压缩的方式提高了数据的传输效率，有“空闲”来进行回报同步。但是目前使用的SPP协议是可以回报的，但是回报与server端接受-处理耗时可能会比较久。之后降低延时可以基于这种方法改进。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/IOT/" class="print-no-link">#IOT</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【IOT开发】蓝牙SPP协议的使用</div>
+      <div>http://example.com/2022/09/06/【IOT开发】蓝牙SPP协议的使用/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2022年9月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2022/09/06/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91%E8%93%9D%E7%89%99-%E9%9F%B3%E9%A2%91-%E5%8D%8F%E8%AE%AE%E6%A0%88/" title="【调研学习】蓝牙-音频-协议栈">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【调研学习】蓝牙-音频-协议栈</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2022/08/27/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91DEBUG_Mark/" title="【IOT开发】DEBUG_Mark">
+                        <span class="hidden-mobile">【IOT开发】DEBUG_Mark</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

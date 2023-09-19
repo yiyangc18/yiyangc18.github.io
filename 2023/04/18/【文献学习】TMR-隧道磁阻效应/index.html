@@ -1,0 +1,887 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="TMR-隧穿磁阻效应-最新研究进展1.TMR 技术简介原理铁磁薄片的磁化方向可以在外磁场的控制下被独立的切换。如果极化方向平行，那么电子隧穿过绝缘层的可能性会更大，其宏观表现为电阻小；如果极化方向反平行，那么电子隧穿过绝缘层的可能性较小，其宏观表现是电阻极大。  Yaodi Yang, Shaohua Yan, and Xiaobo Sharon Hu, “Developments and App">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【文献学习】TMR-隧道磁阻效应">
+<meta property="og:url" content="http://example.com/2023/04/18/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91TMR-%E9%9A%A7%E9%81%93%E7%A3%81%E9%98%BB%E6%95%88%E5%BA%94/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="TMR-隧穿磁阻效应-最新研究进展1.TMR 技术简介原理铁磁薄片的磁化方向可以在外磁场的控制下被独立的切换。如果极化方向平行，那么电子隧穿过绝缘层的可能性会更大，其宏观表现为电阻小；如果极化方向反平行，那么电子隧穿过绝缘层的可能性较小，其宏观表现是电阻极大。  Yaodi Yang, Shaohua Yan, and Xiaobo Sharon Hu, “Developments and App">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/img/VnEdbACB9oWohKxkh8gcmBAZnKc.png">
+<meta property="article:published_time" content="2023-04-18T11:09:23.000Z">
+<meta property="article:modified_time" content="2023-04-18T11:18:26.078Z">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="文献学习">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/img/VnEdbACB9oWohKxkh8gcmBAZnKc.png">
+  
+  
+  
+  <title>【文献学习】TMR-隧道磁阻效应 - CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 80vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/tree.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="【文献学习】TMR-隧道磁阻效应"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-04-18 19:09" pubdate>
+          2023年4月18日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          23k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          188 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">【文献学习】TMR-隧道磁阻效应</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="TMR-隧穿磁阻效应-最新研究进展"><a href="#TMR-隧穿磁阻效应-最新研究进展" class="headerlink" title="TMR-隧穿磁阻效应-最新研究进展"></a>TMR-隧穿磁阻效应-最新研究进展</h1><h2 id="1-TMR-技术简介"><a href="#1-TMR-技术简介" class="headerlink" title="1.TMR 技术简介"></a>1.TMR 技术简介</h2><h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p>铁磁薄片的磁化方向可以在外磁场的控制下被独立的切换。如果极化方向平行，那么电子隧穿过绝缘层的可能性会更大，其宏观表现为电阻小；如果极化方向反平行，那么电子隧穿过绝缘层的可能性较小，其宏观表现是电阻极大。</p>
+<p><img src="/img/Vl9EbewUioN5pIxNJmtcjqUvnPd.png" srcset="/img/loading.gif" lazyload></p>
+<p><em>Yaodi Yang, Shaohua Yan, and Xiaobo Sharon Hu, “Developments and Applications of Tunneling Magnetoresistance Sensors,” Tsinghua Science and Technology, vol. 27, no. 3, pp. 443-454, June 2022.</em></p>
+<p>GMR 是利用非磁性体的金属层 (Cu 等)被两层強磁性体夹住，而 TMR 是利用非磁性体的绝缘层 (Al2O3 等)被两层強磁性体夹住。GMR 和 TMR 的电阻变化率都比 AMR 高，但 TMR 比 GMR 更高，可以达到 100% 以上。TMR 相比 GMR 具有更高的温度稳定性、更低的功耗、更小的尺寸等优点。</p>
+<p><a target="_blank" rel="noopener" href="https://www.jstage.jst.go.jp/article/butsuri/65/5/65_KJ00006254747/_article/-char/ja/">TMR 和 GMR 的中间插入层的区别主要在于它们的电子输运机制</a><a target="_blank" rel="noopener" href="https://www.jstage.jst.go.jp/article/butsuri/65/5/65_KJ00006254747/_article/-char/ja/">(1)</a><a target="_blank" rel="noopener" href="https://www.sekorm.com/news/8718.html">(2)</a>：</p>
+<ul>
+<li>TMR 是指隧道磁电阻效应，它利用的是磁性多层膜材料的隧道磁电阻效应对磁场进行感应，其中间插入层是一层非磁性绝缘层，如氧化铝或氧化镁。当电子从一个铁磁层穿过绝缘层到另一个铁磁层时，会受到两个铁磁层的自旋极化的影响，从而导致电阻变化。当两个铁磁层的自旋极化同向时，电阻最小；当两个铁磁层的自旋极化反向时，电阻最大。</li>
+<li>GMR 是指巨大磁电阻效应，它利用的是金属多层膜材料的巨大磁电阻效应对磁场进行感应，其中间插入层是一层非磁性金属层，如铜或银。当电子从一个铁磁层穿过金属层到另一个铁磁层时，会受到两个铁磁层的自旋散射的影响，从而导致电阻变化。当两个铁磁层的自旋平行时，电阻最小；当两个铁磁层的自旋反平行时，电阻最大。</li>
+</ul>
+<p>TMR 中的量子隧穿效应：</p>
+<p>量子隧穿效应是一种量子力学现象，它指的是像电子等微观粒子能够穿过它们本来无法通过的“墙壁”的现象，又称势垒贯穿。对于能量势垒，按经典力学的观点，粒子需先像爬山一样翻过山顶再到山脚，如果能量势垒比粒子本身的能量高，则粒子无法通过；按量子力学的观点，只要势垒的能量不是无穷高，即只要山不是无限高无限厚，粒子就有概率可以穿透这道势垒，就像是有一条直达的隧道一样。</p>
+<p>粒子穿过势垒并出现在经典力学禁阻区域的过程。当一个电子通过由金属层&#x2F;绝缘层&#x2F;金属层构成的三明治薄膜，绝缘层就形成一个势垒很高的势阱。电子具有波粒二象性，电子的运动可以用波函数表征。量子力学对这种情况的分析表明，电子能以一定的几率通过隧道效应而穿过势垒，逃出势阱。穿过势垒的几率是由波函数在势阱的两壁上必需连续这个条件决定的。当电子通过第一个金属&#x2F;绝缘体的界面时，在绝缘体内波函数较快地衰减，如果绝缘层足够薄，即势垒薄，电子通过绝缘层到达第二个绝缘体&#x2F;金属界面时波函数没有衰减到零，那么在第二个金属薄膜中发射电子的几率不是零，即电子穿越了势垒。</p>
+<h3 id="TMR-现象"><a href="#TMR-现象" class="headerlink" title="TMR 现象"></a>TMR 现象</h3><p><img src="/img/VnEdbACB9oWohKxkh8gcmBAZnKc.png" srcset="/img/loading.gif" lazyload></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Tunnel_magnetoresistance">Wiki:</a></p>
+<p>Tunnel magnetoresistance (TMR) is a magnetoresistive effect that occurs in a magnetic tunnel junction (MTJ), which is a component consisting of two ferromagnets separated by a thin insulator. If the insulating layer is thin enough (typically a few nanometres), electrons can tunnel from one ferromagnet into the other. Since this process is forbidden in classical physics, tunnel magnetoresistance is a strictly quantum mechanical phenomenon.</p>
+<p><img src="/img/YcWgbh8bEoSMblxgxUZcQ500nnd.png" srcset="/img/loading.gif" lazyload></p>
+<p>隧穿电导随着两铁磁层磁化方向的改变而变化，磁化矢量平行时的电阻低于反平行时的电阻。通过施加外磁场可以改变两铁磁层的磁化方向，从而使得隧穿电阻发生变化，导致 TMR 效应的出现。</p>
+<p>传感器电路初级一般是全桥方案</p>
+<p><img src="/img/Ryp3bLk0MoxMFgxIOMTcYDEUnRg.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="应用-存储"><a href="#应用-存储" class="headerlink" title="应用-存储"></a>应用-存储</h3><p>大容量存储介质–机械硬盘 和 SSD</p>
+<p>机械硬盘也叫磁盘，但是磁盘读写头主要使用的是 GMR，TMR 也有用，但是比较少。</p>
+<p>TMR 的灵敏度更高，功耗更小。但是读写头更改存储状态是使用 TMR 饱和状态测量的，这对读取单元的精度要求也更高，同时也提高了“不稳定性”和 volatile。硬盘追求的是速度、容量、稳定性和 non-volatile</p>
+<p>硬盘的磁头如何读取数据？</p>
+<p>硬盘磁头读取数据的原理是基于磁性媒介。硬盘盘片表面有许多微小的磁性颗粒，它们可以被物理上改变磁极性。当要写入数据时，磁振荡将影响磁性颗粒并使它们产生相应的极性。磁头上的读取器会检测这些极性变化，从而读取并解读出 01 数据信号。数据的读取过程中，磁头将自己靠近盘片，然后检测盘片表面的每一个磁性颗粒的磁极性。</p>
+<p>它是如何检测每一颗磁性颗粒的磁极性的？</p>
+<p>硬盘磁头检测每一个磁性颗粒的磁极性的方法主要是基于磁电阻的原理，并使用了磁电阻效应。磁电阻检测技术可以很灵敏地检测到磁颗粒的微小磁性变化并将其转化为对应的信号，通过信号放大、滤波等过程就可以正确地解读出数据信息。</p>
+<p>你刚刚说”磁性颗粒大小远大于量子隧穿跨越的尺度“那么磁盘磁场变化大概是什么量级，量子隧穿磁阻效应敏感的磁场大概在什么量级？nT pT 还是 uT？</p>
+<p>硬盘磁场的变化的量级通常在微特斯拉（μT）到毫特斯拉（mT）之间，同时磁性颗粒的尺寸也在纳米级别左右。而量子隧穿效应以及磁电阻效应通常对于磁场的强度要求比较低，大约在纳特斯拉至微特斯拉（nT-μT）的范围内。</p>
+<p><a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/%E5%B7%A8%E7%A3%81%E9%98%BB%E6%95%88%E5%BA%94">PMR 垂直磁记录是通过巨磁阻效应（GMR）来读出磁性的。巨磁阻效应是指物质在一定磁场下电阻改变的现象。当两层磁性材料之间夹有一层非磁性材料时，如果两层磁性材料的磁化方向平行，那么电阻较小；如果两层磁性材料的磁化方向反平行，那么电阻较大。</a></p>
+<p>SSD 目前主要的方案还是浮栅晶体管：</p>
+<p>基于量子隧穿的闪存芯片利用量子隧穿效应来存储数据。量子隧穿效应是指粒子即使没有足够的能量来克服势垒也可以通过势垒的现象。在闪存芯片中，电子隧道穿过薄氧化层到达浮栅，浮栅存储电荷。</p>
+<p><img src="/img/JySkbVmfToFe6hxGcLLcm4NKndl.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/GtPSb7VkgoPjlAxANZYcN6iPntJ.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/RWtKbhol5oMProxFcBpcWf9YnFe.png" srcset="/img/loading.gif" lazyload></p>
+<p>通过给多晶硅导体注入电子(WRITE)，控制弱电势（READ）下的 01 状态。注入的原理是量子隧穿。微观尺度下量子的位置和动量不确定。只要势垒不是太高，总有概率穿过。绝缘层太薄不能长期保存，太厚不易写入。写入方式有两种：在置 0 的时候，在源极漏极加大电压，让热电子进入绝缘栅，置 1 则反向置位；另一种方法是在栅极加高压-FN 隧穿，置 0 或 1。</p>
+<p>热电子注入是指当在漏和栅极上同时加高电压时，沟道中的电子获得很高的能量，并在栅极电场的吸引下，跃过氧化层电子势垒，形成热电子注入。F-N 隧道效应是指根据量子力学理论，电子有几率可以隧穿比本身能量高的势垒。隧穿的几率严重依赖势垒的高度与宽度，在存储器中，这个势垒就是介电层。</p>
+<p>这两种现象都在闪存的工作原理中有应用，例如 NOR 型闪存通过热电子注入方式给浮栅充电，而 NAND 型闪存通过 F-N 隧道效应给浮栅充电。</p>
+<p>晶体管平面-&gt;page-&gt;block-&gt;die-&gt;flash chip。</p>
+<p>图右下是多态管，可以简要理解为一个一个晶体管存储多种状态，提高存储效率。目前高端、大容量的设备基本都是一个晶体管存多 bit 数据了。详情可以见硬件茶谈的<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1aF411u7Ct/?spm_id_from=333.999.0.0&vd_source=780d24dc66c0ccace4122aa4edfd6aac">科普视频</a></p>
+<p><img src="/img/MJMzbXPEEoMFMvxLBgDcPQFnnvi.png" srcset="/img/loading.gif" lazyload></p>
+<p>MLC 和 TLC 是两种不同的闪存技术，它们的原理是利用不同的电压水平来存储多个 bit 的信息。</p>
+<ul>
+<li>MLC 是 Multi Level Cell 的缩写，意思是多级单元，它可以在一个浮动栅中存储 2 个 bit 的信息，有 4 种不同的电压水平，分别对应 00、01、10、11 这四种状态。</li>
+<li>TLC 是 Triple Level Cell 的缩写，意思是三级单元，它可以在一个浮动栅中存储 3 个 bit 的信息，有 8 种不同的电压水平，分别对应 000、001、010、011、100、101、110、111 这八种状态。</li>
+</ul>
+<p>MLC 和 TLC 相比于 SLC（单级单元，只存储 1 个 bit 的信息），都可以提高闪存的容量和降低成本，但是也会降低写入速度和寿命，因为电压水平之间的差异更小，更容易出现误差。</p>
+<p>NVMe 和 SATA 是<strong>不同的硬盘接口和协议。</strong>NVMe 是为固态硬盘设计的逻辑设备接口规范，利用 PCIe 通道直接连接 CPU，提高带宽和降低延迟。SATA 是一种物理接口类型，执行的 AHCI 协议是为机械硬盘设计的，有 6Gbps 的读写限制，需要接口控制器。NVMe 和 SATA 的物理表现形式可以是 M.2+PCIe，U.2&#x2F;U.3+PCIe，或者 SATA 插槽。pcie 是一种高速接口，可以让固态硬盘直接连接到主板上，而不需要经过 sata 或其他控制器，从而提高数据传输速度和降低延迟。</p>
+<p>slc cache 是一种利用单层单元（slc）闪存作为缓存的技术，可以让固态硬盘在写入数据时先写入 slc 区域，然后再慢慢转移到多层单元（mlc、tlc、qlc）闪存中，从而提高写入速度。</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/344174968">知乎：Nand Flash 和 Nor Flash 的区别</a></p>
+<p>1、NOR 的读速度比 NAND 稍快一些。NAND flash 需要按块进行读取数据，而 NOR flash 可以随机按字节读取数据。<br>2、NAND 的写入速度比 NOR 快很多。NAND 的擦除速度远比 NOR 快。</p>
+<p>3、NOR flash 可以在片内运行程，不必再把代码读到系统 RAM 中。</p>
+<p>4、NAND flash 适合于数据存储，NOR flash 适合于代码存储。</p>
+<p>基于 TMR 原理生产的存储介质是 MRAM(magnet random access memory)。它既可以做计算机的内存 RAM，也可以做外存储器。</p>
+<p><a target="_blank" rel="noopener" href="https://www.chinastor.com/jishu/MRAM.html">基本原理</a>：</p>
+<p>电子像一个小磁体一样在不断地旋转着，称这种运动为自旋。根据旋转方向可分为向上与向下两种自旋方向。自旋磁电阻就是一个存储单元，它是一些特殊的小点，拥有特殊的三明治结构，上下层为引发电子自旋、产生磁场的磁性层，中间为担负产生磁阻变化的非磁性层。由于电子自旋态的不同而产生磁场的性质差异，在不同的磁场下中间层的电阻也就不同，从而使通过的电流强度不同，电路再通过强度来控制或判断出是“0”还是“1”。 MRAM 是以磁电阻性质储存记录资料的随机存储器，采用磁化方向的不同来记录“0”与“1”。只要外在磁场不改变，磁化的方向就不会变更，不像 DRAM 为了要保持资料需让电流不断流动，MRAM 也不需 refresh 的动作。其优点为写入与读取时间的速度上可与 SRAM 媲美，同时在记忆容量上可与 DRAM 相抗衡。</p>
+<p>磁性随机存取存储器 (MRAM) ，虽然叫 RAM，但其实是一种非易失性存储器，它使用磁荷而不是电荷来存储数据。它基于磁阻现象，即当施加外部磁场时材料电阻的变化。基于 TMR 效应制作的 MRAM 是指利用隧道磁阻（TMR）效应读写数据的 MRAM。</p>
+<p>与 DRAM 相比，MRAM 的优势：高速、低功耗和高耐用性、长时间数据保留、可以在极端温度下运行。</p>
+<p>劣势：工艺不够成熟、控制方法不够成熟。典型 MTJ 支持的最小平面尺寸是 90–130 nm，二浮栅晶体管特征尺寸已经到 10nm 内了。</p>
+<p>MRAM 最大的特点就是掉电存储。闪存 flash 可用作一种非易失性 RAM (NVRAM)，但是 flash RAM 读写很慢，并且写周期数有限。大容量存储主要还是 SSD 和机械硬盘，它们都无法掉电存储。MRAM 芯片可以在断电的情况下依靠磁性的极性来保存数据， 用 MRAM 替代 DRAM 以后，或许可以实现一按开关机器就立刻运行起来，并进入到就绪状态。</p>
+<p>一篇关于存储的文章：</p>
+<p>*Efficient and Highly Reliable Spintronic Non-volatile Quaternary Memory Based on Carbon Nanotube FETs and Multi-TMR MTJs,” <strong>ECS</strong> Journal of Solid State Science and Technology, vol. 11, no. 6, p. *<em>061007, 2022</em></p>
+<p>由于传统二进制电路的局限性，例如高功耗和大面积以及互连密度，多值逻辑（MVL）被提供作为解决方案。四元逻辑是一种与二进制系统高度兼容的 MVL 形式。本文提出了一种低成本且高度可靠的非易失性四元存储器，受益于环栅碳纳米管场效应晶体管 (GAA-CNTFET) 的可调阈值电压特性和磁隧道结 (MTJ) 的非易失性.所提出的四进制存储器占用更少的面积并且消耗更低的功率。仿真结果表明，所提出的设计可将平均功耗、静态功耗和写入功耗降低多达 53%、41% 和 69%。此外，它的读取功率延迟积 (PDP) 和写入 PDP 分别降低了 47% 和 34%。所提出的锁存器占用的面积也比最先进的非易失性四进制存储器(MLC flash nvs)低 23%。</p>
+<h3 id="应用-微磁传感器"><a href="#应用-微磁传感器" class="headerlink" title="应用-微磁传感器"></a>应用-微磁传感器</h3><p>微型电流检测、人体磁场检测。最大的优点是灵敏度很高，作为 MR 传感器磁阻变化率很大，结构也不算复杂。</p>
+<p><img src="/img/YJbGbXNHboP5kvxZsehcwYnZnib.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/Knsrbu3BDonz6ex0OzocZfMVnGh.png" srcset="/img/loading.gif" lazyload></p>
+<p>总之是一个高灵敏度、低功耗的磁传感器</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>作为传感器：</p>
+<p>优点：高灵敏度、低功耗、易实现三轴测量、相较于 AMR,GMR 温度稳定性更好</p>
+<p>缺点：本底噪声大；多层膜结构薄膜电阻工艺 温漂严重</p>
+<p>作为存储介质：</p>
+<p>优点：RAM&amp;FLASH 统一，对于 DRAM 而言具有非易失性，同时速度较快，功耗小。对于 flash 而言，速度快，几乎没有寿命损耗。</p>
+<p>缺点：典型 MTJ 支持的最小平面尺寸是 90–130 nm，同样芯片体积下存储空间小。工艺、控制方法不够成熟，贵。</p>
+<h2 id="2-最新的研究进展"><a href="#2-最新的研究进展" class="headerlink" title="2.最新的研究进展"></a>2.最新的研究进展</h2><h3 id="原理、原型"><a href="#原理、原型" class="headerlink" title="原理、原型"></a>原理、原型</h3><p>偏理论的、基于 TMR 原理级的研究，或是提出了新的 TMR 原型</p>
+<p><em>L. Šmejkal, A. Birk Hellenes, R. González-Hernández, J. Sinova, and T. Jungwirth, “Giant and Tunneling Magnetoresistance in Unconventional Collinear Antiferromagnets with Nonrelativistic Spin-Momentum <strong>Coupling</strong>,” Phys. Rev. X, vol. 12, no. 1, p. 011028, Feb. 2022.</em></p>
+<p>本文提出了一种新型的自旋电子学概念，即在非相对论性反铁磁体系中实现巨磁电阻和隧道磁电阻效应。这些效应依赖于参考和感应铁磁电极之间传递的守恒自旋电流。最近，我们提出了这些基本自旋电子学效应可以在非常规的共线反铁磁体系中实现，其中具有非相对论性交替自旋动量耦合。在这里，我们通过提出具有这些非常规共线反铁磁体系的多层结构中巨磁电阻和隧道磁电阻效应的原型模型机制来详细阐述这一提议。这些模型分别基于交替自旋动量耦合的各向异性和谷相关形式。使用第一性原理计算，我们将这些模型机制与真实材料联系起来，并预测了效应的大约 100% 的比例。我们指出，除了巨磁或隧道磁电阻检测外，交替自旋动量耦合还可以通过自旋转移扭矩实现磁激发。</p>
+<p><img src="/img/IJRnbUoZSokcIkxE0lacAdiLnZc.png" srcset="/img/loading.gif" lazyload></p>
+<p>非常规反铁磁铁中的 GMR 和 TMR 模型机制。红色和蓝色分别对应于上下自旋，灰色箭头标记了施加的电流方向。 （a）在平面上几何形状中带有金属垫片的 GMR 堆栈。 （b）能量带切断了围绕布里鲁因区域的 γ 点周围的各向异性交替自旋摩孔耦合，从而导致各向异性自旋依赖性电导率。 （c）紧密结合模型带分散。虚线的矩形突出了该区域，各向异性自旋摩孔在 γ 点上耦合。 （d）带有绝缘屏障的 TMR 堆栈。例如，我们显示了两个电极中 NéelVector 的并行配置。 （e）能量带切断了依赖山谷的交替自旋摩托孔偶联，围绕 M1 和 M2 点，导致山谷和旋转状态的密度。 （f）紧密结合模型带分散。虚线的矩形以相反的旋转分裂突出显示了山谷，标有洋红色箭头。</p>
+<p>主要结论：在具有非相对论性自旋-动量耦合的非常规共线抗铁磁体中，可以实现巨磁阻和隧道磁阻效应，这些效应不依赖于自旋流的守恒。这些效应的物理机制是：在反铁磁体中，自旋极化的电子可以通过交错的自旋纹理隧穿，从而导致电阻的变化。</p>
+<p>unconventional antiferromagnets 是一种特殊的反铁磁材料，它们具有与铁磁材料类似的自旋依赖的输运效应，对于自旋电子学器件的信息读出非常重要。自旋依赖的输运效应是指电子在材料中运动时，其电流和电阻等物理量与其自旋方向有关的现象。例如，当电子通过一个磁性材料时，其自旋会受到磁场的影响，导致不同自旋方向的电子有不同的输运特性，这就是磁阻效应。</p>
+<ul>
+<li>这些效应为设计新型的基于反铁磁体的自旋电子器件提供了新的思路和可能性。</li>
+<li>这些效应可以在室温下实现，且不受外界磁场的影响，因此具有较高的稳定性和可靠性。</li>
+<li>这些效应可以用于实现高密度、低功耗、快速切换的数据存储和逻辑运算。</li>
+</ul>
+<p><em>L. Zhang, Y. Zhang, J. Li, Y. Wang, and H. Zeng, “Transport properties of tunneling magnetoresistance sensors based on double indirect exchange <strong>coupling</strong> effect,” Journal of Magnetism and Magnetic Materials, vol. 500, p. 166382, 2020.</em></p>
+<p>研究了基于双间接交换耦合效应的隧道磁阻 (TMR) 传感器的传输特性。在磁隧道结中获得了大约 150% 的 TMR rate，并且成功地实现了对面内磁场的线性响应。由于设计了 CoFeB&#x2F;NiFe&#x2F;Ru&#x2F;IrMn 传感层，实现了 1.85%&#x2F;Oe 的高灵敏度。此外，全惠斯通电桥配置的电压输出灵敏度和噪声水平分别为 10.7 mV&#x2F;V&#x2F;Oe、1 Hz 时 10 nT&#x2F;Hz$^{1&#x2F;2}$ 和 10 Hz 时 3.3 nT&#x2F;Hz$^{1&#x2F;2}$。这种磁传感器可用于智能电网领域、电流检测和传感。</p>
+<p>双间接交换耦合效应是隧道磁阻 (TMR) 传感器中出现的一种现象。 它是指磁隧道结 (MTJ) 中两个铁磁层之间通过反磁性层的耦合。 双间接交换耦合效应可用于在 TMR 传感器 中实现对面内磁场的线性响应。（它允许 TMR 传感器以线性响应检测平行于传感器平面，并且是线性的）CoFeB&#x2F;NiFe&#x2F;Ru&#x2F;IrMn 多层薄膜结构中，CoFeB 和 NiFe 是铁磁性层，它们具有较高的饱和磁化强度和磁隧道效应。Ru 是非磁性层，它用于分隔两个铁磁性层，形成双间接交换耦合效应。IrMn 是反铁磁性层，它用于固定一个铁磁性层的磁化方向，形成直接交换耦合效应</p>
+<p>铁磁性层和反铁磁性层：</p>
+<p>铁磁性层和反铁磁性层的区别主要在于它们的原子磁矩的排列方式<a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%B1%82%E9%97%B4%E8%80%A6%E5%90%88/22392618">(1)</a><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/337897711">(2)</a>：</p>
+<ul>
+<li>铁磁性层是指多层薄膜中具有铁磁性的层。在铁磁性物质内部，相邻原子的自旋磁矩趋于同向平行排列，这样就形成了一个净的磁矩，可以产生磁场。这种物质一般局限于铁、钴、镍等过渡金属元素。</li>
+<li>反铁磁性层是指由两个或多个磁性层组成的结构，其中相邻的磁性层之间的交换耦合是反平行的，即它们的磁化方向相反。反铁磁性层可以通过改变非磁性层的厚度或材料来调节交换耦合强度和方向。在反铁磁性物质内部，相邻原子的自旋磁矩趋于反向平行排列，这样就抵消了彼此的磁矩，导致净的磁矩为零，不会产生磁场。这种物质比较不常见，大多数反铁磁性物质都是稀土元素或氧化物。</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/386333986">在施加电流的时候，铁磁性层和反铁磁性层的表现也不同</a><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/386333986">(3)</a>：</p>
+<ul>
+<li>铁磁性层在施加电流的时候，会受到电流产生的洛伦兹力的作用，从而改变其原子磁矩的方向，导致其净的磁场增强或减弱。</li>
+<li>反铁磁性层在施加电流的时候，由于其净的磁场为零，不会受到洛伦兹力的影响，但是会受到电流产生的自旋转移力量（spin-transfer torque）的作用，从而改变其相邻原子间的自旋耦合强度，导致其反铁磁性增强或减弱。</li>
+</ul>
+<p>直接交换耦合和*indirect exchange *<em>coupling</em></p>
+<ul>
+<li>直接交换是由于相邻原子轨道的重叠而产生的磁性耦合，它只涉及相邻原子局域电子的波函数重叠。直接交换在多层薄膜中可以通过控制铁磁层的厚度和成分来调节，一般来说，铁磁层越厚，直接交换越强，铁磁层中含有过渡金属元素也有利于增强直接交换。</li>
+<li>间接交换是由于非磁性介质层或反铁磁层对铁磁层的调节而产生的磁性耦合，它涉及相邻铁磁层之间的电子跃迁或反铁磁层对铁磁层的作用。间接交换在多层薄膜中可以通过控制非磁性介质层或反铁磁层的厚度和成分来调节，一般来说，非磁性介质层或反铁磁层越薄，间接交换越强，非磁性介质层或反铁磁层中含有稀土元素也有利于增强间接交换。</li>
+</ul>
+<p>器件性能指标：</p>
+<p>噪声水平的单位是 mV&#x2F;V&#x2F;Oe，表示每个 Oe 的磁场强度变化引起的电压输出变化的百分比。这个单位反映了传感器的灵敏度和动态范围。</p>
+<p>nT&#x2F;Hz$^{1&#x2F;2}$是磁场噪声密度的单位，表示每个 Hz 的频率带宽内的磁场噪声的均方根值。这个单位反映了传感器的噪声水平和信噪比。噪声是一个随机过程，它的功率谱密度是一个频率函数，表示每个 Hz 的频率带宽内的平均功率。为了得到噪声的均方根值，我们需要对功率谱密度进行积分，积分的结果是一个带有 sqrt(Hz)的单位</p>
+<p><img src="/img/LXNnb8vH2oMunmxuDDJcK5iqnd9.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/Xvbsbu4JtorcrXx3oD2cX0n2njd.png" srcset="/img/loading.gif" lazyload></p>
+<p>论文主要亮点：</p>
+<ul>
+<li>利用双间接交换耦合效应，实现了磁隧道结中的高 TMR 比率和对面内磁场的线性响应，提高了传感器的性能和稳定性。</li>
+<li>设计了一种软固定传感层，利用 Ru 层的自旋阻挫效应，实现了高灵敏度和低饱和场。</li>
+</ul>
+<p>可能对后续研究和工程应用的影响：</p>
+<ul>
+<li>为基于 TMR 效应的磁传感器的设计和优化提供了一种新的思路和方法。</li>
+<li>为智能电网领域的电流检测和传感提供了一种高性能、低成本、低功耗、易集成的磁传感器方案。为其他基于 TMR 效应的磁存储、磁逻辑、磁随机存取存储器等领域的发展提供了参考和启示。</li>
+</ul>
+<p>关于新型材料、结构的文章：</p>
+<p><em>Z. Li, Y. Zhang, J. Wang and X. Zhang, “Giant tunneling magnetoresistance in two-dimensional transition metal carbides based magnetic tunnel junctions,” Nanoscale Advances, vol. 4, no. 1, pp. 218-225, <strong>Jan</strong>. 2022.</em></p>
+<p>这篇文章研究了基于二维过渡金属碳化物（MXenes）的磁性隧道结（MTJs）的巨大隧穿磁电阻（TMR）效应。作者发现，通过调节 MXenes 的层数、外加电压和磁场，可以实现 TMR 效应的可调控和优化。所有构建的 MTJ 都可以保持超过 9 × 105% 的大隧道磁阻 (TMR) 比。这种基于二维材料的 MTJs 具有高自旋极化率、低界面散射和高结构稳定性等优点，对于未来的自旋电子学和磁性器件有重要的应用前景。</p>
+<p><img src="/img/Hha2bJzuuo93KCxyX3Dc0r92n6c.png" srcset="/img/loading.gif" lazyload></p>
+<p>G_APC 和 G_PC 分别是 parallel configuration (PC) and antiparallel configuration (APC)  中的隧道阻力。1T-MoS2 作为电极，2H-MoS2 作为隧道势垒。</p>
+<p>这篇文章的主要创新点：</p>
+<ul>
+<li>首次研究了基于二维过渡金属碳化物（MXenes）的磁性隧道结（MTJs）的电子输运性质，发现了巨大的隧穿磁电阻（TMR）效应。</li>
+<li>系统地分析了 MXenes 的层数、外加电压和磁场对 TMR 效应的影响机制，发现了 TMR 效应的可调控和优化方法。</li>
+<li>展示了 MXenes 具有高自旋极化率、低界面散射和高结构稳定性等优点，对于未来的自旋电子学和磁性器件有重要的应用前景。</li>
+</ul>
+<p>对后续研究以及工程应用的影响：</p>
+<ul>
+<li>为后续研究提供了一个新的平台和方法，可以利用二维材料的特性来设计和优化 MTJs 的性能和功能。</li>
+<li>为工程应用提供了一种高效、灵活和稳定的 MTJs 方案，可以实现高速、低功耗和多功能的自旋电子学和磁性器件。</li>
+</ul>
+<ul>
+<li>Y. Zhang, J. Wang, X. Li and Y. Liu, “Large Tunneling Magnetoresistance in van der Waals Ferromagnet&#x2F;Semiconductor Heterojunctions,” in Advanced Materials, vol. 34, no. 50, pp. 2104658, December 2022, <strong>doi</strong>: 10.1002&#x2F;adma.202104658.*</li>
+</ul>
+<p>该文章报道了全二维范德瓦尔斯垂直自旋阀器件，该器件将二维层状半导体 InSe 作为间隔物与二维层状铁磁金属 Fe3GeTe2 作为自旋注入和检测电极相结合。对于隧道器件，在 10 K 下施加 0.1 µA 的偏置电流时，可获得 41% 的大磁阻 (MR)，大约是金属器件 (3) 的三倍。</p>
+<p><img src="/img/GOgwbGCkzoP9u3xWBhNc9Px9n5g.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用了 2D van der Waals 垂直自旋阀器件，将 2D 层状半导体 InSe 作为隔离层，将 2D 层状铁磁金属 Fe3GeTe2 作为自旋注入和检测电极。他们观察到了两种不同的输运行为：隧道效应和金属效应。其中，隧道效应是由于在 Fe3GeTe2&#x2F;InSe 界面处形成了无针孔的隧道势垒，而金属效应则是由于 InSe 隔离层中存在针孔。此外，隧道器件表现出更低的工作偏置电流但更敏感的偏置电流依赖性。这些发现揭示了针孔在所有-2D van der Waals 铁磁&#x2F;半导体异质结器件的 MR 中的关键作用。</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs awk">[<span class="hljs-number">2</span>D van der Waals是指由两个或多个二维材料通过范德华力（van der Waals force）堆叠而成的异质结构。这种异质结构的特点是具有原子级别的平坦界面，且具有可调节性和灵活性。<br>](https:<span class="hljs-regexp">//</span>onlinelibrary.wiley.com<span class="hljs-regexp">/doi/</span>full<span class="hljs-regexp">/10.1002/</span>adfm.<span class="hljs-number">202104260</span>)[<span class="hljs-number">2</span>D范德华材料是指由弱的范德华力相互作用的单层或多层原子晶体构成的材料。这种材料具有许多独特的物理和化学性质，例如高强度、高导热性、高光电效应等](https:<span class="hljs-regexp">//</span>physicstoday.scitation.org<span class="hljs-regexp">/doi/</span><span class="hljs-number">10.1063</span><span class="hljs-regexp">/PT.3.3297)[。其中，一些2D范德华材料还具有磁性，例如CrI3、Fe3GeTe2等](https:/</span><span class="hljs-regexp">/iopscience.iop.org/</span>article<span class="hljs-regexp">/10.1088/</span><span class="hljs-number">0256</span>-<span class="hljs-number">307</span>X<span class="hljs-regexp">/40/</span><span class="hljs-number">5</span>/<span class="hljs-number">058501</span>)。在制备TMR多层薄膜时使用了<span class="hljs-number">2</span>D范德华材料，可能对薄膜的特性有以下影响：<br>[由于<span class="hljs-number">2</span>D范德华材料具有较低的界面粗糙度和较好的晶格匹配，可以减少界面散射和缺陷，从而提高TMR效应](https:<span class="hljs-regexp">//i</span>opscience.iop.org<span class="hljs-regexp">/article/</span><span class="hljs-number">10.1088</span><span class="hljs-regexp">/0256-307X/</span><span class="hljs-number">40</span><span class="hljs-regexp">/5/</span><span class="hljs-number">058501</span>)。<br>[由于<span class="hljs-number">2</span>D范德华材料具有较高的自旋极化率和较大的自旋轨道耦合，可以增强自旋过滤效应和自旋依赖隧穿效应，从而提高TMR效应](https:<span class="hljs-regexp">//i</span>opscience.iop.org<span class="hljs-regexp">/article/</span><span class="hljs-number">10.1088</span><span class="hljs-regexp">/0256-307X/</span><span class="hljs-number">40</span><span class="hljs-regexp">/5/</span><span class="hljs-number">058501</span>)。<br>[由于<span class="hljs-number">2</span>D范德华材料具有较强的光电响应和电场调控能力，可以实现对TMR效应的光电调制和电场调制，从而提高器件的功能性和灵活性](https:<span class="hljs-regexp">//i</span>opscience.iop.org<span class="hljs-regexp">/article/</span><span class="hljs-number">10.1088</span><span class="hljs-regexp">/0256-307X/</span><span class="hljs-number">40</span><span class="hljs-regexp">/5/</span><span class="hljs-number">058501</span>)。<br><br></code></pre></td></tr></table></figure>
+
+<p>文章的主要结论是：利用二维层状半导体 InSe 作为隧道层，二维层状铁磁金属 Fe3GeTe2 作为自旋注入和检测电极，实现了全二维范德华垂直自旋阀器件。这种器件在 10 K 下施加 0.1 µA 的偏置电流时，可获得 41% 的大磁阻 (MR)，比金属器件高出三倍。此外，这种器件还具有较低的工作偏压电流和较敏感的偏压电流依赖性。</p>
+<p>Here, all-2D van der Waals vertical spin-valve devices that combine the 2D layered semiconductor InSe as a spacer with the 2D layered ferromagnetic metal Fe(3)GeTe(2) as spin injection and detection electrodes, are reported.</p>
+<p>对后续研究以及工程应用可能影响:</p>
+<p>TMR 效应在自旋电子学中有重要的应用，例如磁存储、磁传感器和逻辑器件。因此，实现高效的全二维范德华垂直自旋阀器件可能对提高这些应用的性能和可靠性有积极的影响。同时，也可能为探索新型的自旋电子学现象和功能提供新的平台。</p>
+<p><em>J. Yan, Y. Zhang, Y. Zhang, J. Wang and X. Zhang, “Significant tunneling magnetoresistance and excellent spin filtering effect in CrI3-based van der Waals magnetic tunnel junctions,” Science Advances, vol. 4, no. 3, Mar. 2018, Art. no. eaar4851.</em></p>
+<p>本文报道了基于 CrI3 的 van der Waals 磁隧道结的自旋极化量子输运性质。通过第一性原理计算，我们研究了由单层 CrI3、六方氮化硼（h-BN）间隔层和 n 层 CrI3（n&#x3D;1、2、3 和 4）组成的三明治型 vdW 磁隧道结的自旋极化量子输运性质。在 n&#x3D;3 时，获得了几乎完全自旋极化电流和大的隧道磁电阻比（3600%）。在正偏压下，由于 MTJs 中固定层数的不同，这些 MTJs 的输运性质表现出有趣的奇偶效应。当 n 为奇数（n&#x3D;1 和 3）时，观察到几乎完美的自旋过滤效应和显著的负微分电阻（NDR）。我们的结果为基于 2D 磁性 vdW 材料的 MTJs 的实验研究提供了有效的指导。</p>
+<p>文章的主要结论是：基于 CrI3 的范德华磁性隧道结具有显著的隧道磁阻和优异的自旋滤波效应，这些效应可以通过调节 CrI3 层数和外加电压来调控。这些效应的物理机制是：CrI3 作为自旋滤波隧道势垒，可以有效地选择性地传输不同自旋方向的电子，从而导致电阻的变化。</p>
+<p>对后续研究以及工程应用可能有以下影响：</p>
+<ul>
+<li>这些效应为设计新型的基于二维磁性材料的自旋电子器件提供了新的平台和可能性。</li>
+<li>这些效应可以在低温下实现，且受外界磁场的影响较小，因此具有较高的灵敏度和稳定性。</li>
+<li>这些效应可以用于实现高密度、低功耗、快速切换的数据存储和逻辑运算</li>
+</ul>
+<p>刚好有一篇研究 2D van der Waals 结构的文章，偏原理：</p>
+<p>Y. Zhang, Y. Li, X. Zhang, Y. Li, Y. Wang and J. Wang, “Tunable Tunneling Magnetoresistance in van der Waals Magnetic Tunnel Junctions with 1T-CrTe2 Electrodes,” in IEEE Transactions on Magnetics, vol. 58, no. 4, pp. 1-5, April 2022, doi: 10.1109&#x2F;TMAG.2022.3172466.</p>
+<p><img src="/img/XS0FbON0uoY16exk7ZqcZAFVnXc.png" srcset="/img/loading.gif" lazyload></p>
+<p>二维 (2D) 范德华 (vdW) 异质结构为具有新颖特性的自旋电子学应用开辟了新途径。在这里，通过密度泛函理论计算，我们研究了由 1T-CrTe2 铁磁电极组成的 vdW 磁隧道结 (MTJ) 中的自旋相关传输。同时，石墨烯和六方氮化硼被用作隧道势垒。已经发现两种类型的 vdW MTJ 的隧道磁阻 (TMR) 效应呈现出类似的趋势：势垒厚度对 TMR 比率有很大影响，当势垒增加到五个单层时达到最大值。然而，尽管存在相似性，但石墨烯-势垒结更有希望进行优化。通过观察 vdW MTJ 的能量分辨透射光谱，我们注意到石墨烯-势垒结的 TMR 比率是可调的，并且可以通过调整费米能量的位置来提高。因此，我们通过置换掺杂成功实现了 TMR 优化。当在石墨烯势垒中用一个硼原子取代一个碳原子时，TMR 比显着提高，在掺杂的七单层势垒结中可以获得高达 6962% 的 TMR 比。我们的结果为自旋电子学中的 vdW MTJ 应用铺平了道路。</p>
+<p>这篇文章的主要结论是，他们发现可以通过调整 h-BN 障碍层的厚度和石墨烯与 1T-CrTe2 电极之间的层间距来调节隧道磁电阻（TMR）比。TMR 比是指磁化反平行时的抵抗值与磁化平行时的抵抗值之比，用于衡量 TMR 效应的大小 文章中发现，障碍层厚度越大，TMR 比越大；层间距越大，TMR 比越小</p>
+<h3 id="应用、制造、测试"><a href="#应用、制造、测试" class="headerlink" title="应用、制造、测试"></a>应用、制造、测试</h3><p>基于 TMR 原理制造的传感器，在一些特定领域的应用。</p>
+<p><em>C. Li, B. Yang, X. Guo and X. Chen, “Design, Analysis and Simulation of a MEMS-Based Gyroscope with Differential Tunneling Magnetoresistance Sensing Structure,” Sensors, vol. 20, no. 17, p. 4919, Aug. 2020, doi: 10.3390&#x2F;s20174919.</em></p>
+<p>本文介绍了一种基于差分隧道磁阻传感的新型微机电系统 (MEMS) 陀螺仪的设计、分析和仿真。该设备由静电力驱动，而科里奥利位移会通过磁场的强度变化测出，由隧道磁阻单元进一步检测。磁场由一对涂在内部质量背面的双层平面多匝铜线圈产生。与所提出的音叉陀螺仪的双质量结构一起，形成了两级差分检测，从而能够同时抑制机械和磁共模误差。</p>
+<p><img src="/img/RjarbZHR1oAxPuxRq2FcejHgnWg.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/GpGob23rWoFqJwxdKGmchYHfntf.png" srcset="/img/loading.gif" lazyload></p>
+<p>所提出方案的独特之处在于，在空的内部质量上镀上一个双层平面微型线圈，以在铜线施加励磁电流时产生恒定磁场。当输入垂直于平面的角速度时，驱动一对外质量块 vibrate in reverse 沿 X 轴 ，从而使一对内质量块受到沿 y 轴的科里奥利力。因此，这对铜微线圈形成两个独立的磁场，在感测轴上具有不同的变化。</p>
+<p>由于磁场沿 Y 轴对称分布，一对 Y 感测 TMR 单元对称地布置在每个线圈下方，以差分检测磁场的局部变化，如图 2 所示。TFG 的双质量设计和 TMR 传感器的对称布局构成了两级差分测量。因此，可以同时抑制 Y 轴加速度引起的机械共模误差和电磁干扰引起的 TMR 共模误差。</p>
+<p>同样是陀螺仪 +TMR：</p>
+<p><em>L. Jin, S.-Y. Qin, R. Zhang, and M.-W. Li, “High-sensitivity tunneling magneto-resistive micro-gyroscope with immunity to external magnetic interference,” Scientific Reports, vol. 10, no. 1, p. 16441, Oct. 2020.</em></p>
+<p><img src="/img/Ovgkb4nf6o2EEJx5KT2cJ7AsnMd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/N8SJbIBtqo33oPxA1ycciX0tnOc.png" srcset="/img/loading.gif" lazyload></p>
+<p>顶层是 TMR 结构，有多个磁阻结；中间层为微陀螺结构层，铜制电子线圈位于结构质量块表面；底层为接合基板，两个驱动磁体位于基板两侧，由脉冲激光沉积溅射 Nd_2Fe_14B 靶材制成，在驱动方向提供均匀磁场。当在驱动线的电极上施加电压时，微型陀螺仪的结构（包括驱动和传感质量块）被电磁力驱动，从而在 X 轴方向上往复运动。如果在 Z 轴上施加一个角速度信号，由于科里奥利力的作用，传感质量块和通电线圈将沿 Y 轴方向移动。通电线圈在驱动方向提供均匀磁场，在感应方向提供高梯度磁场。这种运动会改变 TMR 设备感应到的磁场强度。由于 TMR 器件对磁场的微弱变化具有很高的灵敏度，当磁场变化时 TMR 器件的电阻值变化很快。因此，微型陀螺仪的输入角速度 Ω 可以通过测量 TMR 器件输出电压的变化来获得。</p>
+<p>实验装置的框图如图 3a 所示。谐波响应测试用于研究微型陀螺仪的模式匹配。信号发生器产生的扫频交流信号，用于驱动微型陀螺仪，驱动&#x2F;传感方向的输出信号经过放大和低通滤波后，使用锁相放大器进行同步解调。谐波响应测试的结果如图 3b 所示。共振频率经测试为 7850 Hz 和 7854 Hz。这种 4 Hz 的频率分裂主要是由制造过程中的不对称造成的。</p>
+<p>文章的主要创新点是：建立了 TMR 微型陀螺仪的灵敏度计算模型，所设计的结构、磁场和磁阻器件对后续研究有参考意义。测试发现，传感器测量的精度取决于外部磁场波动；为此，提出了多桥电路的方法来抑制外部磁场干扰，有效避免 TMR 器件的积分误差，提高运算精度。</p>
+<p>裂缝检测</p>
+<p><em>C. Ye, Z. Zhou, Y. Yang, Q. Leng and W. Zhao, “Research on crack monitoring technology of flexible eddy current array sensor based on TMR sensors,” Measurement: Journal of the International Measurement Confederation, vol. 186, p. 109530, 2022.</em></p>
+<p>设计了一种矩形柔性涡流阵列传感器，它由励磁线圈和 TMR 传感器组成。</p>
+<p><img src="/img/QdcAbQzUbofifcxhbKXc1CQhn2b.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/F4Ffbl6pYoqiSTxqrKXcaBxbnJf.png" srcset="/img/loading.gif" lazyload></p>
+<p>基于 TMR 传感器的柔性涡流阵列传感器的裂纹监测原理与传统涡流传感器相同。交变磁场是由交流电驱动空间中的励磁线圈产生的。当励磁线圈靠近金属导体时，金属导体上方会形成涡流。当结构出现裂纹时，结构上的涡流会受到扰动，从而产生扰动磁场。裂纹的出现可以通过 TMR 传感器测量扰动磁场来确定。</p>
+<p>主要亮点是：</p>
+<ul>
+<li>提出了一种基于 TMR 传感器的柔性涡流阵列传感器，用于检测金属结构中的裂缝。</li>
+<li>建立了柔性涡流阵列传感器的有限元模型，分析了不同参数对探头输出信号的影响。</li>
+<li>进行了实验验证，比较了不同裂缝长度和深度下探头输出信号的变化。</li>
+<li>提出了一种基于神经网络的裂缝识别算法，实现了对裂缝长度和深度的准确估计</li>
+</ul>
+<p>三相激励和集成阵列隧道磁阻传感器的涡流探头；旨在快速、可靠地检测金属结构中的缺陷。</p>
+<p><em>Na Zhang, Chaofeng Ye, Lei Peng, and Yu Tao, “Eddy Current Probe With Three-Phase Excitation and Integrated Array Tunnel Magnetoresistance Sensors,” in <strong>IEEE</strong> Transactions on Industrial Electronics, vol. 68, no. 6, pp. 5325-5334, June 2021.</em></p>
+<p>涡流探头使用承载三相电流的线圈作为激励。这与其他使用单相或两相电流的励磁方法不同。三相励磁法在导电样品中感应出涡流，涡流沿相位变化方向循环流动并发生电位移。这使得探头对任何方向的缺陷都敏感，并且无需多路复用励磁线圈，从而具有成本更低、噪音更小和检测速度更快的优势。</p>
+<p>使用三相激励电路的原因是：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9080544">三相激励电路可以实现涡流场的旋转和调制，从而提高探头的信噪比和抗干扰能力</a><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9080544">(1)</a><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8725600/">(2)</a>。</li>
+<li><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9080544">三相激励电路可以减少探头的尺寸和重量，从而提高探头的灵活性和可靠性</a><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9080544">(1)</a><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/8725600/">(2)</a>。</li>
+<li><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9080544">三相激励电路可以避免探头的直流偏置，从而提高探头的稳定性和精度</a><a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9080544">(1)</a><a target="_blank" rel="noopener" href="https://www.semanticscholar.org/paper/Eddy-Current-Probe-With-Three-Phase-Excitation-and-Zhang-Ye/6c1716201f94a150d62f52aece5644426237e89b">(3)</a>。</li>
+</ul>
+<p>涡流检测探头使用集成阵列隧道磁阻 (TMR) 传感器作为接收器来测量磁场。 TMR 阵列包含 64 个传感器，这些传感器经过微加工并封装在一条线上。在单次探测过程中，传感器会生成具有高灵敏度（1.99 nT&#x2F;√Hz @ 30 kHz）和精细空间分辨率（0.5 毫米间距）的磁场图像。通过分析输出图像，可以识别和定位缺陷。TMR 传感器通过测量被测金属结构中感应的涡流引起的磁场变化来工作。当涡流流过导电材料时，会在其周围产生磁场。 TMR 传感器检测这些磁场并将其转换为可分析的电信号，以识别被测材料中的缺陷。</p>
+<p><img src="/img/CeUebs1DwoZnpKxbuwlc0ZPBnGb.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/I9DlbiBhZo0JYPxieUKclmPpnwe.png" srcset="/img/loading.gif" lazyload></p>
+<p>DRTE 结构具有更低的噪声，但也有更低的灵敏度。SRTE 结构和 DRTE 结构在检测裂缝和腐蚀方面都有良好的性能，但 DRTE 结构更适合检测较小的缺陷。</p>
+<p>这篇文章的主要亮点是：</p>
+<ul>
+<li>它提出了一种基于三相激励和集成隧道磁阻（TMR）传感器阵列的涡流探头。</li>
+<li>它设计了一种新颖的三相激励电路，实现了涡流场的旋转和调制。</li>
+<li>它利用 TMR 传感器阵列的高灵敏度和高分辨率，实现了对金属结构中的裂缝和腐蚀的检测。</li>
+<li>它进行了理论分析和实验验证，表明了 TMR 涡流探头的优越性能和广泛应用前景。</li>
+</ul>
+<p>高精度微位移传感器</p>
+<p><em>X. Wang et al., “High-precision micro-displacement sensor based on tunnel magneto-resistance effect,” Sci Rep, vol. 12, no. 1, Art. no. 1, Feb. 2022, <strong>doi</strong>: 10.1038&#x2F;s41598-022-06965-3.</em></p>
+<p>基于隧道磁阻效应的高精度微位移传感器。采用细分插值技术，通过将 TMR 传感器的正余弦输出转换为随位移线性变化的输出来提高分辨率。同时，采用多桥电路方式抑制外磁和地磁干扰。实验结果表明，微位移传感器的分辨率为 800 nm，精度为 0.14%(全量程误差，最大误差为 0.7 μm，满量程为 500 μm)，毫米级的满量程范围。</p>
+<p><img src="/img/W4lab9VFEo2yyRxd9PHcTva7nzb.png" srcset="/img/loading.gif" lazyload></p>
+<p>TMR 位移传感器由铜制电子线圈层和 TMR 器件层组成。电子线圈在 X 轴方向提供均匀的磁场，在 Y 轴（感应）方向提供高梯度磁场。磁阻结构由几组 TMR 装置组成，它有两种极性相反的磁阻结。磁场分布和 TMR 器件的灵敏度直接决定了基于 TMR 的位移传感器的性能。</p>
+<p>工艺流程：</p>
+<p><img src="/img/PTvcbY94CoxXK9xk9egc4Vk7nSh.png" srcset="/img/loading.gif" lazyload></p>
+<p>这篇文章中使用的 TMR 传感器的具体型号是 TMR1302，它是由 MultiDimension Technology （多维科技，江苏张家港）生产</p>
+<p><em>C. Ren, Q. Bayin, S. Feng, Y. Fu, X. Ma, and J. Guo, “Biomarkers detection with magnetoresistance-based sensors,” Biosensors and Bioelectronics, vol. 165, p. 112340, Oct. 2020.</em></p>
+<p>这是一篇综述文章。综述了三种基于 MR 的生物标志物检测技术，即各向异性磁阻 (AMR)、巨磁阻 (GMR) 和隧道磁阻 (TMR)。基于这三种常用技术，分别介绍了生物医学诊断、食品安全、环境监测等不同的典型应用。此外，通过结合微流控、微机电系统（MEMS）、免疫层析试纸（ICTS）等不同的先进技术，更好地扩展了现有的基于 MR 的检测方法，使其更符合当前的检测需求。基于磁阻的传感器具有易于集成、灵敏度高和元件成本低的优点。基于磁阻的传感器在医学检测、食品安全和环境监测等方面具有广阔的前景。各种先进技术与磁阻传感器的结合促进了它的发展。</p>
+<ul>
+<li>Y. Zhang, J. Wang, X. Li and Y. Liu, “New Small-Volume High-Precision TMR Busbar DC Current Sensor,” in <strong>IEEE</strong> Transactions on Magnetics, vol. 56, no. 4, pp. 1-5, April 2020, <strong>doi</strong>: 10.1109&#x2F;TMAG.2019.2950406.*</li>
+</ul>
+<p>本文设计了一种尺寸为 23.2 mm × 16.5 mm × 7.2 mm 的新型差分式超小型磁传感器。该传感器基于隧道磁阻 (TMR)，放置在母线的上表面边缘。电源电压为 5 V，额定电流测量范围为 ±150 A，峰值电流测量范围为 ±250 A，对应于 ±250 A dc 峰值电流下的 2.5 ± 2 V 输出。相对精度在 25 °C 时小于 ±1%，在 -40 °C 至 105 °C 的整个温度范围内小于 ±2%</p>
+<p><img src="/img/Er3YbtnLKo8zthxlUEYcpKTcnpd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/Pdq5bWIz5oGG5uxOIFNchoTmnLh.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="调理电路、信号处理算法"><a href="#调理电路、信号处理算法" class="headerlink" title="调理电路、信号处理算法"></a>调理电路、信号处理算法</h3><p>提出了一种交流调制方法和阻抗补偿方法来提高传感器的性能。文章中还介绍了传感器的直流和交流特性，并且指出了外部磁场对传感器等效电阻和电容的影响。</p>
+<p><em>Wenlei Zhao, Xinchen Tao, Chaofeng Ye and Yu Tao, “Tunnel Magnetoresistance Sensor with AC Modulation and Impedance Compensation for Ultra-Weak Magnetic Field Measurement,” Sensors, vol. 22, no. 3, p. 1021, <strong>Jan</strong>. 2022, <strong>doi</strong>: 10.3390&#x2F;s22031021.</em></p>
+<p>调制和阻抗补偿显著提高了低频范围内的传感器灵敏度。在 1 Hz 时，传感器的信噪比通过交流调制、阻抗补偿和梯度计测量装置提高了约 25.3 dB。此外，传感器的灵敏度从 165.2 提高到 222.1 mV&#x2F;V&#x2F;mT。在未屏蔽环境中，该传感器测量了两个人体的超弱磁信号，即心磁图信号（MCG），并且可以清晰地可视化 MCG 的 R 峰。</p>
+<p><img src="/img/O7fBbf3Ypo6KBIxnAFGcTG7Knld.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/Wul6brgDSoNPwGxSfW8c1PPRn3g.png" srcset="/img/loading.gif" lazyload></p>
+<p>提出了一种交流调制和阻抗补偿的方法，用于提高隧道磁阻（TMR）传感器在超弱和低频磁场测量中的性能。该方法通过在传感器两端加上交流电压，使传感器工作在交流状态，从而降低 1&#x2F;f 噪声的影响。同时，该方法还通过在传感器两端并联一个阻抗补偿电路，使传感器的输出电压与输入电压成正比，从而消除了阻抗不匹配对信号的影响。</p>
+<p>文章的阻抗补偿电路是通过在传感器两端并联一个电阻和一个电容组成的 RC 电路来实现的。该 RC 电路的阻抗与传感器的阻抗相等，但相位相反。因此，当传感器和 RC 电路并联时，它们的总阻抗为零，从而消除了阻抗不匹配对信号的影响</p>
+<p>由于 TMR 传感器由多个纳米层构成，因此 TMR 传感器的简化等效电路是并联连接的电阻器和电容器。如果在较高频率下工作，则应考虑传感器的阻抗，而不仅仅是电阻。因此，需要使用 LCR 表。测量 TMR 传感器的交流阻抗，即 TMR 传感器在不同驱动下的等效电阻和电容频率。 LCR 表的驱动电压为 2 V。LCR 表的频率从 20 Hz 变为 300 kHz。</p>
+<p>TMR 传感器的等效电路包含并联连接的电阻器和电容器。 TMR 的电阻和电容都会受到外部磁场的影响。因此，推测可以通过并联一个电感来适当补偿 TMR 传感器的阻抗，从而提高传感器的灵敏度。</p>
+<p><img src="/img/X6y4bVo1Uo6yuvxnuuica5HCnPe.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/NKiIbJn0foiUcvxCusOciHaBnfg.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用的传感器：MR1302</p>
+<p>MEMS 器件的高精度磁编码器</p>
+<p>B. Zhang, Y. Jiang, Y. Li, X. Chen and X. Wen, “Design and Development of High Precision Magnetic Encoder Based on TMR MEMS Device,” 2021 IEEE 16th International Conference on Nano&#x2F;Micro Engineered and Molecular Systems (NEMS), Xiamen, China, 2021, pp. <a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/document/9451506/">169-173</a></p>
+<p>会议文章</p>
+<p>采用基于 TMR 原理的 MEMS 磁敏芯片作为磁性编码器的敏感元件。在硬件开发方面，经过磁路优化设计，开发精密旋转结构，设计稳压电源电路和低噪声信号调理电路，将模拟电压信号数字化转换为高信噪比比率通过模数转换，然后进入微处理器。在程序设计方面，针对敏感元器件的原始输出数据设计并编写了数据处理、校正和标定算法，并利用 MATLAB 软件对编码器计算出的角度数据进行仿真、计算和验证，进一步验证。</p>
+<ul>
+<li>作者通过实验验证了磁编码器的性能，结果表明其分辨率达到了 0.01°，重复性误差小于 0.02°，非线性误差小于 0.05°。</li>
+</ul>
+<p><img src="/img/EGkMbOd9GosXKkxkYaRcmVkxn1g.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/QJh3bqqBloPSxKxjRR5cus99nbf.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/img/WaW4bXPUCotVT3xq4T0cqZ3Snde.png" srcset="/img/loading.gif" lazyload></p>
+<p>两个电桥，测 sin cos</p>
+<h2 id="3-总结"><a href="#3-总结" class="headerlink" title="3.总结"></a>3.总结</h2><p>可能的研究方向很多，TMR 在磁传感器各个应用领域表现优越</p>
+<p>基于“磁检测技术”应用的大方向，TMR 可以应用在很多场景（地址勘探、定位导航、缺陷检测、生物检测），或者和其他典型传感器结构结合（位移传感器、陀螺仪）。得益于 TMR 的高分辨率、灵敏度，作为磁传感器在价格、性能上都具有优势，最近基于 TMR 的特定应用领域的文章还是挺多的。但是 TMR 的加工制造仍然是难点。关于“如何制造更高性能的 TMR 传感器”以及“设计更高性能 TMR 原型”仍然是一个难点，相关的工程研究并不多。（可能关于制造的技术是各企业的商业机密）</p>
+<p>适用于 MEMS 系统的新特性</p>
+<p>偏原理、前沿的研究（凝聚态物理、量子力学），偏向的可能应用都是存储介质。TMR 作为存储单元，主要使用其饱和态，更加关注其存储效率和功耗，但是也有多 bit 的应用。关注前沿的研究，虽然不一定能看懂、理解，但知道某种材料、结构对磁-阻曲线的影响，也能迁移到传感器应用中。例如：van der Waals、加入抗铁磁层的间接交换；同时也需要基于仿真、理论计算和工艺能力，调整层厚和多层膜的选择、膜厚设计、MTJ 组网设计，通过仿真设计寻找在某个特定应用系统中性能更佳的传感器。主要是 TMR 结构尺寸的设计。</p>
+<p>CMOS 的良好兼容性以及小型化</p>
+<p>TMR 结构比较简单，和 COMS 工艺兼容有良好的兼容性。面向应用的研究，可以和 ADC、寄存器、通信接口等数字电路集成，制备更易用的数字传感器。</p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a><strong>参考文献</strong></h2><p>[1]磁性隧道结的隧穿磁电阻研究_张佩佩[D].四川师范大学，2011</p>
+<p>[2]李翔宇. 高性能隧穿磁阻传感器接口电路芯片集成技术研究_李翔宇[D]. 哈尔滨工业大学, 2018</p>
+<p>[3]Yaodi Yang, Shaohua Yan, and Xiaobo Sharon Hu, “Developments and Applications of Tunneling Magnetoresistance Sensors,” Tsinghua Science and Technology, vol. 27, no. 3, pp. 443-454, June 2022.</p>
+<p>[4]Efficient and Highly Reliable Spintronic Non-volatile Quaternary Memory Based on Carbon Nanotube FETs and Multi-TMR MTJs,” ECS Journal of Solid State Science and Technology, vol. 11, no. 6, p. 061007, 2022</p>
+<p>[5]L. Šmejkal, A. Birk Hellenes, R. González-Hernández, J. Sinova, and T. Jungwirth, “Giant and Tunneling Magnetoresistance in Unconventional Collinear Antiferromagnets with Nonrelativistic Spin-Momentum Coupling,” Phys. Rev. X, vol. 12, no. 1, p. 011028, Feb. 2022.</p>
+<p>[6]Yan, J., Zhang, Y., Zhang, Y., Wang, J., &amp; Zhang, X. (2018). Significant tunneling magnetoresistance and excellent spin filtering effect in CrI3-based van der Waals magnetic tunnel junctions. Science advances, 4(3), eaar4851.</p>
+<p>[7]Y. Zhang, J. Wang, X. Li and Y. Liu, “Large Tunneling Magnetoresistance in van der Waals Ferromagnet&#x2F;Semiconductor Heterojunctions,” in Advanced Materials, vol. 34, no. 50, pp. 2104658, December 2022, doi: 10.1002&#x2F;adma.202104658.</p>
+<p>[8]Y. Zhang, Y. Li, X. Zhang, Y. Li, Y. Wang and J. Wang, “Tunable Tunneling Magnetoresistance in van der Waals Magnetic Tunnel Junctions with 1T-CrTe2 Electrodes,” in IEEE Transactions on Magnetics, vol. 58, no. 4, pp. 1-5, April 2022, doi: 10.1109&#x2F;TMAG.2022.3172466.</p>
+<p>[9]L. Zhang, Y. Zhang, J. Li, Y. Wang, and H. Zeng, “Transport properties of tunneling magnetoresistance sensors based on double indirect exchange coupling effect,” Journal of Magnetism and Magnetic Materials, vol. 500, p. 166382, 2020.</p>
+<p>[10]C. Li, B. Yang, X. Guo and X. Chen, “Design, Analysis and Simulation of a MEMS-Based Gyroscope with Differential Tunneling Magnetoresistance Sensing Structure,” Sensors, vol. 20, no. 17, p. 4919, Aug. 2020, doi: 10.3390&#x2F;s20174919.</p>
+<p>[11]L. Jin, S.-Y. Qin, R. Zhang, and M.-W. Li, “High-sensitivity tunneling magneto-resistive micro-gyroscope with immunity to external magnetic interference,” Scientific Reports, vol. 10, no. 1, p. 16441, Oct. 2020.</p>
+<p>[12] C. Ye, Z. Zhou, Y. Yang, Q. Leng and W. Zhao, “Research on crack monitoring technology of flexible eddy current array sensor based on TMR sensors,” Measurement: Journal of the International Measurement Confederation, vol. 186, p. 109530, 2022.</p>
+<p>[13]  X. Wang et al., “High-precision micro-displacement sensor based on tunnel magneto-resistance effect,” Sci Rep, vol. 12, no. 1, Art. no. 1, Feb. 2022, doi: 10.1038&#x2F;s41598-022-06965-3.</p>
+<p>[14]Na Zhang, Chaofeng Ye, Lei Peng, and Yu Tao, “Eddy Current Probe With Three-Phase Excitation and Integrated Array Tunnel Magnetoresistance Sensors,” in IEEE Transactions on Industrial Electronics, vol. 68, no. 6, pp. 5325-5334, June 2021.</p>
+<p>[15] Y. Zhang, J. Wang, X. Li and Y. Liu, “New Small-Volume High-Precision TMR Busbar DC Current Sensor,” in IEEE Transactions on Magnetics, vol. 56, no. 4, pp. 1-5, April 2020, doi: 10.1109&#x2F;TMAG.2019.2950406.</p>
+<p>[16]Wenlei Zhao, Xinchen Tao, Chaofeng Ye and Yu Tao, “Tunnel Magnetoresistance Sensor with AC Modulation and Impedance Compensation for Ultra-Weak Magnetic Field Measurement,” Sensors, vol. 22, no. 3, p. 1021, Jan. 2022, doi: 10.3390&#x2F;s22031021.</p>
+<p>[17] B. Zhang, Y. Jiang, Y. Li, X. Chen and X. Wen, “Design and Development of High Precision Magnetic Encoder Based on TMR MEMS Device,” 2021 IEEE 16th International Conference on Nano&#x2F;Micro Engineered and Molecular Systems (NEMS), Xiamen, China, 2021, pp. 169-173</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0/" class="print-no-link">#文献学习</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>【文献学习】TMR-隧道磁阻效应</div>
+      <div>http://example.com/2023/04/18/【文献学习】TMR-隧道磁阻效应/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Chery Young</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年4月18日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/04/25/%E3%80%90MEMS%E3%80%91%E4%B8%80%E7%A7%8D%E4%B8%89%E7%9B%B8%E9%9D%99%E7%94%B5MEMS%E6%97%8B%E8%BD%AC%E7%94%B5%E6%9C%BA%E7%9A%84%E8%AE%BE%E8%AE%A1/" title="【mems】一种三相静电旋转电机的设计">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">【mems】一种三相静电旋转电机的设计</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/03/25/%E3%80%90%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E3%80%91%E5%9F%BA%E4%BA%8E%E7%A3%81%E5%BC%BA%E8%AE%A1%E3%80%81IMU%E7%9A%84%E7%BB%84%E5%90%88%E5%AF%BC%E8%88%AA%E7%AE%97%E6%B3%95/" title="【项目总结】基于磁强计、IMU的组合导航算法">
+                        <span class="hidden-mobile">【项目总结】基于磁强计、IMU的组合导航算法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

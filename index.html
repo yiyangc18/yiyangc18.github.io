@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Chery Young">
+  <meta name="keywords" content="嵌入式">
+  
+    <meta name="description" content="记录技术的成长">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CHER-YOUNG BLOG">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="CHER-YOUNG BLOG">
+<meta property="og:description" content="记录技术的成长">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="Chery Young">
+<meta property="article:tag" content="嵌入式">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>CHER-YOUNG BLOG</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 100vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>CHERY</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/swing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="每个项目的点灯验证，是赋予他们心跳的开始"></span>
+          
+        </div>
+
+        
+      </div>
+
+      
+        <div class="scroll-down-bar">
+          <i class="iconfont icon-arrowdown"></i>
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      <div class="container nopadding-x-md">
+        <div id="board"
+          style="margin-top: 0">
+          
+          <div class="container">
+            <div class="row">
+              <div class="col-12 col-md-10 m-auto">
+                
+
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/08/14/%E3%80%90%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E3%80%91%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" target="_self">
+          <img src="/img/learning.png" srcset="/img/loading.gif" lazyload alt="【软件开发】设计模式">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2023/08/14/%E3%80%90%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E3%80%91%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" target="_self">
+          【软件开发】设计模式
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2023/08/14/%E3%80%90%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91%E3%80%91%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" target="_self">
+        <div>
+          面向对象基础类与对象 - 对象是实体，类是对象的抽象集合。 类的构造函数 - 代替默认 重载- 相同函数名但是不同参数类型 属性 - 一种限制了外部修改情况的 public 方法，与 public 成员区别是可以限制读写或数值区间 封装 - 暴露可操作的接口，减少耦合 继承 - b is a，b 继承 a 的非 private 属性和功能，可以派生和重写。 多态 - 不同的对象，相同的方法不同的结
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-08-14 10:28" pubdate>
+              2023-08-14
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E5%BC%80%E5%8F%91/">#开发</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/04/25/%E3%80%90MEMS%E3%80%91%E4%B8%80%E7%A7%8D%E4%B8%89%E7%9B%B8%E9%9D%99%E7%94%B5MEMS%E6%97%8B%E8%BD%AC%E7%94%B5%E6%9C%BA%E7%9A%84%E8%AE%BE%E8%AE%A1/" target="_self">
+          <img src="/img/9a91d34f-2597-4347-87b0-9362183878ac.png" srcset="/img/loading.gif" lazyload alt="【mems】一种三相静电旋转电机的设计">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2023/04/25/%E3%80%90MEMS%E3%80%91%E4%B8%80%E7%A7%8D%E4%B8%89%E7%9B%B8%E9%9D%99%E7%94%B5MEMS%E6%97%8B%E8%BD%AC%E7%94%B5%E6%9C%BA%E7%9A%84%E8%AE%BE%E8%AE%A1/" target="_self">
+          【mems】一种三相静电旋转电机的设计
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2023/04/25/%E3%80%90MEMS%E3%80%91%E4%B8%80%E7%A7%8D%E4%B8%89%E7%9B%B8%E9%9D%99%E7%94%B5MEMS%E6%97%8B%E8%BD%AC%E7%94%B5%E6%9C%BA%E7%9A%84%E8%AE%BE%E8%AE%A1/" target="_self">
+        <div>
+          试设计一款静电驱动电机，要求：输出力矩可达 2nNm，驱动电压必须小于 50V。要求：原理说明、可能的应用背景、结构图、尺寸参数、数学建模（可包含等效电路图、传递函数、仿真等）、工艺流程说明；按照发表的论文的形式（摘要、 关键字、正文、参考文献)  Abstract静电 MEMS 旋转电机通过转子和定子两极之间的可变电容中储存的电能来运行。本文介绍了一种 MEMS 三相旋转微电机的设计、建模和制
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-04-25 09:58" pubdate>
+              2023-04-25
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/IOT/">#IOT</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/04/18/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91TMR-%E9%9A%A7%E9%81%93%E7%A3%81%E9%98%BB%E6%95%88%E5%BA%94/" target="_self">
+          <img src="/img/VnEdbACB9oWohKxkh8gcmBAZnKc.png" srcset="/img/loading.gif" lazyload alt="【文献学习】TMR-隧道磁阻效应">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2023/04/18/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91TMR-%E9%9A%A7%E9%81%93%E7%A3%81%E9%98%BB%E6%95%88%E5%BA%94/" target="_self">
+          【文献学习】TMR-隧道磁阻效应
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2023/04/18/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91TMR-%E9%9A%A7%E9%81%93%E7%A3%81%E9%98%BB%E6%95%88%E5%BA%94/" target="_self">
+        <div>
+          TMR-隧穿磁阻效应-最新研究进展1.TMR 技术简介原理铁磁薄片的磁化方向可以在外磁场的控制下被独立的切换。如果极化方向平行，那么电子隧穿过绝缘层的可能性会更大，其宏观表现为电阻小；如果极化方向反平行，那么电子隧穿过绝缘层的可能性较小，其宏观表现是电阻极大。  Yaodi Yang, Shaohua Yan, and Xiaobo Sharon Hu, “Developments and App
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-04-18 19:09" pubdate>
+              2023-04-18
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0/">#文献学习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/03/25/%E3%80%90%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E3%80%91%E5%9F%BA%E4%BA%8E%E7%A3%81%E5%BC%BA%E8%AE%A1%E3%80%81IMU%E7%9A%84%E7%BB%84%E5%90%88%E5%AF%BC%E8%88%AA%E7%AE%97%E6%B3%95/" target="_self">
+          <img src="/img/learning.png" srcset="/img/loading.gif" lazyload alt="【项目总结】基于磁强计、IMU的组合导航算法">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2023/03/25/%E3%80%90%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E3%80%91%E5%9F%BA%E4%BA%8E%E7%A3%81%E5%BC%BA%E8%AE%A1%E3%80%81IMU%E7%9A%84%E7%BB%84%E5%90%88%E5%AF%BC%E8%88%AA%E7%AE%97%E6%B3%95/" target="_self">
+          【项目总结】基于磁强计、IMU的组合导航算法
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2023/03/25/%E3%80%90%E9%A1%B9%E7%9B%AE%E6%80%BB%E7%BB%93%E3%80%91%E5%9F%BA%E4%BA%8E%E7%A3%81%E5%BC%BA%E8%AE%A1%E3%80%81IMU%E7%9A%84%E7%BB%84%E5%90%88%E5%AF%BC%E8%88%AA%E7%AE%97%E6%B3%95/" target="_self">
+        <div>
+          基于卡尔曼滤波器的磁强计、IMU 组合导航算法研究背景介绍由三轴加速度计和三轴陀螺仪组成的惯性测量单元 (IMU) 广泛用于自主导航系统。然而，IMU 的漂移会导致位置和姿态测量存在显著的累积误差。IMU 测量的主要参数是加速度和角速率，其他参数例如速度、位移和旋转角度是通过对加速度或角速率随时间积分得到的。然而，漂移和积分误差导致长时间运动测量中存在大量累积误差，甚至导致结果发散。对于长时间稳定
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-03-25 18:32" pubdate>
+              2023-03-25
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">#课程学习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2023/03/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP32-A2DP%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5/" target="_self">
+          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【IOT开发】ESP32-A2DP自动连接">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2023/03/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP32-A2DP%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5/" target="_self">
+          【IOT开发】ESP32-A2DP自动连接
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2023/03/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP32-A2DP%E8%87%AA%E5%8A%A8%E8%BF%9E%E6%8E%A5/" target="_self">
+        <div>
+          A2DP 自动连接ESP32官方例程，A2DP无法做到开机即连。这在蓝牙而集中是一个“理所当然”的功能。 解决方案查找相关例程、issue，没有找到类似的问题。 查看官方文档，在 A2DP 协议中找到了相应的 API： esp_err_t**esp_a2d_sink_connect(esp_bd_addr_t remote_bda)** Connect to remote bluetooth A2
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-03-17 11:34" pubdate>
+              2023-03-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/IOT/">#IOT</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+          <img src="/img/learning.png" srcset="/img/loading.gif" lazyload alt="【课程学习】信号分析处理">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+          【课程学习】信号分析处理
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2022/11/17/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E4%BF%A1%E5%8F%B7%E5%88%86%E6%9E%90%E5%A4%84%E7%90%86/" target="_self">
+        <div>
+          测试信号分析与处理课程笔记 WEEK3 DFS一些简单的性质：线性、奇偶虚实 - 实信号 频域幅值偶对称相位奇对称 对于一个 δ 信号，频谱是一个 A&#x3D;1 横线 ；直流信号的频谱是 2pi δ 时域乘 exp(jωt) 频域频移 -ω  ；时移 to 频 AXexp(jωto) 相位变化 时域拉伸  频域 f 变窄 ，同时幅值 a 压缩 时域卷积 等于 频域相乘 相关： 频谱  X*Y
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-11-17 11:35" pubdate>
+              2022-11-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">#课程学习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-IDF&amp;ADF%E5%BC%80%E5%8F%91%E6%9E%B6%E6%9E%84/" target="_self">
+          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【IOT开发】ESP-IDF&amp;ADF 开发框架搭建">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-IDF&amp;ADF%E5%BC%80%E5%8F%91%E6%9E%B6%E6%9E%84/" target="_self">
+          【IOT开发】ESP-IDF&amp;ADF 开发框架搭建
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ESP-IDF&amp;ADF%E5%BC%80%E5%8F%91%E6%9E%B6%E6%9E%84/" target="_self">
+        <div>
+          ESP32 的音频应用开发框架。主要了解 ADF 的架构、使用、以及注意事项。 适用 MCU：ESP32, ESP32-S2, and ESP32-S3 ESP-ADF 是 IDF(Espressif IoT Development Framework)在音频应用方面的一系列扩展组件。所以得先搭好 IDF 环境，再搭建 ADF 环境。 ADF 框架：  几个重要的 element：streams，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-11-17 11:34" pubdate>
+              2022-11-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/IOT/">#IOT</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ES8388%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" target="_self">
+          <img src="/img/esp32-c6-overview.png" srcset="/img/loading.gif" lazyload alt="【IOT开发】ES8388驱动">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ES8388%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" target="_self">
+          【IOT开发】ES8388驱动
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2022/11/17/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91ES8388%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91/" target="_self">
+        <div>
+          ES8388 驱动 &amp;component之前使用的 I2S 解码芯片功能比较单一，直接在 I2S 信号引脚输入相应的脉冲量即可工作，通过一些外接引脚的拉高拉低控制数据格式、功放类型等。但是 ES8388 数字化集成较好，有双声道输入输出，集成 I2C 通信模块以及内部控制寄存器，需要通过 I2C 更改内部寄存器的值来调整工作模式。 ES8388 需要 I2C 通信，command 初始化
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-11-17 11:34" pubdate>
+              2022-11-17
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/IOT/">#IOT</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" target="_self">
+          <img src="/img/microsatellite.png" srcset="/img/loading.gif" lazyload alt="【文献学习】磁强计的应用">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" target="_self">
+          【文献学习】磁强计的应用
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2022/09/24/%E3%80%90%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0%E3%80%91%E7%A3%81%E5%BC%BA%E8%AE%A1%E7%9A%84%E5%BA%94%E7%94%A8/" target="_self">
+        <div>
+          给磁强计做一个应用系统，调研一下磁强计原理、大致有哪些应用方向。任务路线：理解磁强计的工作原理、找一个具体的应用方向、规划系统构成-软硬件方案、开发实现、迭代改进 1.磁强计的原理大体有哪些、弱磁场-中磁场-强磁场 的区别、如何测弱磁和强磁从应用的观点出发，根据磁场感应范围将磁场传感器分为：中低强度磁场、高强度磁场传感器。中低强度磁场传感器通常检测 10G 以下的磁场；高强度磁场传感器检测范围通常
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-09-24 10:32" pubdate>
+              2022-09-24
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E6%96%87%E7%8C%AE%E5%AD%A6%E4%B9%A0/">#文献学习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+      <div class="col-12 col-md-4 m-auto index-img">
+        <a href="/2022/09/23/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" target="_self">
+          <img src="/img/learning.png" srcset="/img/loading.gif" lazyload alt="【数值分析】课程学习_上">
+        </a>
+      </div>
+    
+    <article class="col-12 col-md-8 mx-auto index-info">
+      <h2 class="index-header">
+        
+        <a href="/2022/09/23/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" target="_self">
+          【数值分析】课程学习_上
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt " href="/2022/09/23/%E3%80%90%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0%E3%80%91%E6%95%B0%E5%80%BC%E5%88%86%E6%9E%90/" target="_self">
+        <div>
+          Hi，这是数值分析课程中的笔记。原文档 基础概念&amp;线代复习计算机中的浮点数计算： 表示： x &#x3D; (−1)^s ·(0.a_1a2 ···at ) ·β^e &#x3D; (−1)s ·m ·β ^e−t 符号位、有效位数、字长 ~ 在存储中为符号位、阶码、尾数位 类似于科学计数法 和之前学的二级制浮点数表示有点相似，但又不完全相同 Matlab 默认的数据类型是 double
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2022-09-23 13:35" pubdate>
+              2022-09-23
+            </time>
+          </div>
+        
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/%E8%AF%BE%E7%A8%8B%E5%AD%A6%E4%B9%A0/">#课程学习</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+
+
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/#board">2</a><a class="extend next" rel="next" href="/page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
+
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
