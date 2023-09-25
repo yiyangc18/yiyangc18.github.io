@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/NearLink.jpg">
 <meta property="article:published_time" content="2023-09-22T06:15:52.000Z">
-<meta property="article:modified_time" content="2023-09-25T07:15:42.658Z">
+<meta property="article:modified_time" content="2023-09-25T07:26:07.653Z">
 <meta property="article:author" content="Chery Young">
 <meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
@@ -268,7 +268,7 @@
               <div class="markdown-body">
                 
                 <h1 id="星闪-NaerLink"><a href="#星闪-NaerLink" class="headerlink" title="星闪_NaerLink"></a>星闪_NaerLink</h1><p>偶然间看到HUAWEI即将发布的MatePad 平板海报，其中一个“NareLink技术”吸引力我的注意。做过半年的蓝牙开发，对无线技术有一点浅显的理解。很感兴趣，进行一个研的调。</p>
-<p><img src="/img/Untitled.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled.png" srcset="/img/loading.gif" lazyload alt="NearLink"></p>
 <h2 id="什么是星闪通信技术？"><a href="#什么是星闪通信技术？" class="headerlink" title="什么是星闪通信技术？"></a>什么是星闪通信技术？</h2><h3 id="故事，要从这里讲起"><a href="#故事，要从这里讲起" class="headerlink" title="故事，要从这里讲起"></a>故事，要从这里讲起</h3><p>首先搜索NareLink，可以找到很多媒体讲的故事：</p>
 <ul>
 <li>2019 年，华为因美国制裁被迫退出蓝牙技术联盟。</li>
@@ -277,7 +277,7 @@
 <li>2023年8月4日华为正式发布<strong>星闪Nearlink。</strong>三年过去，SparkLink改名NearLink，以新的姿态重磅亮相.</li>
 </ul>
 <p>在sparklink官网的测试认证界面，可以找到即将发布的平板：</p>
-<p><img src="/img/Untitled%201.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%201.png" srcset="/img/loading.gif" lazyload alt="SparkLink-MatePad2023"></p>
 <p>什么爽文模板！三年之期已到的既视感</p>
 <p>Wi-Fi和蓝牙几乎是近场无线通信方案的标准答案，高速率高稳定用WiFi，低功耗用蓝牙，而其他诸如zigbee几乎只用于低带宽物联网设备，2.4G用于键鼠办公设备，NFC只适用与一些无源场景。那推出星闪主要目的是什么呢？自主可控，以及“技术更先进、标准更领先”。</p>
 <blockquote>
@@ -287,25 +287,25 @@
 </blockquote>
 <h3 id="技术概述"><a href="#技术概述" class="headerlink" title="技术概述"></a>技术概述</h3><p>作为信息传播的最后一环，无线短距通信技术在社会生活的方方面面发挥着巨大的作用。蓝牙和Wi-Fi是目前近场无线通信的主要解决方案，但蓝牙和 Wi-Fi 之间的标准是割裂的，蓝牙主打低功耗，Wi-Fi 追求高速率，各有长处却不能兼容。而“星闪”从架构设计上做成了一个标准多个模式[1]。在2023年华为HDC发布会上，有这样一个动图：<strong>蓝牙和Wi-Fi两个图标变化后融合成了星闪的图标。</strong></p>
 <p>星闪接入层为星闪上层提供<strong>SLB和SLE两种通信接口</strong>。其中，<strong>SLB</strong>采用超短帧、多点同步、双向认证、快速干扰协调、双向认证加密、跨层调度优化等多项技术，<strong>用于支持具有低时延(20us)、高可靠、精同步、高并发和高安全等传输需求的业务场景</strong>。<strong>SLE</strong>采用Polar信道编码提升传输可靠性，减少重传节省功耗，同时支持最大4MHz传输带宽、最大8PSK调制，支持1对多可靠组播，支持4KHz短时延互，安全配对，隐私保护等特性，在尽可能保证传输效率的同时，充分考虑了节能因素，<strong>用于承载具有低功耗诉求的业务场景。</strong>SLB和SLE面向不同业务诉求，提供不同的传输服务，两者相互补充并且根据业务需求进行持续平滑演进[4]。</p>
-<p><img src="/img/Untitled%202.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%202.png" srcset="/img/loading.gif" lazyload alt="SLB&amp;SLE"></p>
 <p>基础服务层由一系列基础功能单元构成，星闪无线通信系统通过调用不同功能单元实现对于上层<br>应用功能以及系统管理维护的支持。基础应用层用于实现各类应用功能，服务于包括智能网联汽车领域在内等不同场景[4]。</p>
 <p>星闪接入层根据实现功能的不同分为管理节点（G节点）和终端节点（T节点），其中G节点为其<br>覆盖下的T节点提供连接管理、资源分配、信息安全等接入层服务。单个G节点以及与其连接的T节点共同组成一个通信域。</p>
 <p>以智能汽车场景为例(如下图所示)，座舱域控制器CDC可以作为G节点，各类车载设备(例如麦克风、扬声器等)作为T节点，共同完成座舱娱乐功能。此时，CDC与车载设备组成了一个通信域[1]。</p>
-<p><img src="/img/Untitled%203.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%203.png" srcset="/img/loading.gif" lazyload alt="connectionInCar"></p>
 <h2 id="星闪的具体性能指标是怎么样的？"><a href="#星闪的具体性能指标是怎么样的？" class="headerlink" title="星闪的具体性能指标是怎么样的？"></a>星闪的具体性能指标是怎么样的？</h2><p>在很多报道中，可以看到下面的介绍：相比“传统无线连接”蓝牙技术，星闪技术功耗降低60%、传输速率提升6倍，具备更低时延、更稳定连接、更强抗干扰能力的特点，覆盖距离提升2倍，连接数提升10倍。</p>
-<p><img src="/img/Untitled%204.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%204.png" srcset="/img/loading.gif" lazyload alt="性能领先"></p>
 <p>听上去是完全碾压，但这个性能指标得量化一下，毕竟蓝牙都5.2了，不同工况下功耗、速度、延时都不一样。</p>
 <h3 id="指标量化"><a href="#指标量化" class="headerlink" title="指标量化"></a>指标量化</h3><p>在最新的白皮书，2022年8月的[2] <strong>星闪无线短距通信技术（SparkLink1.0）产业化推进白皮书</strong>，可以找到：</p>
-<p><img src="/img/Untitled%205.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%205.png" srcset="/img/loading.gif" lazyload alt="SLE参数"></p>
 <p>星闪对标蓝牙的是<strong>SLE模式</strong>，所以这里列出了SLE模式下的性能指标；SLB在速率、时延、多用户方面要更强一些。</p>
 <p>而关于低功耗的指标，四篇白皮书中只有[2]给出了关于功耗的量化指标：</p>
-<p><img src="/img/Untitled%206.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%206.png" srcset="/img/loading.gif" lazyload alt="SLE功耗"></p>
 <p>于此同时，再来看看“被遥遥领先”的蓝牙是什么样的指标呢？</p>
 <p>在蓝牙5.2中，<strong>蓝牙最大的通信速度可以达到2Mbps</strong>[5]，但是这需要使用支持2Mbps速率的物理层变体（PHY），如LE 2M PHY。以及保证设备之间良好的通信质量。目前能支持2Mbps速率的蓝牙硬件较少。</p>
 <p>一篇关于蓝牙5音频协议性能的报道[7]中，给出了关于蓝牙音频比较可信的指标：</p>
 <p> <a target="_blank" rel="noopener" href="https://soundsightheadphones.com/guides/bluetooth-5-0-codecs-and-other-bluetooth-formats/">Bluetooth 5.0 and Others: Demystifying aptX HD, Low Latency Standards and MIDI Technology - SoundsightR (soundsightheadphones.com)</a></p>
-<p><img src="/img/Untitled%207.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
-<p><img src="/img/Untitled%208.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%207.png" srcset="/img/loading.gif" lazyload alt="BLE_A2DP_Speed"></p>
+<p><img src="/img/Untitled%208.png" srcset="/img/loading.gif" lazyload alt="BLE_A2DP_Delay"></p>
 <p>蓝牙音频协议A2DP是蓝牙实现音频服务的基础协议，而不同的编解码协议是A2DP其中的一环。详情见[9] <a target="_blank" rel="noopener" href="https://yiyangc18.github.io/2022/09/06/%E3%80%90%E8%B0%83%E7%A0%94%E5%AD%A6%E4%B9%A0%E3%80%91%E8%93%9D%E7%89%99-%E9%9F%B3%E9%A2%91-%E5%8D%8F%E8%AE%AE%E6%A0%88/">【调研学习】蓝牙-音频-协议栈 - CHER-YOUNG BLOG (yiyangc18.github.io)</a> 。各个耳机产商会根据自己的需求对A2DP进行魔改，主要的一个环节就是更改编解码协议。例如索尼的LDAC，传输带宽接近A2DP的物理极限，可以播放压缩前24bit&#x2F;96kHz的Hi Res音频，达到了星闪无压缩的带宽。</p>
 <p>在时延方面，好一些的<strong>蓝牙耳机时延都可以做到50ms</strong>，毕竟延时大了是很影响使用体验的。LC3协议是蓝牙5.2最新推出的协议，现在适配的耳机还很少，主要用于语音通话方面。而蓝牙单词回报时长大概10ms，星闪SLE大概是205us，为什么单次数据时延比耳机时延小很多？可以见我之前的文章[8] <a target="_blank" rel="noopener" href="https://yiyangc18.github.io/2023/06/04/%E3%80%90IOT%E5%BC%80%E5%8F%91%E3%80%91%E9%9F%B3%E9%A2%91%E4%BC%A0%E8%BE%93%E4%B8%AD%E7%9A%84%E6%97%B6%E5%BA%8F%E4%B8%8E%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98/">【IOT开发】音频传输中的时序与同步问题 - CHER-YOUNG BLOG (yiyangc18.github.io)</a>。</p>
 <p>就是说，蓝牙音频工程师为了在A2DP那有限的带宽和有限的抗干扰能力下，优化传输音频的码率、时延不知道掉了多少头发，而现在星闪带着更低的延时、更大的带宽、更低的功耗来了。蓝牙音频工程师从某种程度上来失业风险直线增加sigh。</p>
@@ -345,7 +345,7 @@
 </tbody></table>
 <h2 id="实现低功耗、大带宽、快回报、链接稳、多接入的关键是什么？"><a href="#实现低功耗、大带宽、快回报、链接稳、多接入的关键是什么？" class="headerlink" title="实现低功耗、大带宽、快回报、链接稳、多接入的关键是什么？"></a>实现低功耗、大带宽、快回报、链接稳、多接入的关键是什么？</h2><p>单从指标上来看，星闪可谓是全方面暴打了蓝牙，这听上去就像是“大人，时代变了”。那么它为什么能做到全方位“遥遥领先”呢？</p>
 <p>在一些概述中，对于技术优势的总结：星闪在空口技术上采用了很多类似 5G 的技术，而在技术细节上比蓝牙和 Wi-Fi 更先进。比如星闪在 OFDM 和 CP 设计、时域和频域调度颗粒方面就和 5G 很类似，甚至用上了 5G 的 Polar 编码技术，带来了传输带宽以及抗干扰能力的提升。</p>
-<p><img src="/img/Untitled%209.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%209.png" srcset="/img/loading.gif" lazyload alt="NearLink协议栈"></p>
 <p>星闪系统协议栈分为应用层(OSI 5<del>7层)、网络与传输层(OSI 3</del>4层)和接入层(OSI 1~2层)[1].数据链路层保障数据的可靠传输，数据链路层包含链路控制层和媒体接入层，这和蓝牙的链路控制层非常相似。而物理层实现比特流传输功能，星闪技术要点应该集中在物理层的提升。</p>
 <p>所以，接下来，从物理层的频段与传输波形、帧结构、多域协同、低功耗设计、混合自动重传机制、信道编码与调制几个方面讲解其对性能的提升。</p>
 <h3 id="频段与传输波形"><a href="#频段与传输波形" class="headerlink" title="频段与传输波形"></a>频段与传输波形</h3><p>[1]空口性能白皮书在物理层特性的开头写道：</p>
@@ -376,7 +376,7 @@
 <blockquote>
 <p>星闪系统载波带宽最小为20MHz，向上支持40&#x2F;60&#x2F;80&#x2F;100&#x2F;160&#x2F;320MHz规格的载波带宽，分别由连续多个20MHz的载波聚合方式组成。20MHz载波由连续39个子载波组成，子载波间隔480KHz。</p>
 </blockquote>
-<p><img src="/img/Untitled%2010.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2010.png" srcset="/img/loading.gif" lazyload></p>
 <p>因此正交频分复用相当于<strong>提高频带的利用率</strong>，更准确来说它可以<strong>使频带的利用率达到理论上的最大值</strong>。SLE和SLB都是用CP-OFDM波形传输，但是SLB的频带可以扩展到最大320MHz，而SLE只使用20MHz中的38个信道。OFDM会使用全频带的载波进行传输，一定程度上传输速率与频带宽度成正比。</p>
 <p>那么<strong>“传统”的蓝牙物理层频段与波形是怎么样的呢？</strong></p>
 <p>蓝牙的调制方式: GFSK，高斯频移键控，以及跳频技术FHSS。</p>
@@ -384,9 +384,9 @@
 <p>蓝牙技术运用了<strong>跳频技术</strong>，主设备按照特定的伪随机码以每秒1600次的频率不断地从一个信道跳到另一个信道，这样可以有效避免信号干扰。</p>
 <p>可以看到，蓝牙通过在快速切换频率来实现数据传输的稳定和安全，而正交频分复直接把各个载波频段都用了起来，传输速率更快理所当然。</p>
 <h3 id="帧结构"><a href="#帧结构" class="headerlink" title="帧结构"></a>帧结构</h3><p>这一部分首先需要理解一下星闪的帧结构。就数据构成而言，它和蓝牙的数据帧构成很相似，分为：地址、链路层包头、数据。不同的点在于，蓝牙的包头会更冗杂，它包括前导码、MAC地址、PDU、循环冗余校验等。另外，对于递延时高并发场景，星闪支持初步验证后直接透传，就是说不传包头啥的直接传数据。</p>
-<p><img src="/img/Untitled%2011.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2011.png" srcset="/img/loading.gif" lazyload></p>
 <p>星闪系统采用TDD（Time-Division Duplex）方式，超帧格式如下图所示，每超帧包含48个无线帧，每超帧持续时间为1ms，每个无线帧的持续时间为20.833µs。</p>
-<p><img src="/img/Untitled%2012.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2012.png" srcset="/img/loading.gif" lazyload></p>
 <p>就是说传输的每个短帧包都是双工的，并且G和T的配比是可以调节的，中间有符号位和GAP位。</p>
 <p>每个帧更“轻量化”，打包拆包时间更短，帧间隔更短，延时也就更低。</p>
 <p>另一方面，在空口技术测评中由这么一段话：</p>
@@ -398,7 +398,7 @@
 <h3 id="同步与多域协同"><a href="#同步与多域协同" class="headerlink" title="同步与多域协同"></a>同步与多域协同</h3><p>星闪使用短帧结构，各设备之间可以快速实现同步。另一方面，星闪系统通过多G节点间时间&#x2F;频率同步降低多域间的干扰。</p>
 <p>同步的过程会采用一个包含同步信号的帧，而各设备间建立同步能有效减少干扰。星闪系统采用OFDM波形，存在多个通信域的场景下，即使不同的通信域使用不同的频点，如果频率差不是子载波间隔SCS&#x3D;480KHz的整数倍或者定时差异超过CP，则会造成子载波间的干扰，特别的，在干扰来自多个通信域的情况。</p>
 <p><strong>这是因为OFDM波形，子载波之间是正交的。如果不同通信域的频率差异不是子载波间隔的整数倍，就会导致子载波之间的正交性受到破坏，从而引入干扰。</strong><br>即使在干扰源比信号源距离接收设备近得多的情况，G节点之间的时频不对齐引入的干扰会显著降低<br>接收信干噪比。<strong>多G节点间时&#x2F;频同步可以显著降低多域间的干扰</strong>，提升多域共存时的频谱效率。所以在多个域连接时，会进行时间同步，下图是一个同步过程示意图，当两个域连接后，他们就会逐渐同步。</p>
-<p><img src="/img/Untitled%2013.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2013.png" srcset="/img/loading.gif" lazyload alt="多域同步"></p>
 <p>这个同步抗干扰在多设备情况下很有用，比FHSS在多设备场景下的抗干扰能力更强。但可以预见的是，这在只有星闪的2.4GHz环境下会比较有用，因为它无法消除2.4GWIFI蓝牙的干扰。</p>
 <h3 id="低功耗设计"><a href="#低功耗设计" class="headerlink" title="低功耗设计"></a>低功耗设计</h3><p>蓝牙4.0一个重要的升级就是支持了BLE，低功耗蓝牙，甚至4.0之后的蓝牙协议都称为BLE而不是BT。</p>
 <p>那么BLE是怎么做到低功耗的？</p>
@@ -425,19 +425,19 @@
 <p>抗干扰是依赖于物理层的信道编码和调制技术，以及采用了5G的Polar编码技术，以及同步协同机制；</p>
 <p>低功耗主要是依赖于G端对T端低功耗模式调度和传输高数据可靠性；而多设备连接主要是因为其抗干扰能力和稳定性。</p>
 <h2 id="对开发者支持"><a href="#对开发者支持" class="headerlink" title="对开发者支持"></a>对开发者支持</h2><p>在[2]中有提到，2022第四季度实现搭载星闪的芯片量产，2023-2024推动产业化落地。中科晶上表<br>示 2022 年将发布基于 DX502c DSP 平台的星闪芯片。极芯通讯技术有限公司也将于同年发布南迦巴瓦（UC6010）星闪 SoC 芯片。但是搜索搜到的都是新闻稿，这几家公司的官网也没有相关的产品。</p>
-<p><img src="/img/Untitled%2014.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2014.png" srcset="/img/loading.gif" lazyload></p>
 <p>在一些2023HDC的视频能卡电脑，有相关芯片和模组了，但是淘宝、华秋、嘉立创等个人开发者买硬件的地方差不到相关芯片。</p>
-<p><img src="/img/Untitled%2015.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2015.png" srcset="/img/loading.gif" lazyload alt="NearLinkModel"></p>
 <p>在harmony Developer的API参考中，也只找到了蓝牙相关的api，没有Nearlink或者SparkLink相关的API。看来离DIY一个星闪耳机玩玩还有一定的距离。</p>
 <h2 id="畅想"><a href="#畅想" class="headerlink" title="畅想"></a>畅想</h2><p>在[1]星闪无线短距通信技术（SparkLink1.0）产业化推进白皮书中，详细描述了主推的四个产业：智能汽车、智能制造、智能家居、智能终端。</p>
 <p>目前还在demo阶段：2022年11月4日，星闪联盟产业峰会在深圳顺利召开，联盟多家创新领先成员单位展示了基于星闪技术的最新原型系统，包括星闪快速无间断抗扰（FISA）技术、星闪商用车360度全景环视系统、星闪电机无线同步控制系统、星闪无线主动降噪系统、星闪沉浸式氛围灯系统、星闪7.1声道环绕声场系统和星闪4K高清无线投屏系统。</p>
-<p><img src="/img/Untitled%2016.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2016.png" srcset="/img/loading.gif" lazyload></p>
 <p>让我比较感兴趣的是一个无线控制电机同步的技术：以伺服电机控制齿轮同步运动为呈现，展示了通过星闪技术实现多个步进式电机的超高精度同步控制。齿轮的运转指令通过星闪技术在电机两端交互协商，双端以小于1微秒的超高精度协同。星闪通过Polar编码和冗余传输等机制，实时快速匹配信道环境，确保工控数据的稳定传输。经实际测量，端到端时延低至100微秒，同步精度100纳秒，可靠性大于6个9。星闪技术可以<strong>有效降低智能制造工厂通信系统的复杂度，节省大量线缆及人工操作成本</strong>，降低风险并实现灵活部署。</p>
 <p>文献[2]星闪技术在智能网联汽车领域应用白皮书中提到，随着智能驾驶崛起，汽车控制器数量增加，不仅会导致线束用量和成本上升，传统线束还存在难以满足灵活部署零部件的要求，装配难度加大等缺陷，且由于电磁兼容等问题，可能存在线束接插件失效等风险。如果都采用有线连接，一辆车的线材总长度就可以2000 米以上！目前蓝牙显然无法支撑数量如此庞大的传感器。</p>
 <p>而目前星闪正在使用无线的方式代替其中一部分传感器，例如车内无线主动降噪-涉及到多个麦克风到座椅旁的反噪声构造扬声器；无线电池管理-200 节以上电池单体的快速接入工作和多维传感器信息采集上报。</p>
-<p><img src="/img/Untitled%2017.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2017.png" srcset="/img/loading.gif" lazyload></p>
 <p>星闪技术目前落地的产品还比较少，或许未来其能够凭借优势打入蓝牙&#x2F;wifi构筑的生态墙，提供更好的无线解决方案。我本科时毕业设计就是设计一个无源无线的传感器，那是我首次接触无线技术，并且相信无线通信是一项改变世界的技术。无线技术将我们与信息世界连接在一起，这些年来逐渐习惯无线耳机、无线键鼠、无线充电、NFC也取代了各种钥匙，再让我使用有线的这些设备总会感觉由奢入俭难。</p>
-<p><img src="/img/Untitled%2018.png" srcset="/img/loading.gif" lazyload alt="Untitled"></p>
+<p><img src="/img/Untitled%2018.png" srcset="/img/loading.gif" lazyload alt="linkEverythin"></p>
 <p>万物互联，你不觉得这很酷吗？作为一名工科生我觉得这太酷了，大带宽、快响应、低功耗、多设备的美妙结合！这符合我对未来近场无线通信的一切幻想。</p>
 <h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p>白皮书：</p>
 <p>[1] 星闪1.0空口技术性能评估报告</p>
