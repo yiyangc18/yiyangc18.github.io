@@ -25,7 +25,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/esp32-c6-overview.png">
 <meta property="article:published_time" content="2022-09-06T13:43:08.000Z">
-<meta property="article:modified_time" content="2023-03-25T10:29:10.389Z">
+<meta property="article:modified_time" content="2023-09-25T00:17:32.675Z">
 <meta property="article:author" content="Chery Young">
 <meta property="article:tag" content="IOT">
 <meta name="twitter:card" content="summary_large_image">
@@ -210,7 +210,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.5k 字
+          3.3k 字
         
       </span>
     
@@ -221,7 +221,7 @@
         
         
         
-          46 分钟
+          28 分钟
         
       </span>
     
@@ -279,22 +279,11 @@
 <p>总结一下：<br>1.是PC端生成的虚拟串口波特率太低影响的速率吗，如果是的话应该如何更改PC端COM波特率呢？<br>打开蓝牙串口的波特率是协议栈内规定的，貌似没有给出修改接口，但是不影响带宽。蓝牙SPP基于RFCOMM，底层会尽可能多地传输数据，所以改带宽的关键不在波特率。<br>2.我之前开到一个解释：SPP协议的波特率不会影响通信速率，SPP协议层中也没有给出baudrate的配置选项，是因为底层通信不是基于波特率时钟吗？那通信时会有ACK吗？<br>有的。RFCOMM基于Scoket，有ACK。<br>3.在windows PC 与 ESP32 间进行约100kB&#x2F;s的无线数据传输，SPP可以实现吗？如果SPP无法实现，有其他的协议推荐吗？<br>大概能实现，看PC蓝牙的硬件及其是否有其他蓝牙设备，周围的2.4GHz频段有多少干扰。</p>
 <p>SPP对蓝牙模块串口的读写实现通信，建立在串口仿真协议RFCOMM上实现；服务端和客户端对应为BluetoothServerSocket和BluetoothSocket，通过流进行数据传输，和java中的socket很像。<br>RFCOMM，它是蓝牙客户端和服务端的Socket通道，其目的为了解决如何在两个不同设备上的应用程序之间保证一条完整的通信路径，并在它们之间保持同一通信段的问题。设备配对后，还没有通信通道，BluetoothServerSocket监听RFCOMM，BluetoothSocket发起建立RFCOMM连接完成通信通道的建立。大致就像是下面这样：</p>
 <p><img src="/img/ESP-SPP/RFCOMM.PNG" srcset="/img/loading.gif" lazyload alt="RFCOMM"></p>
-<p>这也解释了为什么蓝牙端口有两个COM号，因为需要两个通道<br>什么是socket？<br>socket起源于Unix，而Unix&#x2F;Linux基本哲学之一就是“一切皆文件”，都可以用“open –&gt; write&#x2F;read –&gt; close”模式操作。Socket就是该模式的一个实现，是一种特殊的文件，一些socket函数就是对其进行的操作（读&#x2F;写IO、打开、关闭。<br>Socket是应用层与TCP&#x2F;IP协议族通信的中间软件抽象层，它是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP&#x2F;IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。其实socket也没有层的概念，它只是一个facade设计模式的应用，让编程变的更简单。是一个软件抽象层。</p>
+<p>什么是socket？<br>socket起源于Unix，而Unix&#x2F;Linux基本哲学之一就是“一切皆文件”，都可以用“open –&gt; write&#x2F;read –&gt; close”模式操作。Socket就是该模式的一个实现，是一种特殊的文件，一些socket函数就是对其进行的操作（读&#x2F;写IO、打开、关闭。<br>Socket是应用层与TCP&#x2F;IP协议族通信的中间软件抽象层，它是一组接口。在设计模式中，Socket其实就是一个门面模式，它把复杂的TCP&#x2F;IP协议族隐藏在Socket接口后面，对用户来说，一组简单的接口就是全部，让Socket去组织数据，以符合指定的协议。其实socket也没有层的概念，它只是一个facade设计模式的应用，让编程变的更简单。是一个软件抽象层。</p>
 <p><img src="/img/ESP-SPP/Socket.PNG" srcset="/img/loading.gif" lazyload alt="socket"></p>
 <p>Socket抽象层，会有请求-应答，也就是ACK。那这个ACK是总体传输开始时候的ACK呢，还是同步时钟用的ACK呢？这两个发送的速率是怎样的。如果没有每次包的同步ACK，那么应该有同步位检测，如果同步失败则返回错误ACK。在不同的线程调用同一个socket通道,会致错误产生.</p>
 <p>所以如果要改PC端盖的蓝牙串口，重点是改RFCOMM服务。<br>RFCOMM通过L2CAP来处理单连接上的多路复用，并提供到多个设备的连接，从而提供多个并发连接。<br>RFCOMM数据速率将限制在涉及物理串行端口（类型2设备）的设备中。实现可以选择在虚拟串行端口（类型1设备中）上对数据进行调整。在允许范围内，RFCOMM将提供尽可能高的数据速率<br>什么是类型2？<br>RFCOMM支持两种类型的设备：<br>• 类型1–内部模拟串行端口（或等效端口）。<br>• 类型2–带物理串行端口的中间设备</p>
 <p>PC是type1  PC没有把数据传给真实物理端口。通道打开后，如果持续一段时间（60s）没有数据传输，就会自动关闭通道。或者一方发送关闭通道的命令也行。</p>
-<h2 id="SCO"><a href="#SCO" class="headerlink" title="SCO"></a>SCO</h2><p>在配置A2DP蓝牙协议栈时，偶然发现有个东西叫：SCO  -Synchronous Connection Oriented link - 面向链接的同步链路<br>最近接触了一下音视频开发相关的项目，不同设备间、不同数据形式间的时间同步是一个比较重要的问题。了解这个链路的同步逻辑、实现原理，会有助于需要同步的项目开发。</p>
-<p>百度百科：<br>支持对时延敏感的信息如语音。蓝牙中定义的两种数据链路方式之一。<br>用保留带宽进行同步通信，即两台设备在LMP层利用保留时隙在物理信道上周期传送传送数据包。这种类型的链接主要用于传送SCO包（语音数据）。SCO 包不包括CRC码，且不进行重传。主要支持传输有时间限制的信息，例如声音。仅仅在ACL链接已经建立之后，才可以建立SCO 链接。</p>
-<blockquote>
-<p>What is SCO in Bluetooth?<br>SCO (Synchronous Connection Oriented Link) This is a voice data link. While Bluetooth is the technology used to connect devices from different manufacturers without wires, the devices still have to talk to each other while providing what ever service they are designed for.<br>SCO is a symmetric link, i.e. fixed slots are allocated for each direction. Since fixed slots are reserved, SCO provides a circuit switched connection. SCO radio links are used for time critical data transfer, particularly for voice data.</p>
-</blockquote>
-<blockquote>
-<p>The Synchronous Connection Oriented link is one of the two possible Bluetooth data link types defined. The SCO link is a symmetric, point-to-point link between the master device and a specific slave device. The SCO link reserves slots between the master and the slave and can therefore be considered to provide a circuit switched connection. The SCO link is usually used to support time critical information, e.g. voice, since time critical SCO packets are never retransmitted. The master device can support up to three SCO links, this might be to the same slave or to different slaves. A slave can support up to a maximum of three SCO links, assuming they are from the same master. If the slave has links from different masters, a maximum of two SCO links are available.</p>
-</blockquote>
-<p>蓝牙物理链路ACL(Asynchronous Connectionless)，另外的一种链路是SCO(Synchronous Connection Oriented)主要用来传输对时间要求很高的数据通信。<br>蓝牙基带技术支持两种连接类型：同步定向连接(SCO)类型和异步无连接(ACL)类型。前者主要用于同步话音传送，后者主要用于分组数据传送。<br>SCO连接为对称连接，利用保留时隙传送数据包。连接建立后，主设备和从设备可以不被选中就发送SCO数据包。SCO数据包既可以传送话音，也可以传送数据，但在传送数据时，只用于重发被损坏的那部分的数据。同步定向链接（SCO）是在匹克网中主单元和从单元之间实现 点到点链接。主单元通过有规律的 使用保留时隙来维持SCO 链接。 </p>
-<p>SCO 链路是通过为传输预留时隙来实现同步的。主设备向从设备发送同步数据包以建立连接。然后，从设备向主设备发回一个数据包，以确认它已收到同步数据包。此后，两个设备同步并可以传输数据。<br>主单元以有规律的时间间隔来发送分组，所以在保留的主―从时隙里，称到从单元的SCO 间隔为Tsco（记数时隙）。在主―从时隙里SCO从单元总是允许响应SCO分组传输。SCO 链接由主单元发送SCO 建立消息，经链接管理（LM）协议来确立。该消息分组含定时参数（如SCO 间隔Tsco 和规定保留时隙补偿Dsco）等。在 SCO 链接不保留的时隙里，主单元可以与任何属于每个时隙基里的从单元进行分组交换。</p>
-<p>所以SCO实现同步的两个核心分别是“间隙”和“回报”。在发送语言等数据时进行主从通信，确定时间同步。<br>在我的项目中，通过编码压缩的方式提高了数据的传输效率，有“空闲”来进行回报同步。但是目前使用的SPP协议是可以回报的，但是回报与server端接受-处理耗时可能会比较久。之后降低延时可以基于这种方法改进。</p>
 
                 
               </div>
