@@ -1,0 +1,63 @@
+# Only site-specific overrides live here. Theme defaults come from
+# node_modules/hexo-theme-fluid/_config.yml.
+
+favicon: /img/fluid.png
+apple_touch_icon: /img/fluid.png
+
+navbar:
+  blog_title: CHERY
+  menu:
+    - { key: "home", name: "首页", link: "/", icon: "iconfont icon-home-fill" }
+    - { key: "index", name: "索引", link: "/articles/", icon: "iconfont icon-tags-fill" }
+    - { key: "about", name: "关于", link: "/about/", icon: "iconfont icon-user-fill" }
+
+search:
+  enable: false
+
+index:
+  banner_img: /img/tree.png
+  slogan:
+    enable: true
+    text: "NPU Infra · Post-Training · Systems"
+  auto_excerpt:
+    enable: true
+  post_url_target: _self
+  post_meta:
+    date: true
+    category: false
+    tag: true
+
+post:
+  banner_img: /img/tree.png
+  default_index_img: /img/NearLink.jpg
+  updated:
+    enable: true
+    date_format: "LL"
+    relative: false
+  comments:
+    enable: false
+  toc:
+    enable: true
+    expand_all: true
+    placement: right
+    headingSelector: "h1,h2,h3,h4,h5,h6"
+    collapseDepth: 0
+
+archive:
+  banner_img: /img/tree.png
+
+about:
+  enable: true
+  banner_img: /img/tree.png
+  avatar: /img/pika-nezha.jpg
+  name: "Chery Young"
+  intro: "NPU Infra · 后训练 · AI 系统工程"
+  icons:
+    - { class: "iconfont icon-github-fill", link: "https://github.com/yiyangc18", tip: "GitHub" }
+
+page:
+  banner_img: /img/tree.png
+
+page404:
+  enable: true
+  banner_img: /img/tree.png

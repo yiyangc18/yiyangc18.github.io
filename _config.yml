@@ -1,0 +1,59 @@
+# Site
+title: CHER-YOUNG BLOG
+subtitle: NPU Infra · Post-Training · Systems
+description: 记录 NPU Infra、后训练与 AI 系统工程实践
+keywords:
+  - NPU Infra
+  - 后训练
+  - AI Infra
+author: Chery Young
+language: zh-CN
+timezone: Asia/Shanghai
+
+# URL
+url: https://yiyangc18.github.io
+root: /
+permalink: :year/:month/:day/:title/
+pretty_urls:
+  trailing_index: false
+  trailing_html: false
+
+# Directories
+source_dir: source
+public_dir: public
+tag_dir: tags
+archive_dir: archives
+category_dir: categories
+skip_render:
+  - "2022/**/*.html"
+  - "2023/**/*.html"
+
+# Writing
+new_post_name: :title.md
+default_layout: post
+titlecase: false
+external_link:
+  enable: true
+  field: site
+  exclude: ''
+filename_case: 0
+render_drafts: false
+post_asset_folder: false
+relative_link: false
+future: true
+syntax_highlighter: highlight.js
+
+# Home and pagination
+index_generator:
+  path: ''
+  per_page: 10
+  order_by: -date
+per_page: 10
+pagination_dir: page
+
+# Theme
+theme: fluid
+
+# Deployment is handled separately; `npm run build` writes to public/.
+deploy:
+  type: ''

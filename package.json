@@ -1,0 +1,31 @@
+{
+  "name": "yiyangc18.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CHER-YOUNG BLOG source",
+  "scripts": {
+    "clean": "hexo clean",
+    "build": "hexo generate",
+    "serve": "hexo server",
+    "new": "hexo new"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "hexo": {
+    "version": "8.1.2"
+  },
+  "dependencies": {
+    "@adobe/css-tools": "4.5.0",
+    "hexo": "8.1.2",
+    "hexo-generator-category": "2.0.0",
+    "hexo-generator-index": "4.0.0",
+    "hexo-generator-tag": "2.0.0",
+    "hexo-renderer-ejs": "2.0.0",
+    "hexo-renderer-marked": "7.0.1",
+    "hexo-renderer-stylus": "3.0.1",
+    "hexo-server": "3.0.0",
+    "hexo-theme-fluid": "1.9.9",
+    "nunjucks": "3.2.4"
+  }
+}
