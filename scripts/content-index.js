@@ -20,6 +20,10 @@ function renderPostList(posts) {
   return `<ul>${items.join('')}</ul>`;
 }
 
+function joinUrlPath(root, path) {
+  return `${root.replace(/\/+$/, '')}/${path.replace(/^\/+/, '')}`;
+}
+
 hexo.extend.generator.register('content-index', locals => {
   const postsByTag = new Map();
 
@@ -29,7 +33,7 @@ hexo.extend.generator.register('content-index', locals => {
     const item = {
       title: post.title,
       date: post.date.format('YYYY-MM-DD'),
-      path: `${hexo.config.root}${post.path}`
+      path: joinUrlPath(hexo.config.root, post.path)
     };
 
     tagNames.forEach(tagName => {
