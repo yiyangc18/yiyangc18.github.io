@@ -34,6 +34,10 @@ post:
     enable: true
     date_format: "LL"
     relative: false
+  mermaid:
+    enable: true
+    specific: true
+    options: { theme: default }
   comments:
     enable: false
   toc:
@@ -61,3 +65,7 @@ page:
 page404:
   enable: true
   banner_img: /img/tree.png
+
+# Mermaid 11 supports the block-beta diagrams used in graph-mode.
+static_prefix:
+  mermaid: /lib/mermaid/

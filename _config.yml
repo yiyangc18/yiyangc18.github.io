@@ -25,6 +25,7 @@ tag_dir: tags
 archive_dir: archives
 category_dir: categories
 skip_render:
+  - "lib/mermaid/**"
   - "2022/**/*.html"
   - "2023/**/*.html"
 
