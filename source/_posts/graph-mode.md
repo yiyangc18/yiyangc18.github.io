@@ -7,8 +7,8 @@ tags:
   - LLM 推理
 index_img: /img/graph-mode/qwen3_8b_comparison.png
 banner_img: /img/tree.png
-mermaid: true
 excerpt: 从 recipe 开关出发，串起图捕获、图编译、Runtime 与硬件执行，并用 Qwen3-8B 实测对比 Eager、GE Graph 和 NPU Graph EX。
+updated: 2026-09-30 15:10:17
 ---
 
 本文是 LLM 推理图模式的串讲底稿，简单理解图下沉与图编译的基本原理，并且跟着 recipe 图模式开关找到执行入口。
@@ -38,48 +38,17 @@ Host 和 Device 通常异步工作，时间会重叠，不能把所有 CPU 时�
 
 如果单个 kernel 在 Device 上只执行几十微秒，而 Host 准备和下发下一项任务需要更久，那么这些下发间隔就会直接变成 NPU 空洞，AI Core 利用率也随之下降。图捕获、图下沉或 replay 的重要价值，就是把其中可重复的准备与任务组织工作提前完成，让 Device 更连续地消费已经准备好的任务。
 
-如果我们能把接下来一段时间 NPU 要执行的算子都提前准备好，然后下发一条执行指令，依次执行这些算子，这就是图模式。
+如果我们能把接下来一段时间 NPU 要执行的算子都提前准备好，然后下一一条执行依次执行这些算子，这就是图模式。
 
 **Eager：逐算子下发**
 
-```mermaid
-block-beta
-  columns 13
-  s0["CPU Time"]:2 d1["下发<br/>kernel 1"]:2 d2["下发<br/>kernel 2"]:2 d3["下发<br/>kernel 3"]:2 dd["…"]:2 dn["下发<br/>kernel n"]:2 space:1
-  s1["NPU Time"]:2 space:1 e1["执行<br/>kernel 1"]:2 e2["执行<br/>kernel 2"]:2 e3["执行<br/>kernel 3"]:2 ed["…"]:2 en["执行<br/>kernel n"]:2
+![Eager 逐算子下发](/img/graph-mode/mermaid_01_eager_dispatch.png)
 
-  d1 --> e1
-  d2 --> e2
-  d3 --> e3
-  dn --> en
-
-  classDef hdr fill:#eee,stroke:#999,color:#000
-  classDef host fill:#5B9BD5,color:#fff,stroke:#1F4E79
-  classDef dev fill:#70AD47,color:#fff,stroke:#385723
-
-  class s0,s1 hdr
-  class d1,d2,d3,dd,dn host
-  class e1,e2,e3,ed,en dev
-```
 
 **图模式：复用已准备的执行过程**
 
-```mermaid
-block-beta
-  columns 14
-  s0["CPU Time"]:2 g["下发<br/>图（1 &gt; 2 &gt; 3 &gt; n）"]:4 space:8
-  s1["NPU Time"]:2 space:4 e1["执行<br/>kernel 1"]:2 e2["执行<br/>kernel 2"]:2 e3["执行<br/>kernel 3"]:2 ed["…"]:1 en["执行<br/>kernel n"]:2
+![图模式复用执行过程](/img/graph-mode/mermaid_02_graph_replay.png)
 
-  g --> e1
-
-  classDef hdr fill:#eee,stroke:#999,color:#000
-  classDef host fill:#5B9BD5,color:#fff,stroke:#1F4E79
-  classDef dev fill:#70AD47,color:#fff,stroke:#385723
-
-  class s0,s1 hdr
-  class g host
-  class e1,e2,e3,ed,en dev
-```
 
 来源：[recipe 图模式原理，图 1、图 2](https://gitcode.com/cann/cann-recipes-infer/blob/master/docs/cann/zh/npu_graph_optimization.md)，直接复制 Mermaid 源码。两图为执行示意，实际 Host 提交与 Device 执行可以重叠。
 
@@ -142,40 +111,26 @@ bash executor/scripts/infer.sh --model qwen --yaml qwen3_8b_1tp.yaml
 - **Stream**：软件层面的有序任务流。跨流依赖需要 event 等机制表达，多开 stream 并不自动产生有效并行。
 - **SQ（Submission Queue）**：承载待提交任务描述的队列，SQE 是其中的条目。
 - **CQ（Completion Queue）**：用于完成或异常等状态上报，具体行为依实现而定。CQE 不承载模型输出 Tensor。
-- **SQE（SQ Entry）**：一次任务的描述，包含任务类型和所需的信息。
+- **SQ（SQ Entry）**：一次任务的描述，包含任务类型和所需的信息。
 - **Event / 同步接口**：表达依赖或确认执行进度。异步 API 返回不能直接视为计算完成。
 
 
 ![Runtime 任务提交、设备调度与完成反馈的典型流程](/img/graph-mode/typical_process.png)
 
-图片来源：Runtime quick start 原图（旧快照：`docs/zh/quick_start/figures/typical_process.png`）。沿图理解：Host 调用 LaunchKernel，Runtime 将任务加入 stream，设备调度器选择执行资源，任务完成后反馈状态，Host 可通过 SynchronizeStream 等待完成。图中未单独展开 Driver，Driver 的职责结合上表理解。分层说明依据：Runtime 架构（旧快照：`docs/zh/design/architecture.md`）。
+图片来源：[Runtime quick start 原图（旧快照，见附录来源说明）](https://gitcode.com/cann/runtime)。沿图理解：Host 调用 LaunchKernel，Runtime 将任务加入 stream，设备调度器选择执行资源，任务完成后反馈状态，Host 可通过 SynchronizeStream 等待完成。图中未单独展开 Driver，Driver 的职责结合上表理解。分层说明依据：[Runtime 架构（旧快照，见附录来源说明）](https://gitcode.com/cann/runtime)。
 
 错误的一一对应：算子 = kernel、kernel = SQE、任务 = CQE。一个算子可能展开成多个 kernel 和辅助任务，一些实现中一个 Task 可占多个 SQE。当前 runtime 文档中的部分实现也不会为每个正常任务返回 CQE。
 
-```mermaid
-sequenceDiagram
-    participant Host as Host侧Runtime
-    participant SQ as SQ提交队列
-    participant HW as 硬件执行
-    participant CQ as CQ完成队列
-    participant Recycle as 回收线程
+![SQ / CQ 提交与回收](/img/graph-mode/mermaid_03_sq_cq_recycle.png)
 
-    Host->>SQ: 写入SQE到sqTailPos位置, sqTailPos指向下一个位置
-    SQ->>HW: 硬件从sqHeadPos读取SQE
-    HW->>HW: 执行任务
-    HW->>SQ: 更新sqHeadPos
-    HW->>CQ: 失败信息写入CQE
-    Recycle->>CQ: 读取CQE或判断sqHead==sqTail
-    Recycle->>Host: 回收任务资源
-```
 
-图源：Stream 的 SQ/CQ 管理（旧快照：`docs/zh/design/modules/stream/stream.md`），直接复制 Mermaid 源码。这张图描述源文档对应实现的回收流程，不代表所有平台都会为正常任务产生 CQE。补充依据：Task 设计（旧快照：`docs/zh/design/modules/task/task.md`）。
+图源：[Stream 的 SQ/CQ 管理（旧快照，见附录来源说明）](https://gitcode.com/cann/runtime)，直接复制 Mermaid 源码。这张图描述源文档对应实现的回收流程，不代表所有平台都会为正常任务产生 CQE。补充依据：[Task 设计（旧快照，见附录来源说明）](https://gitcode.com/cann/runtime)。
 
 ### 3.3 SQE 中会填什么？
 
 **单算子类 SQE 描述“执行哪个 kernel、参数在哪里”；条件算子类 SQE 通过设备侧控制指令描述“先激活哪些下沉流、满足条件后如何切换、何时停用流或结束控制过程”。** 下面分别看 Eager 单算子计算任务与图模式控制任务。图中实际执行计算的任务仍然使用 kernel SQE，两类 SQE 并不是 Eager / 图模式各自独占的格式。
 
-本节以参考的 Runtime 源码快照 的 STARS 实现为例；字段采用源码拼写。不同设备代际的 SQE 布局可能不同。
+本节以 `cann/runtime` 的 STARS 实现为例；字段采用源码拼写。不同设备代际的 SQE 布局可能不同。
 
 **① 单算子（Eager 模式）：kernel SQE 的关键字段**
 
@@ -190,7 +145,7 @@ sequenceDiagram
 
 Tensor 数据和 kernel 二进制存放在设备可访问的内存中，SQE 通过地址引用它们，不把权重 Tensor 或整段 kernel 代码塞进队列。
 
-源码依据：[kernel SQE 结构（`RtStarsKernelSqe` / `RtFftsPlusKernelSqe`）](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/inc/stars/stars_kernel.hpp)、[字段填充 `ConstructAICoreSqeForDavinciTask()`](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/core/src/task/task_info/davinci_kernel_task.cc#L884)、[二进制基址到入口地址 `Kernel::GetFunctionDevAddr()`](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/core/src/kernel/kernel.cc#L82)。
+源码依据：[kernel SQE 结构（`RtStarsKernelSqe` / `RtFftsPlusKernelSqe`）](https://gitcode.com/cann/runtime/blob/master/src/runtime/inc/stars/stars_kernel.hpp)、[字段填充 `ConstructAICoreSqeForDavinciTask()`](https://gitcode.com/cann/runtime/blob/master/src/runtime/core/src/task/task_info/davinci_kernel_task.cc#L884)、[二进制基址到入口地址 `Kernel::GetFunctionDevAddr()`](https://gitcode.com/cann/runtime/blob/master/src/runtime/core/src/kernel/kernel.cc#L82)。
 
 **② 条件算子（图模式）：条件 SQE 与流控制指令**
 
@@ -221,7 +176,7 @@ Host 提交 ModelExecute 条件 SQE
 
 这里的“激活—切换—完成”分布在模型执行任务、下沉流内的控制任务以及图尾任务中。ModelExecute 的控制序列返回，只表示本次启动控制过程结束，不能据此认定整张图已经执行完毕。
 
-源码依据：[条件 SQE 结构 `RtStarsFunctionCallSqe`](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/inc/stars/stars.hpp#L414)、[装入指令地址和长度 `ConstructFunctionCallInstr()`](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/core/src/task/inc/stars_cond_isa_helper.hpp#L184)、[ModelExecute SQE 构造](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/core/src/task/task_info/model/model_execute_task_info.cc#L447)、[模型执行控制序列](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/inc/stars/stars_model_execute_cond_isa_define.hpp)、[StreamSwitch 控制序列与参数](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/inc/stars/stars_cond_isa_define.hpp#L246)、[StreamSwitch 指令构造](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/core/src/task/stars_cond_isa_helper.cc#L1430)、[指令编码与 SQ ID / SQ head 字段](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/inc/cond_isa/v100/stars_cond_isa_struct.hpp)、[图尾完成处理 `Context::ModelAddEndGraph()`](https://gitcode.com/cyy010617/runtime/blob/master/src/runtime/core/src/context/context.cc#L2674)。
+源码依据：[条件 SQE 结构 `RtStarsFunctionCallSqe`](https://gitcode.com/cann/runtime/blob/master/src/runtime/inc/stars/stars.hpp#L414)、[装入指令地址和长度 `ConstructFunctionCallInstr()`](https://gitcode.com/cann/runtime/blob/master/src/runtime/core/src/task/inc/stars_cond_isa_helper.hpp#L184)、[ModelExecute SQE 构造](https://gitcode.com/cann/runtime/blob/master/src/runtime/core/src/task/task_info/model/model_execute_task_info.cc#L447)、[模型执行控制序列](https://gitcode.com/cann/runtime/blob/master/src/runtime/inc/stars/stars_model_execute_cond_isa_define.hpp)、[StreamSwitch 控制序列与参数](https://gitcode.com/cann/runtime/blob/master/src/runtime/inc/stars/stars_cond_isa_define.hpp#L246)、[StreamSwitch 指令构造](https://gitcode.com/cann/runtime/blob/master/src/runtime/core/src/task/stars_cond_isa_helper.cc#L1430)、[指令编码与 SQ ID / SQ head 字段](https://gitcode.com/cann/runtime/blob/master/src/runtime/inc/cond_isa/v100/stars_cond_isa_struct.hpp)、[图尾完成处理 `Context::ModelAddEndGraph()`](https://gitcode.com/cann/runtime/blob/master/src/runtime/core/src/context/context.cc#L2674)。
 
 ## 4. 图下沉与图捕获
 
@@ -231,23 +186,12 @@ Host 提交 ModelExecute 条件 SQE
 
 离线编译出的 OM 是常见部署产物，但图下沉不只存在于静态 OM 路径。在线编译或捕获也可以建立可复用的设备执行过程。
 
-Persistent Stream 的教学模型：创建持久流，绑定模型运行实例，构建任务，结束构建，然后反复执行实例。任务执行后保留，直到清理或销毁。Persistent 流说明与示例（旧快照：`docs/zh/dev_guide/03-02_stream_management.md`）
+Persistent Stream 的教学模型：创建持久流，绑定模型运行实例，构建任务，结束构建，然后反复执行实例。任务执行后保留，直到清理或销毁。[Persistent 流说明与示例（旧快照，见附录来源说明）](https://gitcode.com/cann/runtime)
 
 “执行时只下发一个 SQE”适合帮助形成初步直觉，更准确地说：**通过模型执行任务触发已准备的任务集合。** 一个模型执行 API 对应几个 SQE，是否还需要参数刷新或同步任务，应以平台实现与 trace 为准。
 
-```mermaid
-flowchart LR
-    subgraph host["Host 侧"]
-        A["加载：整图下沉一次"]
-        B["执行：下发 1 个模型执行 Task<br/>（多次执行=多次下发这一个 Task）"]
-    end
-    subgraph device["Device 侧"]
-        C["[Task1][Task2]...[TaskN]<br/>已预分发，不立即执行"]
-        D["触发后 Device 按预置依赖调度整图 Task"]
-    end
-    A --> C
-    B --> D
-```
+![图下沉的加载与执行](/img/graph-mode/mermaid_04_graph_sink.png)
+
 
 图源：[GE 图下沉 Mermaid](https://gitcode.com/cann/cann-learning-hub/blob/master/tutorials/ge_development/04_model_execution_optimization/images/graph_sink.mmd)。
 
@@ -277,7 +221,7 @@ Capture 区间保留了类似 eager 的调用形式，但任务不会像正常 e
 
 ### 4.3 IO数据变化，但地址可以不变
 
-做图下沉、图捕获，一个非常大的优化点是提前申请、安排好权重、每个算子 IO、算子 Binary 的地址空间。
+做图下次、图捕获，一个非常大的优化点上提前申请、安排的好权重、每个算子IO、算子Binary的地址空间。
 
 | 资源 | 复用时要理解的约束 |
 | --- | --- |
@@ -315,17 +259,8 @@ t2 = SiLU(t1)          # SiLU(z) = z * sigmoid(z)
 y  = Add(t2, residual)
 ```
 
-```mermaid
-flowchart LR
-    X["x [M,K]"] --> MM["MatMul"]
-    W["W [K,N]"] --> MM
-    MM -->|"t0 [M,N]"| BIAS["Add bias"]
-    B["b [N]<br/>广播"] --> BIAS
-    BIAS -->|"t1 [M,N]"| SILU["SiLU"]
-    SILU -->|"t2 [M,N]"| ADD["Add residual"]
-    R["residual [M,N]"] --> ADD
-    ADD --> Y["y [M,N]"]
-```
+![MatMul → bias → SiLU → residual Add](/img/graph-mode/mermaid_05_tensor_graph.png)
+
 
 这张图除了运算顺序，还包含 shape、dtype、布局、广播方式，以及 Tensor 的使用关系。编译器由此知道：`t0`、`t1`、`t2` 都只有一个消费者，可以尝试消除它们的独立存储；`b` 不必真的扩成 `[M,N]`；最后的 Add 必须等 `t2` 和 `residual` 都就绪。
 
@@ -361,17 +296,8 @@ flowchart LR
 
 **把融合前后画出来：** 下图是候选执行方案，不表示某个后端一定会自动实现这两种融合。
 
-```mermaid
-flowchart TB
-    subgraph BEFORE["未融合：4 个计算阶段"]
-        A["MatMul"] -->|"t0 写入 / 读回 GM"| B["Add bias"]
-        B -->|"t1 写入 / 读回 GM"| C["SiLU"]
-        C -->|"t2 写入 / 读回 GM"| D["Add residual"]
-    end
-    subgraph AFTER["候选融合：2 个计算阶段"]
-        E["MatMulBias<br/>内部完成 bias 相加"] -->|"u 写入 / 读回 GM"| F["SiLUAdd<br/>内部完成 SiLU 与 residual 相加"]
-    end
-```
+![四阶段到两阶段的融合对比](/img/graph-mode/mermaid_06_kernel_fusion.png)
+
 
 对应计算仍是 `u = x @ W + b`、`y = SiLU(u) + residual`。这里的 `MatMulBias`、`SiLUAdd` 是示意名称，不是接口名。SiLU 是非线性的，不能把 residual 移到 SiLU 前面；融合还需符合要求的舍入、累加精度和误差容限。
 
@@ -521,14 +447,8 @@ Decode 阶段，T 维度固定为 1，但是 Batch 维度 和 KVcache 维度会�
 
 以本文的 npugraph_ex 路径为例，可以这样区分两层复用：
 
-```mermaid
-flowchart LR
-    FX["动态 FX 图<br/>B 为符号"] --> A["B=4 的 ACLGraph 实例"]
-    FX --> B["B=8 的 ACLGraph 实例"]
-    FX --> C["其他具体 shape 的实例"]
-    A --> R1["相同执行规格下 replay"]
-    B --> R2["相同执行规格下 replay"]
-```
+![动态 FX 图与多个 ACLGraph 实例](/img/graph-mode/mermaid_07_dynamic_aclgraph.png)
+
 
 图为教学示意。所参考的 npugraph_ex 实现可从同一张动态 FX 图捕获多个具体 shape 的 ACLGraph。因此 **FX 图没有重编译，不代表没有发生新的 Runtime capture**。另一种策略是分档：例如为 batch 1、2、4、8、16 准备实例，实际 batch 6 填充到 8，正确处理 mask、KV 写入和无效请求输出；这用额外计算换取实例复用，并非本仓默认档位。依据：[npugraph_ex 内存复用说明](https://gitcode.com/cann/cann-learning-hub/blob/master/blogs/inference/npugraph_ex_aclgraph_graph_mode/CANN%20npugraph_ex%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%BC%98%E5%8C%96.md)。
 
@@ -544,7 +464,7 @@ flowchart LR
 
 ## 8. 用一次实验把整条链路串起来
 
-本组实测于 2026-09-29 完成，参考 `cann-learning-hub/tutorials/llm_inference/qwen3_8b/07_npu_graph_optimization.ipynb`，在 Ascend A3 环境对比 Qwen3-8B 的 Eager、TorchAir GE Graph 和 NPU Graph EX。数据来自 [完整实验记录](/graph-mode/experiment/)：每种模式运行 3 个独立新进程，以中位数作为主结果，方括号给出三轮最小值和最大值。
+本组实测于 2026-09-29 完成，参考 `cann-learning-hub/tutorials/llm_inference/qwen3_8b/07_npu_graph_optimization.ipynb`，在 Ascend A3 环境对比 Qwen3-8B 的 Eager、TorchAir GE Graph 和 NPU Graph EX。数据来自 [完整实验记录](https://gitcode.com/cyy010617/graphMode/blob/main/experiments/qwen3_8b_graph/README.md)：每种模式运行 3 个独立新进程，以中位数作为主结果，方括号给出三轮最小值和最大值。
 
 ### 8.1 对比变量固定
 
@@ -671,27 +591,29 @@ Notebook 还提到简化代码。从调用者看，一个融合接口能隐藏�
 
 ## 附录 A：配图索引与来源
 
-按正文出现顺序列出 **9 张图片、7 张 Mermaid 图**。博客图片副本保存在 `/img/graph-mode/`；Mermaid 源码直接内嵌在 Markdown 中。原始图片文件记录见 [图片来源清单](/graph-mode/sources/)。
+按正文出现顺序列出 **9 张图片、7 张 Mermaid 图**。博客图片副本保存在 `/img/graph-mode/`；本发布版的 Mermaid 图均以 PNG 展示；可编辑源码保留在 `graphPresentation.md` 中。原始图片文件记录见 [图片来源清单](https://gitcode.com/cyy010617/graphMode/blob/main/figs/SOURCES.md)。
 
 | 编号 | 配图 / 形式 | 正文位置与讲解重点 | 来源与性质 |
 | --- | --- | --- | --- |
 | 01 | [Eager 的 Host Bound 时间线](/img/graph-mode/host_bound_eager_timeline.png) | 第 1 节：Host 下发间隙造成 Device 空洞 | [vLLM-Ascend 推理优化](https://gitcode.com/cann/cann-learning-hub/blob/master/blogs/inference/vllm_ascend_inference_optimization/vLLM-Ascend%E6%8E%A8%E7%90%86%E4%BC%98%E5%8C%96.md)；原文 Profiling 案例，非本组实测 |
-| 02 | Eager 逐算子下发（Mermaid） | 第 1 节：CPU 逐次下发、NPU 执行 | [recipe 图模式原理，图 1](https://gitcode.com/cann/cann-recipes-infer/blob/master/docs/cann/zh/npu_graph_optimization.md)；执行示意 |
-| 03 | 图模式复用执行过程（Mermaid） | 第 1 节：复用预先准备的任务集合 | [recipe 图模式原理，图 2](https://gitcode.com/cann/cann-recipes-infer/blob/master/docs/cann/zh/npu_graph_optimization.md)；执行示意 |
+| 02 | [Eager 逐算子下发（PNG）](/img/graph-mode/mermaid_01_eager_dispatch.png)；原稿保留 Mermaid | 第 1 节：CPU 逐次下发、NPU 执行 | [recipe 图模式原理，图 1](https://gitcode.com/cann/cann-recipes-infer/blob/master/docs/cann/zh/npu_graph_optimization.md)；执行示意 |
+| 03 | [图模式复用执行过程（PNG）](/img/graph-mode/mermaid_02_graph_replay.png)；原稿保留 Mermaid | 第 1 节：复用预先准备的任务集合 | [recipe 图模式原理，图 2](https://gitcode.com/cann/cann-recipes-infer/blob/master/docs/cann/zh/npu_graph_optimization.md)；执行示意 |
 | 04 | [Runtime 典型任务执行流程](/img/graph-mode/typical_process.png) | 3.2 节：任务提交、设备调度、同步与完成反馈 | 原 Runtime quick start 旧快照图片；保留的原始副本，来源路径说明见表后 |
-| 05 | SQ / CQ 提交与回收（Mermaid） | 3.2 节：SQE 入队、队列推进与资源回收 | 原 Runtime Stream 设计文档；对应实现的流程示意，来源路径说明见表后 |
-| 06 | 图下沉的加载与执行（Mermaid） | 4.1 节：提前下沉任务，模型执行任务触发运行 | [GE 图下沉源图](https://gitcode.com/cann/cann-learning-hub/blob/master/tutorials/ge_development/04_model_execution_optimization/images/graph_sink.mmd)；教学示意 |
+| 05 | [SQ / CQ 提交与回收（PNG）](/img/graph-mode/mermaid_03_sq_cq_recycle.png)；原稿保留 Mermaid | 3.2 节：SQE 入队、队列推进与资源回收 | 原 Runtime Stream 设计文档；对应实现的流程示意，来源路径说明见表后 |
+| 06 | [图下沉的加载与执行（PNG）](/img/graph-mode/mermaid_04_graph_sink.png)；原稿保留 Mermaid | 4.1 节：提前下沉任务，模型执行任务触发运行 | [GE 图下沉源图](https://gitcode.com/cann/cann-learning-hub/blob/master/tutorials/ge_development/04_model_execution_optimization/images/graph_sink.mmd)；教学示意 |
 | 07 | [ACLGraph 流与任务调度](/img/graph-mode/aclgraph_stream_task_scheduling.png) | 4.1 节：Stream、Task 与依赖关系 | [AOT SuperKernel：从图执行优化说起](https://gitcode.com/cann/cann-learning-hub/blob/master/blogs/inference/aot_superkernel_graph_execution/aot_superkernel_graph_execution.md)；调度结构示意 |
 | 08 | [Host tiling 参数刷新](/img/graph-mode/aclgraph_optimize.png) | 4.3 节：回放时的参数更新与同步 | [npugraph_ex 图模式优化](https://gitcode.com/cann/cann-learning-hub/blob/master/blogs/inference/npugraph_ex_aclgraph_graph_mode/CANN%20npugraph_ex%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%BC%98%E5%8C%96.md)；机制示意，第 7 节进一步解释 KV 长度变化 |
-| 09 | MatMul → bias → SiLU → residual Add（Mermaid） | 5.1 节：算子、shape、广播与 Tensor 依赖 | 本文按 `y = SiLU(x @ W + b) + residual` 绘制；逻辑计算图 |
-| 10 | 四阶段到两阶段的融合对比（Mermaid） | 5.3 节：减少 kernel 启动和中间 GM 读写 | 本文绘制；候选优化方案，不代表特定后端的实际编译结果 |
+| 09 | [MatMul → bias → SiLU → residual Add（PNG）](/img/graph-mode/mermaid_05_tensor_graph.png)；原稿保留 Mermaid | 5.1 节：算子、shape、广播与 Tensor 依赖 | 本文按 `y = SiLU(x @ W + b) + residual` 绘制；逻辑计算图 |
+| 10 | [四阶段到两阶段的融合对比（PNG）](/img/graph-mode/mermaid_06_kernel_fusion.png)；原稿保留 Mermaid | 5.3 节：减少 kernel 启动和中间 GM 读写 | 本文绘制；候选优化方案，不代表特定后端的实际编译结果 |
 | 11 | [TorchAir 架构](/img/graph-mode/torchair_architecture.png) | 第 6 节：框架、编译后端与执行层的关系 | [TorchAir 总览](https://github.com/Ascend/torchair/blob/master/docs/zh/overview.md)；架构图 |
 | 12 | [编译缓存时间分布](/img/graph-mode/execution_time_2.png) | 第 6 节“编译缓存与 replay 缓存”：缓存减少哪些准备耗时 | [TorchAir 编译缓存说明](https://github.com/Ascend/torchair/blob/master/docs/zh/npugraph_ex/advanced/compile_cache.md)；原文案例，非本组实测 |
-| 13 | 动态 FX 图与多个 ACLGraph 实例（Mermaid） | 7.3 节：编译图复用与 Runtime capture 分属两层 | 本文绘制，依据 [npugraph_ex 内存复用说明](https://gitcode.com/cann/cann-learning-hub/blob/master/blogs/inference/npugraph_ex_aclgraph_graph_mode/CANN%20npugraph_ex%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%BC%98%E5%8C%96.md)；教学示意 |
-| 14 | [Qwen3-8B 三种执行模式性能对比](/img/graph-mode/qwen3_8b_comparison.png) | 8.2 节：Eager、GE Graph、NPU Graph EX 的 Decode 时延与吞吐 | [本仓实验记录](/graph-mode/experiment/)；2026-09-29 在 A3 上的本组实测 |
+| 13 | [动态 FX 图与多个 ACLGraph 实例（PNG）](/img/graph-mode/mermaid_07_dynamic_aclgraph.png)；原稿保留 Mermaid | 7.3 节：编译图复用与 Runtime capture 分属两层 | 本文绘制，依据 [npugraph_ex 内存复用说明](https://gitcode.com/cann/cann-learning-hub/blob/master/blogs/inference/npugraph_ex_aclgraph_graph_mode/CANN%20npugraph_ex%E5%9B%BE%E6%A8%A1%E5%BC%8F%E4%BC%98%E5%8C%96.md)；教学示意 |
+| 14 | [Qwen3-8B 三种执行模式性能对比](/img/graph-mode/qwen3_8b_comparison.png) | 8.2 节：Eager、GE Graph、NPU Graph EX 的 Decode 时延与吞吐 | [本仓实验记录](https://gitcode.com/cyy010617/graphMode/blob/main/experiments/qwen3_8b_graph/README.md)；2026-09-29 在 A3 上的本组实测 |
 | 15 | [VV 融合流程](/img/graph-mode/fused_vv_process.png) | 9.2 节：省去中间结果的搬出与搬入 | [融合算子概念教程](https://gitcode.com/cann/cann-learning-hub/blob/master/tutorials/ascendc_operator_development/05_fused_operator_development/05.02_fused_operator_concept_intro.ipynb) 的 `vv_process.png`；原样复制的机制图 |
 | 16 | [CV 融合流水](/img/graph-mode/fused_cv_mix_process.png) | 9.2 节：不同数据块的 Cube / Vector 阶段重叠 | [融合算子概念教程](https://gitcode.com/cann/cann-learning-hub/blob/master/tutorials/ascendc_operator_development/05_fused_operator_development/05.02_fused_operator_concept_intro.ipynb) 的 `mix_process.png`；原样复制的机制图 |
 
-**旧快照来源说明：** 图 04 原记录为 Runtime 的 `docs/zh/quick_start/figures/typical_process.png`；图 05 原记录为 `docs/zh/design/modules/stream/stream.md`。这两条路径在当前本地 Runtime 快照中已不存在，讲稿中保留了图片副本和 Mermaid 源码。当前相关背景可参阅 [Runtime 编程模型](https://gitcode.com/cyy010617/runtime/blob/master/docs/01_quick_start/Runtime%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B.md)，但不将它当作两张旧图完全相同的原始来源。
+**旧快照来源说明：** 图 04 原记录为 Runtime 的 `docs/zh/quick_start/figures/typical_process.png`；图 05 原记录为 `docs/zh/design/modules/stream/stream.md`。这两条路径在当前本地 Runtime 快照中已不存在，讲稿中保留了图片副本和 Mermaid 源码。当前相关背景可参阅 [Runtime 编程模型](https://gitcode.com/cann/runtime/blob/master/docs/01_quick_start/Runtime%E7%BC%96%E7%A8%8B%E6%A8%A1%E5%9E%8B.md)，但不将它当作两张旧图完全相同的原始来源。
+
+旧版 Runtime 文档的网页原址未能确认，相关引用暂链接到 Runtime 仓库首页。历史路径还包括 `docs/zh/design/architecture.md`、`docs/zh/design/modules/task/task.md`、`docs/zh/dev_guide/03-02_stream_management.md`；这些路径在当前快照和可用本地历史中未找到，不将新的文档冒充旧版来源。
 
 以上区分了机制示意、引用案例与本组实测：示意图不提供加速比，引用案例不能替代本组测量，第 8 节的实测结论也只对应记录中的模型、设备和测试条件。`figs/` 中未被正文使用的备用素材不计入本索引。
